@@ -1,0 +1,9 @@
+version: "3.4"
+services:
+    app:
+      build: "."
+      working_dir: "/srv/api"
+      volumes:
+        - "./:/srv/api"
+      ports:
+        - "127.0.0.1:8000:8000"
