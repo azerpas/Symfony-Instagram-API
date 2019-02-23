@@ -27,6 +27,7 @@ class InstaController extends AbstractController
         $truncatedDebug = false;
         //////////////////////
         echo ($request->get('type'));
+        return new Response("INDEX TEST");
 
     }
 

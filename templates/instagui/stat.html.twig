@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}INSTAGUI{% endblock %}
+
+{% block Navbar %}
+ {{parent()}}
+{% endblock %}
+{% block Section %}
+       <section class="dashboard-counts section-padding">
+        <div class="container-fluid">
+          <div class="row">
+            <!-- Count item widget-->
+            <div class="col-xl-4 col-md-4 col-6">
+              <div class="wrapper count-title d-flex">
+                <div class="icon"><i class="fas fa-heart"></i></div>
+                <div class="name"><strong class="text-uppercase">Abonnées</strong><span> </span>
+                  <div class="count-number">25</div>
+                </div>
+              </div>
+            </div>
+            <!-- Count item widget-->
+            <div class="col-xl-4 col-md-4 col-6">
+              <div class="wrapper count-title d-flex">
+                <div class="icon"><i class="fas fa-user-plus"></i></div>
+                <div class="name"><strong class="text-uppercase">Abonnement</strong><span> </span>
+                  <div class="count-number">400</div>
+                </div>
+              </div>
+            </div>
+            <!-- Count item widget-->
+            <div class="col-xl-4 col-md-4 col-6">
+              <div class="wrapper count-title d-flex">
+                <div class="icon"><i class="fas fa-grin-hearts"></i></div>
+                <div class="name"><strong class="text-uppercase">Funs</strong><span> </span>
+                  <div class="count-number">342</div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </section>
+      <!-- Statistics Section-->
+       <section class="charts">
+        <div class="container-fluid">
+          <!-- Page Header-->
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="card line-chart-example ">
+                <div class="card-header d-flex align-items-center">
+                  <h4> Followers </h4>
+                </div>
+               
+                <div class="card-body">
+                  <canvas id="follow"></canvas>
+                </div>
+                <div class="form-group row container">
+                <div class="col-3">
+                    <select class="selectpicker">
+                        <option>année</option>
+                        <option>mois</option>
+                        <option>semaine</option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <input class="form-control" id="dateDebut" name="dateDebut" placeholder="Date de début" type="text"/>
+
+                </div>
+                <div class="col-3">
+                     <select class="selectpicker">
+                        <option>accrued</option>
+                        <option>separate</option>
+                    </select>
+                </div> 
+                <div class="col-3">
+                     <button class="btn btn-primary  float-right">Reload</button> 
+                </div>              
+               </div>   
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Updates Section -->
+      <section class="mt-30px mb-30px">
+       
+      </section>
+{% endblock %}
+{% block Footer %}
+{{parent()}}
+{% endblock %}
