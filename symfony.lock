@@ -125,6 +125,9 @@
     "nikic/php-parser": {
         "version": "v4.1.0"
     },
+    "ocramius/package-versions": {
+        "version": "1.4.0"
+    },
     "ocramius/proxy-manager": {
         "version": "2.1.1"
     },
@@ -154,6 +157,9 @@
     },
     "psr/simple-cache": {
         "version": "1.0.1"
+    },
+    "ralouphie/getallheaders": {
+        "version": "2.0.5"
     },
     "react/cache": {
         "version": "v0.5.0"
@@ -211,6 +217,9 @@
             "version": "3.3",
             "ref": "b5026d7ffdb43b4d66f4cc091b1e6f94e6023986"
         }
+    },
+    "symfony/contracts": {
+        "version": "v1.0.2"
     },
     "symfony/css-selector": {
         "version": "v4.1.7"
@@ -421,6 +430,9 @@
     },
     "symfony/var-dumper": {
         "version": "v4.1.7"
+    },
+    "symfony/var-exporter": {
+        "version": "v4.2.3"
     },
     "symfony/web-link": {
         "version": "v4.1.7"

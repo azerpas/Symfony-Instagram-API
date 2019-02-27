@@ -1,0 +1,281 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}INSTAGUI{% endblock %}
+
+{% block Navbar %}
+ {{parent()}}
+{% endblock %}
+{% block Section %}
+       
+      <!-- Counts Section -->
+      <section class="dashboard-counts section-padding">
+        
+
+         
+
+
+         <div class="container">
+            <div class="col-lg-12">
+              <div class="card">
+                <div class="card-header d-flex align-items-center ">
+                    <div class="col-6">   
+                    <h4 class="float-left">Search bot </h4>
+                    </div>
+                    <div class="col-2">
+                    <input type="checkbox" class="justify-content-end" data-onstyle="success" checked data-toggle="toggle">
+
+                    </div>
+                    
+                     <div class="col-3">
+                     <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                        <a class="nav-link active" id="config-tab" data-toggle="tab" href="#config" role="tab" aria-controls="config" aria-selected="true"><span class="fa fa-gear"></span></a>
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav-link" id="slots-tab" data-toggle="tab" href="#slots" role="tab" aria-controls="slots" aria-selected="false"><span class="fa fa-clock-o"></span></a>
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav-link" id="news-tab" data-toggle="tab" href="#news" role="tab" aria-controls="news" aria-selected="false"><span class="fa fa-newspaper"></span></a>
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav-link" id="help-tab" data-toggle="tab" href="#help" role="tab" aria-controls="help" aria-selected="false"><span class="fa fa-question-circle"></span></a>
+                        </li>
+                     </ul>
+                    </div>
+                    <a data-toggle="collapse" href="#collapse-example" aria-expanded="true" aria-controls="collapse-example" id="heading-example" >
+                       <i class="fa fa-chevron-down pull-right"></i>  
+                    </a>
+                         
+                </div>
+                <div id="collapse-example" class="collapse show card-body" aria-labelledby="heading-example" > 
+                    <div class="tab-content" id="myTabContent">
+                      <div class="tab-pane fade show active" id="config" role="tabpanel" aria-labelledby="home-tab">
+                      <div class="card-header">
+                        <h4>Paramétrage</h4>
+                       </div>
+                            <form>
+                              <div class="form-group row ">
+                                <div class=" col-3 vcenter "><label class="form-control-label">Hashtags </label></div>
+                                <div class="col vcenter"> <input type="text" value="" data-role="tagsinput" placeholder="Add tags"></div>
+                              </div>
+                              <div class="form-group row">
+                              <div class=" col-3 vcenter ">  <label class="form-control-label">blackList Hashtags </label></div>
+                              <div class="col vcenter">  <input  type="text" value="" data-role="tagsinput" placeholder="Add tags"></div>
+                              </div>
+                              <div class="form-group row">
+                              <label class="form-control-label col-3 vcenter">nombre d'abonnées </label>
+                              <input id="number"  data-prefix="MIN" type="number" value="50" class="col-4">
+                              <input id="number" data-prefix="MAX" type="number" value="50" class="col-4">
+                              </div>
+                              <div class="form-group row">
+                              <label class="form-control-label col-3">nombre d'abonnement </label>
+                              <input id="number" data-prefix="MIN" type="number" value="50" class="col-4">  
+                              <input id="number" data-prefix="MAX" type="number" value="50" class="col-4">
+                              </div>
+                              <div class="form-group row">
+                              <label class="form-control-label col-3">nombre de publications </label>
+                              <input id="number" data-prefix="MIN" type="number" value="50" class="col-4">
+                              <input id="number" data-prefix="MAX" type="number" value="50" class="col-4">
+                              </div>
+                              <div class="form-group row">
+                              <label class="form-control-label col-3">Photo de profil </label>
+                                  <div class="i-checks col-3 ">
+                                    <input id="radioCustom1" type="radio" value="1" name="b" class="form-control-custom radio-custom">
+                                    <label for="radioCustom1">Avec photo de profil</label>
+                                  </div>
+                                  <div class="i-checks col-3">
+                                    <input id="radioCustom2" type="radio" checked="" value="-1" name="b" class="form-control-custom radio-custom">
+                                    <label for="radioCustom2">Sans photo de profil</label>
+                                  </div>
+                                  <div class="i-checks col-3">
+                                    <input id="radioCustom3" type="radio"  value="0" name="b" class="form-control-custom radio-custom">
+                                    <label for="radioCustom3">Peu importe </label>
+                                  </div>
+                              </div>
+                              <div class="form-group row">
+                              <label class="form-control-label col-3">Acepter les Comptes privés </label>
+                                <div class="i-checks col-3 ">
+                                    <input id="radioCustom11" type="radio" value="1" name="a" class="form-control-custom radio-custom">
+                                    <label for="radioCustom11">Oui</label>
+                                  </div>
+                                  <div class="i-checks col-3">
+                                    <input id="radioCustom22" type="radio" checked="" value="0" name="a" class="form-control-custom radio-custom">
+                                    <label for="radioCustom22">Non</label>
+                                  </div>
+                              </div>
+                                
+                            </form> 
+                             <div class="form-group">
+                                   <button class="btn btn-primary float-right">Enregistrer</button>  
+                              </div> 
+                      </div>
+                      <div class="tab-pane fade" id="slots" role="tabpanel" aria-labelledby="profile-tab">
+                      
+                                  <div class="col-lg-12">
+                          <div class="card">
+                            <div class="card-header row">
+                              <h4 class="col-10">Créneaux</h4>
+                            </div>
+                            <div class="card-body">
+                              <div class="table-responsive">
+                                <table class="table">
+                                  <thead>
+                                    <tr>
+                                      <th>00:00  01:00</th>
+                                      <th>01:00  02:00</th>
+                                      <th>02:00  03:00</th>
+                                      <th>03:00  04:00</th>
+                                      <th>04:00  05:00</th>
+                                      <th>05:00  06:00</th>
+                                      <th>06:00  07:00</th>
+                                      <th>07:00  08:00</th>
+                                      <th>08:00  09:00</th>
+                                      <th>09:00  10:00</th>
+                                      <th>10:00  11:00</th>
+                                      <th>11:00  12:00</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <th><button class="btn btn-basic"></th>
+                                      <th><button class="btn btn-basic"></th>
+                                      <th><button class="btn btn-basic"></th>
+                                      <th><button class="btn btn-basic"></th>
+                                      <th><button class="btn btn-basic"></th>
+                                      <th><button class="btn btn-primary"></th>
+                                      <th><button class="btn btn-primary"></th>
+                                      <th><button class="btn btn-primary"></th>
+                                      <th><button class="btn btn-primary"></th>
+                                      <th><button class="btn btn-primary"></th>
+                                      <th><button class="btn btn-primary"></th>
+                                      <th><button class="btn btn-primary"></th>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                  <thead>
+                                    <tr>
+                                      <th>12:00  13:00</th>
+                                      <th>13:00  14:00</th>
+                                      <th>14:00  15:00</th>
+                                      <th>15:00  16:00</th>
+                                      <th>16:00  17:00</th>
+                                      <th>17:00  18:00</th>
+                                      <th>18:00  19:00</th>
+                                      <th>19:00  20:00</th>
+                                      <th>20:00  21:00</th>
+                                      <th>21:00  22:00</th>
+                                      <th>22:00  23:00</th>
+                                      <th>23:00  00:00</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <th><button class="btn btn-primary"></th>
+                                      <th><button class="btn btn-primary"></th>
+                                      <th><button class="btn btn-primary"></th>
+                                      <th><button class="btn btn-primary"></th>
+                                      <th><button class="btn btn-primary"></th>
+                                      <th><button class="btn btn-primary"></th>
+                                      <th><button class="btn btn-primary"></th>
+                                      <th><button class="btn btn-basic"></th>
+                                      <th><button class="btn btn-basic"></th>
+                                      <th><button class="btn btn-basic"></th>
+                                      <th><button class="btn btn-basic"></th>
+                                      <th><button class="btn btn-basic"></th>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div> 
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tab-pane fade" id="news" role="tabpanel" aria-labelledby="contact-tab">
+                        
+                       <div class="col-lg-12">
+              <div class="card">
+                <div class="card-header row">
+                  <h4 class="col-10">Journal d'activité</h4>
+                   <span class="fa fa-refresh col-2"></span>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Identifiant</th>
+                          <th>Nom</th>
+                          <th>Prénom</th>
+                          <th>Username</th>
+                          <th>Date</th>
+                          <th>time</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">1</th>
+                          <td>577324324</td> 
+                          <td>Mark</td>
+                          <td>Otto</td>
+                          <td>@mdo</td>
+                          <td>13-02-2019</td>
+                          <td>17:30</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">2</th>
+                          <td>687824324</td>
+                          <td>Jacob</td>
+                          <td>Thornton</td>
+                          <td>@fat</td>
+                          <td>13-02-2019</td>
+                          <td>17:30</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">3</th>
+                          <td>654324324</td>
+                          <td>Larry</td>
+                          <td>the Bird</td>
+                          <td>@twitter</td>
+                          <td>13-02-2019</td>
+                          <td>17:30</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>            
+                      </div>
+                      <div class="tab-pane fade" id="help" role="tabpanel" aria-labelledby="contact-tab">
+                       <div class="card">
+                            <div class="card-header row">
+                              <h4 class="col-10">Help</h4>
+                            </div>
+                         </div>   
+                      
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+         </div>   
+      </section>
+    
+      <section class="statistics">
+            
+      </section>
+      <!-- Updates Section -->
+      
+      <section class="mt-30px mb-30px">
+       
+      </section>
+      
+{% endblock %}
+{% block Footer %}
+{{parent()}}
+{% endblock %}
+

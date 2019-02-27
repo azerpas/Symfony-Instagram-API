@@ -33,6 +33,8 @@ class InstalCommand extends Command
 
         $currentFollowers = $this->getCurrentFollowers($ig);
         $subscriptions    = $this->getCurrentSubscriptions($ig);
+        echo implode($currentFollowers);
+        /*
         if ($only === false || $only === 'stats') {
             $unfollowers      = $this->getUnfollowers($lastFollowers, $currentFollowers);
             if (count($unfollowers)) $this->postSlackNotification("Unfollowers (" . count($unfollowers) . "):\n" . implode(", ", $unfollowers));
@@ -55,6 +57,7 @@ class InstalCommand extends Command
                 $this->postSlackNotification($msg);
             }
         }
+        */
     }
 
     private function getInstagramInstance($username, $password)
@@ -171,7 +174,7 @@ class InstalCommand extends Command
 
         return $array;
     }
-
+    /*
     private function unfollowNotFollowers($ig, $subscriptions, $followers)
     {
         $toUnfollow = array_diff($subscriptions, $followers);
@@ -179,7 +182,7 @@ class InstalCommand extends Command
         echo "Unfollowing " . count($toUnfollow) . " people over " . count($subscriptions) . "...\n";
         $i = 0;
         foreach ($toUnfollow as $pk => $username) {
-            /** @var FriendshipStatus $response */
+            /* @var FriendshipStatus $response */ /*
             $response = $ig->people->unfollow($pk)->getFriendshipStatus();
             if ($response->isFollowing()) {
                 throw new \Exception('unfollow failed');
@@ -195,5 +198,5 @@ class InstalCommand extends Command
         }
 
         return $toUnfollow;
-    }
+    }*/
 }
