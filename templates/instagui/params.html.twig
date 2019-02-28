@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}INSTAGUI{% endblock %}
+
+{% block Navbar %}
+    {{parent()}}
+{% endblock %}
+
+{% block Section %}
+    <div class="container-fluid mt-2">
+        <div class="row">
+            {{ form(form) }}
+            <!--
+            <form class="signin-account" action="" type="">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input name="username" class="form-control" placeholder="Input your Instagram username" type="text"/>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input name="password" class="form-control" type="password"/>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-outline-primary">Save</button>
+                    <a href="{{  path('sign_in')  }}">
+                        <button type="button" class="btn btn-outline-secondary">Test connection</button>
+                    </a>
+                </div>
+            </form>
+            -->
+        </div>
+        <!-- https://codepen.io/milesmanners/pen/aBqOya -->
+    </div>
+{% endblock %}
+
+{% block Footer %}
+    {{parent()}}
+{% endblock %}
