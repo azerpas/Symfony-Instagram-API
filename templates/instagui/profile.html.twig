@@ -1,0 +1,119 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}INSTAGUI{% endblock %}
+
+{% block Navbar %}
+ {{parent()}}
+{% endblock %}
+{% block Section %}
+      <!-- Counts Section -->
+      
+      <section class="dashboard-counts section-padding">  
+       <div class="container-fluid row">
+       <!--user profil --> 
+       <div class="col-5">  
+       <div class="card">
+                <div class="card-body">
+                  <div class="sidenav-header-inner text-center row"> 
+                   <div class="col-4">
+                    <img src="{{asset('assets/img/avatar.png')}}" alt="person" class="img-fluid rounded-circle">
+                   </div>
+                   <div class="media-body col-6">
+                      <h4>Nom Prénom</h4>
+                      <p class="text-muted mb-0">admin</p>
+                      <p class="text-muted mb-0">email@vetixy.fr</p>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div> 
+      <form class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Edit Profile</h3>
+                </div>
+                <div class="card-body">
+                  <div class="row mb-3">
+                    <div class="col-auto d-flex align-items-center"><span style="background-image: {{asset('assets/img/avatar.png')}}" class="avatar avatar-lg"></span></div>
+                    <div class="col">
+                      <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input placeholder="Your name" class="form-control">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input placeholder="you@domain.com" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" value="password" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" value="password" class="form-control">
+                  </div>
+ 
+                </div>
+                <div class="card-footer text-right">
+                  <button class="btn btn-primary">Save</button>
+                </div>
+              </form>
+      </div>
+      <!--intagram profil -->  
+      <div class="col-7">  
+       <div class="card">
+                <div class="card-body">
+                  <div class="sidenav-header-inner text-center row"> 
+                   <div class="col-4">
+                    <img src="{{asset('assets/img/instagram.jpg')}}" alt="person" class="img-fluid rounded-circle">
+                   </div>
+                   <div class="media-body col-6">
+                      <h4>Instagram</h4>
+                      <p class="text-muted mb-0">VETIXY</p>
+                      <p class="text-muted mb-0">users : </p>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div> 
+      <form class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Edit Instagram</h3>
+                </div>
+                <div class="card-body">
+                  <div class="row mb-3">
+                    <div class="col-auto d-flex align-items-center"><span style="background-image: {{asset('assets/img/instagram.jpg')}}" class="avatar avatar-lg"></span></div>
+                    
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Instagram</label>
+                    <input placeholder="Vetixy" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" value="password" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" value="password" class="form-control">
+                  </div>
+ 
+                </div>
+                <div class="card-footer text-right">
+                  <button class="btn btn-primary">Save</button>
+                </div>
+              </form>
+      </div>
+  
+
+
+
+    </div>
+      </section> 
+       
+{% endblock %}
+{% block Footer %}
+{{parent()}}
+{% endblock %}
+

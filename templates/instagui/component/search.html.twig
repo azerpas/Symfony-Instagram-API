@@ -1,0 +1,67 @@
+{% extends "instagui/component/baseBot.html.twig" %}
+{% block top %}{{ parent() }}{% endblock %}
+{% block config %}
+
+<div class="section-padding">
+                            <form name="searchForm">
+                              <div class="form-group row ">
+                                <div class=" col-3 vcenter "><label class="form-control-label">Hashtags </label></div>
+                                <div class="col vcenter"> <input type="text" name="hashtags" value="" data-role="tagsinput" placeholder="Add tags #"></div>
+                              </div>
+                              <div class="form-group row">
+                              <div class=" col-3 vcenter ">  <label class="form-control-label">blackList Hashtags </label></div>
+                              <div class="col vcenter">  <input  type="text" name="blacklist" value="" data-role="tagsinput" placeholder="Add tags #"></div>
+                              </div>
+                              <div class="form-group row ">
+                                <div class=" col-3 vcenter "><label class="form-control-label">Pseudo </label></div>
+                                <div class="col vcenter"> <input type="text" name="pseudo" value="" data-role="tagsinput" placeholder="Add pseudo @"></div>
+                              </div>
+                              <div class="form-group row">
+                              <label class="form-control-label col-3 vcenter">Abonnées </label>
+                              <input name="minfollow"  data-prefix="MIN" type="number" value="50" class="col-4">
+                              <input name="maxfollow" data-prefix="MAX" type="number" value="50" class="col-4">
+                              </div>
+                              <div class="form-group row">
+                              <label class="form-control-label col-3">Abonnements </label>
+                              <input name="minfollowing" data-prefix="MIN" type="number" value="50" class="col-4">  
+                              <input name="maxfollowing" data-prefix="MAX" type="number" value="50" class="col-4">
+                              </div>
+                              <div class="form-group row">
+                              <label class="form-control-label col-3">Publications </label>
+                              <input name="minpublication" data-prefix="MIN" type="number" value="50" class="col-4">
+                              <input name="maxpublication" data-prefix="MAX" type="number" value="50" class="col-4">
+                              </div>
+                              <div class="form-group row">
+                              <label class="form-control-label col-3">Photo de profil </label>
+                                  <div class="i-checks col-3 ">
+                                    <input id="radioCustom1" type="radio" value="1" name="b" class="form-control-custom radio-custom">
+                                    <label for="radioCustom1">Avec photo de profil</label>
+                                  </div>
+                                  <div class="i-checks col-3">
+                                    <input id="radioCustom2" type="radio" checked="" value="-1" name="b" class="form-control-custom radio-custom">
+                                    <label for="radioCustom2">Sans photo de profil</label>
+                                  </div>
+                                  <div class="i-checks col-3">
+                                    <input id="radioCustom3" type="radio"  value="0" name="b" class="form-control-custom radio-custom">
+                                    <label for="radioCustom3">Peu importe </label>
+                                  </div>
+                              </div>
+                              <div class="form-group row">
+                              <label class="form-control-label col-3">Accepter les Comptes privés </label>
+                                <div class="i-checks col-3 ">
+                                    <input id="radioCustom11" type="radio" value="1" name="a" class="form-control-custom radio-custom">
+                                    <label for="radioCustom11">Oui</label>
+                                  </div>
+                                  <div class="i-checks col-3">
+                                    <input id="radioCustom22" type="radio" checked="" value="0" name="a" class="form-control-custom radio-custom">
+                                    <label for="radioCustom22">Non</label>
+                                  </div>
+                              </div>
+                                
+                            </form> 
+                             <div class="form-group">
+                                   <button class="btn btn-primary float-right" type="button" onclick="searchBot_config()">Enregistrer</button>  
+                              </div>
+</div>                  
+{% endblock %}
+{% block bottom %}{{parent()}}{% endblock %}
