@@ -197,7 +197,12 @@
       };
       date_input.datepicker(options);
      });
-    
+    $('#myModal').on('shown.bs.modal hide.bs.modal', function (event) {
+    var tmpid = $(document.activeElement).attr('id'); 
+    console.log(tmpid);
+  $('#myInput').trigger('focus');
+ 
+})
               
  </script>
         {% endblock %}

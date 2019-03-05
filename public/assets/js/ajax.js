@@ -1,3 +1,28 @@
+  //custom js file
+ 
+  $(document).ready(function(){
+     //date picker
+    var date_input=$('input[name="dateDebut"]'); //our date input has the name "date"
+    var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+    var options={
+      format: 'yyyy/mm/dd',
+      container: container,
+      todayHighlight: true,
+      autoclose: true,
+    };
+    date_input.datepicker(options);
+    // modal 
+       $('#myModal').on('click', function () {
+      console.log("test");
+      var tmpid = $(document.activeElement).attr('id'); 
+ 
+     $('#myInput').trigger('focus');
+      })
+  
+  
+  
+   });
+
 
 // send config forms to server
 function searchBot_config() {
