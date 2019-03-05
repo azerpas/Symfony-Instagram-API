@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}Welcome!{% endblock %}</title>
-
-
-    {% block stylesheets %}
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}
         <link href="{{ asset('assets/css/fontastic.css') }}" rel="stylesheet" />
         <link  href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
         <link  href="{{ asset('assets/vendor/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
@@ -15,147 +13,153 @@
         <link  href="{{ asset('assets/css/custom.css')}}" rel="stylesheet">
         <link  href="{{ asset('assets/css/bootstrap-tagsinput.css')}}" rel="stylesheet">
         <link  href="{{ asset('assets/css/bootstrap-toggle.css')}}" rel="stylesheet">
-        <link  rel="shortcut icon" href="{{ asset('assets/img/favicon.ico')}}" >
+        <link  rel="shortcut icon" href="{{ asset('assets/img/fav.ico')}}" >
         <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
         <link  rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
+        <link  rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+        <link  rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/v4-shims.css"> 
+        <link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
         <!-- Bootstrap Date-Picker Plugin -->
-
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
-    {% endblock %}
-</head>
-<body>
-
-{% block Navbar %}
+        <link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/> 
+       {% endblock %}
+    </head>
+    <body>
+       
+        {% block Navbar %}
     <!-- Side Navbar -->
     <nav class="side-navbar">
-        <div class="side-navbar-wrapper">
-            <!-- Sidebar Header    -->
-            <div class="sidenav-header d-flex align-items-center justify-content-center">
-                <!-- User Info-->
-                <div class="sidenav-header-inner text-center"><img src="{{asset('assets/img/avatar.jpg')}}" alt="person" class="img-fluid rounded-circle">
-                    <h2 class="h5">VETIXY</h2><span>Web Developer</span>
-                </div>
-                <!-- Small Brand information, appears on minimized sidebar-->
-                <div class="sidenav-header-logo"><a href="index.html" class="brand-small text-center"> <strong>I</strong><strong class="text-primary">G</strong></a></div>
-            </div>
-            <!-- Sidebar Navigation Menus-->
-            <div class="main-menu">
-                <h5 class="sidenav-heading">Main</h5>
-                <ul id="side-main-menu" class="side-menu list-unstyled">
-                    <li><a href="home"> <i class="fas fa-home"></i>Home</a></li>
-                    <li><a href="bots"> <i class="fas fa-robot"></i>Bots</a></li>
-                    <li><a href="charts"> <i class="fas fa-bar-chart"></i>Statistiques</a></li>
-                    <li><a href="history"> <i class="fas fa-newspaper"></i>Journal d'activité</a></li>
-                </ul>
-            </div>
-            <div class="admin-menu">
-                <h5 class="sidenav-heading">Second menu</h5>
-                <ul id="side-admin-menu" class="side-menu list-unstyled">
-                    <li><a href="profile"> <i class="fas fa-user"></i>Profile</a></li>
-                    <li><a href="parameters" > <i class="fa fa-cog"></i>Paramétres</a></li>
-                </ul>
-            </div>
+      <div class="side-navbar-wrapper">
+        <!-- Sidebar Header    -->
+        <div class="sidenav-header d-flex align-items-center justify-content-center">
+          <!-- User Info-->
+          <div class="sidenav-header-inner text-center"><img src="{{asset('assets/img/avatar.png')}}" alt="person" class="img-fluid rounded-circle">
+            <h2 class="h5">VETIXY</h2><span>Web Developer</span>
+          </div>
+          <!-- Small Brand information, appears on minimized sidebar-->
+          <div class="sidenav-header-logo"><a href="index.html" class="brand-small text-center"> <strong>I</strong><strong class="text-primary">G</strong></a></div>
         </div>
+        <!-- Sidebar Navigation Menus-->
+        <div class="main-menu">
+          <h5 class="sidenav-heading">Main</h5>
+          <ul id="side-main-menu" class="side-menu list-unstyled">                  
+            <li><a href="home"> <i class="fas fa-home"></i>Home</a></li>
+            <li><a href="bots"> <i class="fas fa-robot"></i>Bots</a></li>
+            <li><a href="charts"> <i class="fas fa-bar-chart"></i>Statistiques</a></li> 
+            <li><a href="history"> <i class="fas fa-share"></i>Publications</a></li> 
+            <li><a href="history"> <i class="fas fa-heart"></i>Abonnées</a></li> 
+            <li><a href="history"> <i class="fas fa-user-plus"></i>Abonnement</a></li>  
+          </ul>
+        </div>
+        <div class="admin-menu">
+          <h5 class="sidenav-heading">Second menu</h5>
+          <ul id="side-admin-menu" class="side-menu list-unstyled"> 
+            <li><a href="history"> <i class="fas fa-newspaper"></i>Journal d'activité</a></li> 
+            <li><a href="profile"> <i class="fas fa-user"></i>Profile</a></li>
+            <li><a href="parameters" > <i class="fa fa-cog"></i>Paramétres</a></li>
+          </ul>
+        </div>
+      </div>
     </nav>
-<div class="page">
-    <!-- navbar-->
-    <header class="header">
+
+    
+    <div class="page">
+      <!-- navbar-->
+      <header class="header">
         <nav class="navbar">
-            <div class="container-fluid">
-                <div class="navbar-holder d-flex align-items-center justify-content-between">
-                    <div class="navbar-header"><a id="toggle-btn" href="#" class="menu-btn"><i class="icon-bars"> </i></a><a href="index.html" class="navbar-brand">
-                            <div class="brand-text d-none d-md-inline-block"><span> </span><strong class="text-primary">INSTAGUI</strong></div></a></div>
-                    <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
-                        <!-- Notifications dropdown-->
-                        <li class="nav-item dropdown"> <a id="notifications" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link"><i class="fa fa-bell"></i><span class="badge badge-warning">12</span></a>
-                            <ul aria-labelledby="notifications" class="dropdown-menu">
-                                <li><a rel="nofollow" href="#" class="dropdown-item">
-                                        <div class="notification d-flex justify-content-between">
-                                            <div class="notification-content"><i class="fa fa-envelope"></i>You have 6 new messages </div>
-                                            <div class="notification-time"><small>4 minutes ago</small></div>
-                                        </div></a></li>
-                                <li><a rel="nofollow" href="#" class="dropdown-item">
-                                        <div class="notification d-flex justify-content-between">
-                                            <div class="notification-content"><i class="fa fa-twitter"></i>You have 2 followers</div>
-                                            <div class="notification-time"><small>4 minutes ago</small></div>
-                                        </div></a></li>
-                                <li><a rel="nofollow" href="#" class="dropdown-item">
-                                        <div class="notification d-flex justify-content-between">
-                                            <div class="notification-content"><i class="fa fa-upload"></i>Server Rebooted</div>
-                                            <div class="notification-time"><small>4 minutes ago</small></div>
-                                        </div></a></li>
-                                <li><a rel="nofollow" href="#" class="dropdown-item">
-                                        <div class="notification d-flex justify-content-between">
-                                            <div class="notification-content"><i class="fa fa-twitter"></i>You have 2 followers</div>
-                                            <div class="notification-time"><small>10 minutes ago</small></div>
-                                        </div></a></li>
-                                <li><a rel="nofollow" href="#" class="dropdown-item all-notifications text-center"> <strong> <i class="fa fa-bell"></i>view all notifications                                            </strong></a></li>
-                            </ul>
-                        </li>
-                        <!-- Messages dropdown-->
-                        <li class="nav-item dropdown"> <a id="messages" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link"><i class="fa fa-envelope"></i><span class="badge badge-info">10</span></a>
-                            <ul aria-labelledby="notifications" class="dropdown-menu">
-                                <li><a rel="nofollow" href="#" class="dropdown-item d-flex">
-                                        <div class="msg-profile"> <img src="img/avatar-1.jpg" alt="..." class="img-fluid rounded-circle"></div>
-                                        <div class="msg-body">
-                                            <h3 class="h5">Jason Doe</h3><span>sent you a direct message</span><small>3 days ago at 7:58 pm - 10.06.2014</small>
-                                        </div></a></li>
-                                <li><a rel="nofollow" href="#" class="dropdown-item d-flex">
-                                        <div class="msg-profile"> <img src="img/avatar-2.jpg" alt="..." class="img-fluid rounded-circle"></div>
-                                        <div class="msg-body">
-                                            <h3 class="h5">Frank Williams</h3><span>sent you a direct message</span><small>3 days ago at 7:58 pm - 10.06.2014</small>
-                                        </div></a></li>
-                                <li><a rel="nofollow" href="#" class="dropdown-item d-flex">
-                                        <div class="msg-profile"> <img src="img/avatar-3.jpg" alt="..." class="img-fluid rounded-circle"></div>
-                                        <div class="msg-body">
-                                            <h3 class="h5">Ashley Wood</h3><span>sent you a direct message</span><small>3 days ago at 7:58 pm - 10.06.2014</small>
-                                        </div></a></li>
-                                <li><a rel="nofollow" href="#" class="dropdown-item all-notifications text-center"> <strong> <i class="fa fa-envelope"></i>Read all messages    </strong></a></li>
-                            </ul>
-                        </li>
-
-                        <!-- Log out-->
-                        <li class="nav-item"><a href="login.html" class="nav-link logout"> <span class="d-none d-sm-inline-block">Logout</span><i class="fas fa-sign-out-alt"></i></a></li>
-                    </ul>
-                </div>
+          <div class="container-fluid">
+            <div class="navbar-holder d-flex align-items-center justify-content-between">
+              <div class="navbar-header"><a id="toggle-btn" href="#" class="menu-btn"><i class="icon-bars"> </i></a><a href="index.html" class="navbar-brand">
+                  <div class="brand-text d-none d-md-inline-block"><span> </span><strong class="text-primary">INSTAGUI</strong></div></a></div>
+              <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
+                <!-- Notifications dropdown-->
+                <li class="nav-item dropdown"> <a id="notifications" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link"><i class="fa fa-bell"></i><span class="badge badge-warning">12</span></a>
+                  <ul aria-labelledby="notifications" class="dropdown-menu">
+                    <li><a rel="nofollow" href="#" class="dropdown-item"> 
+                        <div class="notification d-flex justify-content-between">
+                          <div class="notification-content"><i class="fa fa-envelope"></i>You have 6 new messages </div>
+                          <div class="notification-time"><small>4 minutes ago</small></div>
+                        </div></a></li>
+                    <li><a rel="nofollow" href="#" class="dropdown-item"> 
+                        <div class="notification d-flex justify-content-between">
+                          <div class="notification-content"><i class="fa fa-twitter"></i>You have 2 followers</div>
+                          <div class="notification-time"><small>4 minutes ago</small></div>
+                        </div></a></li>
+                    <li><a rel="nofollow" href="#" class="dropdown-item"> 
+                        <div class="notification d-flex justify-content-between">
+                          <div class="notification-content"><i class="fa fa-upload"></i>Server Rebooted</div>
+                          <div class="notification-time"><small>4 minutes ago</small></div>
+                        </div></a></li>
+                    <li><a rel="nofollow" href="#" class="dropdown-item"> 
+                        <div class="notification d-flex justify-content-between">
+                          <div class="notification-content"><i class="fa fa-twitter"></i>You have 2 followers</div>
+                          <div class="notification-time"><small>10 minutes ago</small></div>
+                        </div></a></li>
+                    <li><a rel="nofollow" href="#" class="dropdown-item all-notifications text-center"> <strong> <i class="fa fa-bell"></i>view all notifications                                            </strong></a></li>
+                  </ul>
+                </li>
+                <!-- Messages dropdown-->
+                <li class="nav-item dropdown"> <a id="messages" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link"><i class="fa fa-envelope"></i><span class="badge badge-info">10</span></a>
+                  <ul aria-labelledby="notifications" class="dropdown-menu">
+                    <li><a rel="nofollow" href="#" class="dropdown-item d-flex"> 
+                        <div class="msg-profile"> <img src="{{asset('assets/img/avatar.png')}}" alt="..." class="img-fluid rounded-circle"></div>
+                        <div class="msg-body">
+                          <h3 class="h5">Jason Doe</h3><span>sent you a direct message</span><small>3 days ago at 7:58 pm - 10.06.2014</small>
+                        </div></a></li>
+                    <li><a rel="nofollow" href="#" class="dropdown-item d-flex"> 
+                        <div class="msg-profile"> <img src="{{asset('assets/img/avatar.png')}}" alt="..." class="img-fluid rounded-circle"></div>
+                        <div class="msg-body">
+                          <h3 class="h5">Frank Williams</h3><span>sent you a direct message</span><small>3 days ago at 7:58 pm - 10.06.2014</small>
+                        </div></a></li>
+                    <li><a rel="nofollow" href="#" class="dropdown-item d-flex"> 
+                        <div class="msg-profile"> <img src="{{asset('assets/img/avatar.png')}}" alt="..." class="img-fluid rounded-circle"></div>
+                        <div class="msg-body">
+                          <h3 class="h5">Ashley Wood</h3><span>sent you a direct message</span><small>3 days ago at 7:58 pm - 10.06.2014</small>
+                        </div></a></li>
+                    <li><a rel="nofollow" href="#" class="dropdown-item all-notifications text-center"> <strong> <i class="fa fa-envelope"></i>Read all messages    </strong></a></li>
+                  </ul>
+                </li>
+               
+                <!-- Log out-->
+                <li class="nav-item"><a href="login.html" class="nav-link logout"> <span class="d-none d-sm-inline-block">Logout</span><i class="fas fa-sign-out-alt"></i></a></li>
+              </ul>
             </div>
+          </div>
         </nav>
-    </header>
-    <!-- Breadcrumb-->
-    <div class="breadcrumb-holder">
+      </header>
+      <!-- Breadcrumb-->
+      <div class="breadcrumb-holder">
         <div class="container-fluid">
-            <ul class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">VETIXY</a></li>
-                <li class="breadcrumb-item active">{{page}}</li>
-            </ul>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">VETIXY</a></li>
+            <li class="breadcrumb-item active">{{page}}</li>
+          </ul>
         </div>
-    </div>
-
+      </div>
+      
     {% endblock %}
     {% block Section %}
     {% endblock %}
-
-    {% block Footer %}
-
-    <footer class="main-footer">
+     
+    {% block Footer %}  
+        
+      <footer class="main-footer">
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm-6">
-                    <p>VETIXY &copy; 2018-2019</p>
-                </div>
-                <div class="col-sm-6 text-right">
-                    <p>Design by <a href="https://bootstrapious.com" class="external">Bootstrapious</a></p>
-                    <!-- Please do not remove the backlink to us unless you support further theme's development at https://bootstrapious.com/donate. It is part of the license conditions and it helps me to run Bootstrapious. Thank you for understanding :)-->
-                </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <p>VETIXY &copy; 2018-2019</p>
             </div>
+            <div class="col-sm-6 text-right">
+              <p>Design by <a href="https://bootstrapious.com" class="external">Bootstrapious</a></p>
+              <!-- Please do not remove the backlink to us unless you support further theme's development at https://bootstrapious.com/donate. It is part of the license conditions and it helps me to run Bootstrapious. Thank you for understanding :)-->
+            </div>
+          </div>
         </div>
-    </footer>
-</div>
-{% endblock %}
-
-{% block javascripts %}
-    <!-- JavaScript files-->
+      </footer>
+      </div>  
+      {% endblock %}
+      
+        {% block javascripts %}
+        <!-- JavaScript files-->
     <script src="{{ asset('assets/vendor/jquery/jquery.min.js')}}"></script>
     <script src="{{ asset('assets/vendor/popper.js/umd/popper.min.js')}}"> </script>
     <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.min.js')}}"></script>
@@ -165,34 +169,38 @@
     <script src="{{ asset('assets/vendor/jquery-validation/jquery.validate.min.js')}}"></script>
     <script src="{{ asset('assets/vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js')}}"></script>
     <script src="{{ asset('assets/js/charts-home.js')}}"></script>
+    <script src="{{ asset('assets/js/ajax.js')}}"></script> 
     <script src="{{ asset('assets/js/bootstrap-tagsinput.js')}}"></script>
     <script src="{{ asset('assets/js/bootstrap-input-spinner.js')}}"></script>
     <script src="{{ asset('assets/js/bootstrap-toggle.min.js')}}"></script>
     <script src="{{ asset('assets/js/charts-custom.js')}}"></script>
+    <script src="{{ asset('assets/js/bootstrap-notify.min.js')}}"></script>     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-    <script type="text/javascript" src="datePicker/moment/min/moment.min.js"></script>
-    <script type="text/javascript" src="datePicker/moment/min/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script> 
+    <script type="text/javascript" src="{{ asset('assets/js/moment/moment.min.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/moment/moment-with-locales.min.js')}}"></script>
     <!-- Main File-->
     <script src="{{ asset('assets/js/front.js')}}"></script>
-
-    <script>
-        $("input[type='number']").inputSpinner({postfix: '%'});
-
-        //date picker
-        $(document).ready(function(){
-            var date_input=$('input[name="dateDebut"]'); //our date input has the name "date"
-            var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-            var options={
-                format: 'yyyy/mm/dd',
-                container: container,
-                todayHighlight: true,
-                autoclose: true,
-            };
-            date_input.datepicker(options);
-        })
-    </script>
-{% endblock %}
-</body>
+   
+  <script>
+    $("input[type='number']").inputSpinner({postfix: '%'});
+    
+  //date picker
+    $(document).ready(function(){
+      var date_input=$('input[name="dateDebut"]'); //our date input has the name "date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'yyyy/mm/dd',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+     });
+    
+              
+ </script>
+        {% endblock %}
+    </body>
 </html>
 
