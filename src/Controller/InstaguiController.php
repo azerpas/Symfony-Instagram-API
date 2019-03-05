@@ -63,7 +63,7 @@ class InstaguiController extends AbstractController
             $task = $form->getData();
             //echo serialize($task);
 
-            $this->signInIg($task->getUsername(),$task->getPassword());
+            //$this->signInIg($task->getUsername(),$task->getPassword());
             // make it return a response 200 if process RUN without ERROR
 
             // ... perform some action, such as saving the task to the database
@@ -80,9 +80,9 @@ class InstaguiController extends AbstractController
     }
 
     public function signInIg($username,$password){
-        $kernel = $this->container->get('kernel');
+        //$kernel = $this->container->get('kernel');
         $process = new Process('php bin/console instachecker '.$username.' '.$password);
-        $process->setWorkingDirectory($kernel->getProjectDir());
+        //$process->setWorkingDirectory($kernel->getProjectDir());
         $process->run(function ($type, $buffer) {
             if (Process::ERR === $type) {
                 echo 'ERR > '.$buffer;
@@ -90,6 +90,7 @@ class InstaguiController extends AbstractController
                 echo 'OUT > '.$buffer.'<br>';
             }
         });
+        sleep(10);
         return new Response("Successfully launched process");
     }
 
