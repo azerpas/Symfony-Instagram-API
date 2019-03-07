@@ -24,7 +24,7 @@ class People
     /**
      * @ORM\Column(type="integer")
      */
-    private $insta_id;
+    private $instaId;
 
     /**
      * @ORM\Column(type="boolean")
@@ -70,12 +70,12 @@ class People
 
     public function getInstaId(): ?int
     {
-        return $this->insta_id;
+        return $this->instaId;
     }
 
-    public function setInstaId(int $insta_id): self
+    public function setInstaId(int $instaId): self
     {
-        $this->insta_id = $insta_id;
+        $this->instaId = $instaId;
 
         return $this;
     }
