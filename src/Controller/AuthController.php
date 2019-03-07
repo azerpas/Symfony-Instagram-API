@@ -28,7 +28,7 @@ class AuthController extends Controller{
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('app_login');
         }
         return $this->render('instagui/register.html.twig', ['form'=>$form->createView()]);
     }
