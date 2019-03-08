@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class InstaController extends AbstractController
 {
     /**
-     * @Route("/", name="insta", methods="GET")
+     * @Route("/insta", name="insta", methods="GET")
      */
     public function index(Request $request, KernelInterface $kernel)
     {

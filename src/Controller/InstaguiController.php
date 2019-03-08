@@ -126,31 +126,31 @@ class InstaguiController extends AbstractController
         ]);
     }
 
-         /**
+    /**
     * @Route("/instagui/set_search_bot", name="set_search_bot", methods={"POST"},condition="request.isXmlHttpRequest()")
     */
 
-public function setBotParameters(Request $req){
-       
-    $tags=$req->request->get('white_list_tags');
-    
-return new JsonResponse(['output'=> $tags]);
+    public function setBotParameters(Request $req){
+
+        $tags=$req->request->get('white_list_tags');
+
+    return new JsonResponse(['output'=> $tags]);
 
 
-}
+    }
 
-/**
-* @Route("/instagui/set_bot_status", name="set_bot_status", methods={"POST"},condition="request.isXmlHttpRequest()")
-*/
+    /**
+    * @Route("/instagui/set_bot_status", name="set_bot_status", methods={"POST"},condition="request.isXmlHttpRequest()")
+    */
 
-public function setBotStatus(Request $req){
-   
-    $bot=$req->request->get('bot');
-    $value=$req->request->get('value');
-   
-        $message=$bot." bot turned ".$value;
-return new JsonResponse(['output'=> $message]);
+    public function setBotStatus(Request $req){
+
+        $bot=$req->request->get('bot');
+        $value=$req->request->get('value');
+
+            $message=$bot." bot turned ".$value;
+    return new JsonResponse(['output'=> $message]);
 
 
-}
+    }
 }

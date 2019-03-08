@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        {% block HomeStylesheet %}
+            <link rel="stylesheet" href="https://getbootstrap.com/docs/4.3/examples/cover/cover.css"/>
+            <link rel="stylesheet" href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.min.css"/>
+            {% block Stylesheet %}{% endblock %}
+            <style>
+                body{
+                    background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+                    text-shadow: 0 0.05rem 0.05rem rgba(0, 0, 0, .5);
+                }
+                .nav-masthead .nav-link{
+                    color:white;
+                }
+            </style>
+        {% endblock %}
+    </head>
+    {% block body %}
+    <body class="text-center">
+        <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+            {% block Navigation %}
+            <header class="masthead mb-auto">
+                <div class="inner">
+                    <h3 class="masthead-brand">Instagui</h3>
+                    <nav class="nav nav-masthead justify-content-center">
+                        <a class="nav-link active" href="#">Home</a>
+                        <a class="nav-link" href="/features">Features</a>
+                        <a class="nav-link" href="/contact">Contact</a>
+                        <a class="nav-link" href="/register">Register</a>
+                        <a class="nav-link" href="/login">Log in</a>
+                    </nav>
+                </div>
+            </header>
+            {% endblock %}
+            {% block content %}
+            <main role="main" class="inner cover">
+                <h1 class="cover-heading">The Easiest Instagram SEO tool</h1>
+                <p class="lead">Let our solution use your Instagram as you will do in an automatic and efficient way, sit relax and just watch!</p>
+                <p class="lead">
+                    <a href="#" class="btn btn-lg btn-dark">Learn more</a>
+                </p>
+            </main>
+            {% endblock %}
+
+            <footer class="mastfoot mt-auto">
+                <div class="btn-group">
+                    <!-- btn: contact - vetixy - terms - etc -->
+                </div>
+            </footer>
+        </div>
+    </body>
+    {% endblock %}
+</html>
