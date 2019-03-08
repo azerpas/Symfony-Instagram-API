@@ -19,12 +19,13 @@ class AuthController extends Controller{
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder){
         $user = new User();
         $form = $this->createForm(UserType::class,$user)
-            ->add('save', SubmitType::class, ['label' => 'Create Account']);
+            ->add('save', SubmitType::class, ['label' => 'Create Account','attr' => ['class' => 'btn btn-lg btn-primary']]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $passwordEncoder->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
             $user->setRoles(['ROLE_USER']);
+            // To add, check if username already taken, then render page with every arguments with changing username
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
