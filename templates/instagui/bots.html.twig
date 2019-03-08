@@ -10,10 +10,6 @@
       <section class="dashboard-counts section-padding">  
          {% set bot = 'search' %}    
          {{ include( 'instagui/component/search.html.twig',sandboxed = true) }}
-         {% set bot = 'follow' %}    
-         {{ include( 'instagui/component/follow.html.twig',sandboxed = true) }}
-         {% set bot = 'unfollow' %}    
-         {{ include( 'instagui/component/unFollow.html.twig',sandboxed = true) }}
           {% set bot = 'message_sender' %}    
          {{ include( 'instagui/component/message.html.twig',sandboxed = true) }}
       </section>     

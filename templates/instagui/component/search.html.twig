@@ -4,6 +4,7 @@
 
 <div class="section-padding">
                             <form name="searchForm">
+                            <!-- saerch  config start  -->  
                               <div class="form-group row ">
                                 <div class=" col-3 vcenter "><label class="form-control-label">Hashtags </label></div>
                                 <div class="col vcenter"> <input type="text" name="hashtags" value="" data-role="tagsinput" placeholder="Add tags #"></div>
@@ -57,8 +58,52 @@
                                     <label for="radioCustom22">Non</label>
                                   </div>
                               </div>
-                                
-                            </form> 
+                              <!-- search config end   -->
+                              
+                              <!--separator --> 
+                              <div class="w-100"><hr></div>
+
+ 
+                              <!-- follow config start  -->   
+                              <div class="form-group row">
+                              <label class="form-control-label col-3 vcenter"> </label>
+                              
+                              <input id="number" data-prefix="Heurs" type="number" value="50" class="col-6">
+                              </div>
+                              <div class="form-group row">
+                              <label class="form-control-label col-3">Maximum fallow </label>
+                            
+                              <input id="number" data-prefix="Jours" type="number" value="50" class="col-6">
+                              </div>
+                              <div class="form-group row">
+                              <label class="form-control-label col-3"></label>
+  
+                              <input id="number" data-prefix="Mois"  type="number" value="50" class="col-6">
+                              </div> 
+                            
+                             <!-- follow config end  --> 
+
+                              <!--separator --> 
+                              <div class="w-100"><hr></div> 
+                               <!-- unfollow config start  --> 
+                              <div class="form-group row">
+                              <label class="form-control-label col-3 vcenter">day to unfollow </label>
+                              
+                              <input id="number" data-prefix="jours" type="number" value="6" class="col-6">
+                              </div>
+                               <div class="form-group row">
+                              <label class="form-control-label col-3">Add to blackList </label>
+                                <div class="i-checks col-3 ">
+                                    <input id="radio-{{bot}}-oui" type="radio" value="1" name="radio-{{bot}}" class="form-control-custom radio-custom">
+                                    <label for="radio-{{bot}}-oui">Oui</label>
+                                  </div>
+                                  <div class="i-checks col-3">
+                                    <input id="radio-{{bot}}-non" type="radio" checked="" value="0" name="radio-{{bot}}" class="form-control-custom radio-custom">
+                                    <label for="radio-{{bot}}-non">Non</label>
+                                  </div>
+                              </div> 
+                              <!-- unfollow config end  -->
+                              </form> 
                              <div class="form-group">
                                    <button class="btn btn-primary float-right" type="button" onclick="searchBot_config()">Enregistrer</button>  
                               </div>

@@ -3,11 +3,12 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\component\Security\Core\user\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AccountRepository")
  */
-class Account
+class Account implements UserInterface
 {
     /**
      * @ORM\Id()
