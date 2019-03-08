@@ -14,6 +14,7 @@ Instagui is a PHP bot using mgp25/InstagramAPI created for Vetixy. It does have 
 - Better UI for Home screen
 - Sub process
 - CRON
+- Wiki
 
 ## If we have time left:
 - Upgrade performances 
