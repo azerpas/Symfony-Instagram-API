@@ -21,20 +21,20 @@ class InstaSearchCommand extends ContainerAwareCommand
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {$only = $input->getOption('only');
-       foreach( $input->getArgument('tags') as $tag)
-        { echo $tag;
+    protected function execute(InputInterface $input, OutputInterface $output){
+        $only = $input->getOption('only');
+        foreach( $input->getArgument('tags') as $tag){
+            echo $tag;
             $info = $this->getUsresByHashtags($tag);
-        echo $info;
+            echo $info;
         }   
     }
 
    
 
-    private function getUsresByHashtags($hashtag)
-    {   echo "Get instagram account by hashtags\n";
-         $hashtag  =  new Hashtag("rferfreg");
-         $hashtag->getInfo($hashtag);
+    private function getUsresByHashtags($hashtag){
+        echo "Get instagram account by hashtags\n";
+        $hashtag  =  new Hashtag("rferfreg");
+        $hashtag->getInfo($hashtag);
     }
 }
