@@ -2,7 +2,7 @@
 
 ## Introduction:
 
-Instagui is a PHP bot created for Vetixy. It does have every functionnalites an Instagram bot should have. The main goal of this project is to allow Vetixy to regroup stats about their account and furthermore get a better SEO.
+Instagui is a PHP bot using mgp25/InstagramAPI created for Vetixy. It does have every functionnalites an Instagram bot should have. The main goal of this project is to allow Vetixy to regroup stats about their account and furthermore get a better SEO.
 
 ## Requirements:
 - PHP
