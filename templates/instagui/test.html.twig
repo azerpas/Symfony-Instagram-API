@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}INSTAGUI{% endblock %}
+
+{% block Navbar %}
+    {{parent()}}
+{% endblock %}
+
+{% block Section %}
+    <div class="container-fluid mt-2">
+        <div class="row">
+            {{ form(form) }}
+    </div>
+{% endblock %}
+
+{% block Footer %}
+    {{parent()}}
+{% endblock %}
