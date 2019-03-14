@@ -120,3 +120,69 @@ function run_bot(toggle) {
         },
     });
 }
+
+runTestIgAcc = () => {
+    let username = $('#form_username').val();
+    let password = $('#form_password').val();
+    if(username === "" || password === ""){
+        $.notify(
+            {
+                icon:'fa fa-exclamation-circle',
+                title: "<strong>Form data</strong> ",
+                message:"Username or password empty"
+            },
+            {
+                type:'danger',
+                delay: 3000,
+                timer: 1000,
+                offset: 50
+            }
+        );
+        return;
+    }
+    $.ajax({
+        'type':'post',
+        'data':{
+            'username':username,
+            'password':password
+        },
+        'url':'/instagui/testIgAccount',
+        complete:function(data,status){
+            if(data.status !== 200){
+                return;
+            }
+            //console.log('COMPLETE:')
+            //console.log(data.responseJSON.output);
+            //console.log(data.status);
+            $.notify({
+                icon:'fa fa-check-circle',
+                title: "<strong>Success :</strong> ",
+                message:data.responseJSON.output // data below
+            },
+            {
+                type:'success',
+                delay: 5000,
+                timer: 1000,
+                offset: 50
+            });
+        },
+        error:function(jqXHR, textStatus) {
+            //console.log('ERROR');
+            //console.log(jqXHR.responseJSON);
+            //console.log(jqXHR.responseJSON.status);
+            $.notify({
+                    icon:'fa fa-exclamation-circle',
+                    title: "<strong>"+textStatus+" :</strong> ",
+                    message:jqXHR.responseJSON.output
+            },
+            {
+                type:'danger',
+                delay: 5000,
+                timer: 1000,
+                offset: 50
+            });
+        }
+
+    });
+    return true;
+}
