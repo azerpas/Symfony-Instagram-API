@@ -11,6 +11,7 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -55,8 +56,8 @@ class InstaguiController extends AbstractController
         $task = new SignInIg();
         $form = $this->createFormBuilder($task)
             ->add('username', TextType::class)
-            ->add('password', TextType::class)
-            ->add('connect', ButtonType::class, ['label'=> 'Test connection', 'attr' => ['onclick' => 'Connect()']])
+            ->add('password', PasswordType::class)
+            ->add('connect', ButtonType::class, ['label'=> 'Test connection', 'attr' => ['onclick' => 'runTestIgAcc()']])
             ->add('save', SubmitType::class, ['label' => 'Create Task'])
             ->getForm();
         $form->handleRequest($request);
@@ -80,18 +81,24 @@ class InstaguiController extends AbstractController
         ]);
     }
 
-    public function signInIg($username,$password){
+    /**
+     * @Route("/instagui/signInTest")
+     * @return Response
+     */
+    public function signInIg(){
         //$kernel = $this->container->get('kernel');
-        $process = new Process('php bin/console instachecker '.$username.' '.$password);
+        $process = new Process('php bin/console insta:instance alexis ruffier');
+        $process->setWorkingDirectory(getcwd());
+        $process->setWorkingDirectory("../");
         //$process->setWorkingDirectory($kernel->getProjectDir());
         $process->run(function ($type, $buffer) {
             if (Process::ERR === $type) {
                 echo 'ERR > '.$buffer;
+                return new Response("Canno't connect to Instagram, please check your params");
             } else {
                 echo 'OUT > '.$buffer.'<br>';
             }
         });
-        sleep(10);
         return new Response("Successfully launched process");
     }
 
@@ -133,10 +140,7 @@ class InstaguiController extends AbstractController
     public function setBotParameters(Request $req){
 
         $tags=$req->request->get('white_list_tags');
-
-    return new JsonResponse(['output'=> $tags]);
-
-
+        return new JsonResponse(['output'=> $tags]);
     }
 
     /**
@@ -147,10 +151,31 @@ class InstaguiController extends AbstractController
 
         $bot=$req->request->get('bot');
         $value=$req->request->get('value');
+        $message=$bot." bot turned ".$value;
+        return new JsonResponse(['output'=> $message]);
 
-            $message=$bot." bot turned ".$value;
-    return new JsonResponse(['output'=> $message]);
+    }
 
-
+    /**
+     * @Route("/instagui/testIgAccount", name="test_ig_account", methods={"POST"},condition="request.isXmlHttpRequest()")
+     */
+    public function testIgAccount(Request $req){
+        $username = $req->request->get('username');
+        $password = $req->request->get('password');
+        try{
+            $process = new Process('php bin/console insta:instance '.$username.' '.$password);
+            $process->setWorkingDirectory(getcwd());
+            $process->setWorkingDirectory("../");
+            $process->start();
+            $process->wait();
+            if($process->isSuccessful()){
+                return new JsonResponse(["output" => "Successfully connected to ".$username],200);
+            }
+            else{
+                return new JsonResponse(["output" => "Please check password/username"],400);
+            }
+        }catch (\Exception $e) {
+            return new JsonResponse(["output" => "Error processing"],403);
+        }
     }
 }
