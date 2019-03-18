@@ -16,8 +16,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
-
+use App\Repository\AccountRepository;
+use Psr\Log\LoggerInterface;
 class InstaguiController extends AbstractController
 {
     /**
@@ -50,7 +50,7 @@ class InstaguiController extends AbstractController
     /**
      * @Route("/instagui/profile", name="inst_profil")
      */
-    public function profilPage( Request $request)
+    public function profilPage( Request $request,LoggerInterface $logger)
     {   $task = new SignInIg();
         $form = $this->createFormBuilder($task)
             ->add('username', TextType::class, ['label_attr' => array('class' => 'form-label'),  'attr' => [ 'class' => 'form-control' ] ])
@@ -74,8 +74,10 @@ class InstaguiController extends AbstractController
 
             return $this->redirectToRoute('task_success');
         }
+        $usr= $this->container->get('security.token_storage')->getToken()->getUser();
+       
+        $logger->info($usr->getUsername());
         
-
         return $this->render('instagui/profile.html.twig', [
            'page'=> 'Profile', 'form'=>$form->createView()
         ]);
@@ -84,32 +86,11 @@ class InstaguiController extends AbstractController
      * @Route("/instagui/parameters", name="inst_params")
      */
     public function paramsPage(Request $request)
-    {
-        $task = new SignInIg();
-        $form = $this->createFormBuilder($task)
-            ->add('username', TextType::class)
-            ->add('password', TextType::class)
-            ->add('connect', ButtonType::class, ['label'=> 'Test connection', 'attr' => ['onclick' => 'Connect()']])
-            ->add('save', SubmitType::class, ['label' => 'Create Task'])
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $task = $form->getData();
-            //echo serialize($task);
-
-            //$this->signInIg($task->getUsername(),$task->getPassword());
-            // make it return a response 200 if process RUN without ERROR
-
-            // ... perform some action, such as saving the task to the database
-            // for example, if Task is a Doctrine entity, save it!
-            // $entityManager = $this->getDoctrine()->getManager();
-            // $entityManager->persist($task);
-            // $entityManager->flush();
-
-            return $this->redirectToRoute('task_success');
-        }
-        return $this->render('instagui/params.html.twig', [
-            'controller_name' => 'InstaguiController','page'=> 'paramètres', 'form'=>$form->createView()
+    {  
+       
+        
+        return $this->render('instagui/parameters.html.twig', [
+            'controller_name' => 'InstaguiController','page'=> 'paramètres'
         ]);
     }
 
@@ -160,14 +141,21 @@ class InstaguiController extends AbstractController
     }
 
     /**
-    * @Route("/instagui/set_search_bot", name="set_search_bot", methods={"POST"},condition="request.isXmlHttpRequest()")
+    * @Route("/instagui/config_bot", name="set_config", methods={"POST"},condition="request.isXmlHttpRequest()")
     */
 
-    public function setBotParameters(Request $req){
+    public function setBotParameters(Request $req,LoggerInterface $logger){
+        
+       
+        
+        if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
+            return new JsonResponse(['error' => 'auth required'], 401);
+         }
+        $config=$req->request->all();
+        $maxFollow= $config['maxfollow']; 
+        $logger->info($this->getUser()->getUsername());
 
-        $tags=$req->request->get('white_list_tags');
-
-    return new JsonResponse(['output'=> $tags]);
+     return new JsonResponse(['output'=> $config]);
 
 
     }

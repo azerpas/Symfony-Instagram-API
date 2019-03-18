@@ -44,6 +44,11 @@ class User implements UserInterface
      */
     private $BackUp;
 
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $accounts = [];
+
     public function getId(): ?int
     {
         return $this->id;
@@ -137,6 +142,18 @@ class User implements UserInterface
     public function setBackUp(?string $BackUp): self
     {
         $this->BackUp = $BackUp;
+
+        return $this;
+    }
+
+    public function getAccounts(): ?array
+    {
+        return $this->accounts;
+    }
+
+    public function setAccounts(?array $accounts): self
+    {
+        $this->accounts = $accounts;
 
         return $this;
     }
