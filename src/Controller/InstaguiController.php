@@ -48,6 +48,39 @@ class InstaguiController extends AbstractController
         ]);
     }
     /**
+     * @Route("/instagui/profile", name="inst_profil")
+     */
+    public function profilPage( Request $request)
+    {   $task = new SignInIg();
+        $form = $this->createFormBuilder($task)
+            ->add('username', TextType::class, ['label_attr' => array('class' => 'form-label'),  'attr' => [ 'class' => 'form-control' ] ])
+            ->add('password', TextType::class, ['label_attr' => array('class' => 'form-label'),   'attr' => [ 'class' => 'form-control' ] ])
+            ->add('connect', ButtonType::class, ['label'=> 'Test connection', 'attr' => ['onclick' => 'Connect()','class' => 'btn btn-info mt-2 ']])
+            ->add('save', SubmitType::class, ['label' => 'Create Task','attr'=> [ 'class' => ' btn btn-primary mt-2' ]])
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $task = $form->getData();
+            //echo serialize($task);
+
+            //$this->signInIg($task->getUsername(),$task->getPassword());
+            // make it return a response 200 if process RUN without ERROR
+
+            // ... perform some action, such as saving the task to the database
+            // for example, if Task is a Doctrine entity, save it!
+            // $entityManager = $this->getDoctrine()->getManager();
+            // $entityManager->persist($task);
+            // $entityManager->flush();
+
+            return $this->redirectToRoute('task_success');
+        }
+        
+
+        return $this->render('instagui/profile.html.twig', [
+           'page'=> 'Profile', 'form'=>$form->createView()
+        ]);
+    }
+    /**
      * @Route("/instagui/parameters", name="inst_params")
      */
     public function paramsPage(Request $request)
