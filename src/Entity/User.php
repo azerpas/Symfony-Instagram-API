@@ -4,7 +4,9 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-
+use App\Entity\Account;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\JoinColumn;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(name="user_account")
@@ -45,9 +47,10 @@ class User implements UserInterface
     private $BackUp;
 
     /**
-     * @ORM\Column(type="array", nullable=true)
+     * @ManyToOne(targetEntity="Account")
+     * @JoinColumn(name="account_id", referencedColumnName="id")
      */
-    private $accounts = [];
+    private $accounts;
 
     public function getId(): ?int
     {
@@ -146,7 +149,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getAccounts(): ?array
+    public function getAccounts(): ?Account
     {
         return $this->accounts;
     }
