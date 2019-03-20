@@ -29,7 +29,11 @@ class instaInstanceCommand extends Command
     {
         $io            = new SymfonyStyle($input, $output);
         $only = $input->getOption('only');
-        return $this->getInstagramInstance($input->getArgument('username'), $input->getArgument('password'));
+        try{
+            return $this->getInstagramInstance($input->getArgument('username'), $input->getArgument('password'));
+        }catch (\Exception $e){
+            throw new \Exception('Getting Instagram Instance went wrong: ' . $e->getMessage());
+        }
 
   
        
