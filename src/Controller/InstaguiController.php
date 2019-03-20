@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\SignInIg;
+use App\Entity\IgAccount;
 use App\Entity\Task;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
@@ -55,7 +55,7 @@ class InstaguiController extends AbstractController
     public function profilPage( Request $request,LoggerInterface $logger)
     {  $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
          
-        $task = new SignInIg();
+        $task = new IgAccount();
         $form = $this->createFormBuilder($task)
             ->add('username', TextType::class, ['label_attr' => array('class' => 'form-label'),  'attr' => [ 'class' => 'form-control' ] ])
             ->add('password', TextType::class, ['label_attr' => array('class' => 'form-label'),   'attr' => [ 'class' => 'form-control' ] ])
