@@ -48,7 +48,7 @@ class User implements UserInterface
 
     /**
      * @ManyToOne(targetEntity="Account")
-     * @JoinColumn(name="account_id", referencedColumnName="id")
+     * @JoinColumn(name="accounts", referencedColumnName="id")
      */
     private $accounts;
 

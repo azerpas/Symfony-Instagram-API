@@ -2,8 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\SignInIg;
-use App\Entity\Task;
+use App\Entity\IgAccount;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Routing\Annotation\Route;
@@ -55,7 +54,7 @@ class InstaguiController extends AbstractController
     public function profilPage( Request $request,LoggerInterface $logger)
     {  $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
          
-        $task = new SignInIg();
+        $task = new IgAccount();
         $form = $this->createFormBuilder($task)
             ->add('username', TextType::class, ['label_attr' => array('class' => 'form-label'),  'attr' => [ 'class' => 'form-control' ] ])
             ->add('password', TextType::class, ['label_attr' => array('class' => 'form-label'),   'attr' => [ 'class' => 'form-control' ] ])
@@ -103,7 +102,7 @@ class InstaguiController extends AbstractController
      * @Route("/instagui/signInTest")
      * @return Response
      */
-    public function signInIg(){
+    public function IgAccount(){
         //$kernel = $this->container->get('kernel');
         $process = new Process('php bin/console insta:instance alexis ruffier');
         $process->setWorkingDirectory(getcwd());
@@ -128,7 +127,7 @@ class InstaguiController extends AbstractController
     }
 
     public function sign(Request $request){
-        $task = new Task();
+        $task = new IgAccount();
         $task->setTask('Form for instagram');
         $form = $this->createFormBuilder($task)
             ->add('task', TextType::class)

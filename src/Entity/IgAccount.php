@@ -1,8 +1,7 @@
 <?php
-// src/Entity/SignInIg.php
 namespace App\Entity;
 
-class SignInIg
+class IgAccount
 {
     protected $username;
     protected $password;
