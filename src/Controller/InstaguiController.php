@@ -59,7 +59,7 @@ class InstaguiController extends AbstractController
         $form = $this->createFormBuilder($task)
             ->add('username', TextType::class, ['label_attr' => array('class' => 'form-label'),  'attr' => [ 'class' => 'form-control' ] ])
             ->add('password', TextType::class, ['label_attr' => array('class' => 'form-label'),   'attr' => [ 'class' => 'form-control' ] ])
-            ->add('connect', ButtonType::class, ['label'=> 'Test connection', 'attr' => ['onclick' => 'Connect()','class' => 'btn btn-info mt-2 ']])
+            ->add('connect', ButtonType::class, ['label'=> 'Test connection', 'attr' => ['onclick' => 'runTestIgAcc()','class' => 'btn btn-info mt-2 ']])
             ->add('save', SubmitType::class, ['label' => 'Create Task','attr'=> [ 'class' => ' btn btn-primary mt-2' ]])
             ->getForm();
         $form->handleRequest($request);
