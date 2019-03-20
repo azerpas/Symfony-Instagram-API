@@ -25,15 +25,15 @@
 
 
 // send config forms to server
-function searchBot_config() {
+function config() {
     //get parameters value 
     
     
     
     $.ajax({
         type:'post',
-        data:$("[name=searchForm]").serialize() ,
-        url:'/instagui/set_search_bot',
+        data:$("[name=configForm]").serialize() ,
+        url:'/instagui/config_bot',
        
         success: function(data){
             console.log(data.output);

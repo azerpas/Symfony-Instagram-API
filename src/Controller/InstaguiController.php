@@ -17,15 +17,16 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
-
+use App\Repository\AccountRepository;
+use Psr\Log\LoggerInterface;
+use App\Service\DBRequest;
 class InstaguiController extends AbstractController
 {
     /**
      * @Route("/instagui/home", name="inst_home")
      */
     public function homePage()
-    {
+    {   $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         return $this->render('instagui/home.html.twig', [
             'controller_name' => 'InstaguiController','page'=> 'home'
         ]);
@@ -35,7 +36,7 @@ class InstaguiController extends AbstractController
      * @Route("/instagui/bots", name="inst_bots")
      */
     public function botsPage()
-    {
+    {   $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         return $this->render('instagui/bots.html.twig', ['controller_name' => 'InstaguiController','page'=> 'bots']);
     }
 
@@ -43,22 +44,23 @@ class InstaguiController extends AbstractController
      * @Route("/instagui/charts", name="inst_charts")
      */
     public function chartsPage()
-    {
+    {   $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         return $this->render('instagui/stat.html.twig', [
             'controller_name' => 'InstaguiController','page'=> 'statistiques'
         ]);
     }
     /**
-     * @Route("/instagui/parameters", name="inst_params")
+     * @Route("/instagui/profile", name="inst_profil")
      */
-    public function paramsPage(Request $request)
-    {
+    public function profilPage( Request $request,LoggerInterface $logger)
+    {  $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+         
         $task = new SignInIg();
         $form = $this->createFormBuilder($task)
-            ->add('username', TextType::class)
-            ->add('password', PasswordType::class)
-            ->add('connect', ButtonType::class, ['label'=> 'Test connection', 'attr' => ['onclick' => 'runTestIgAcc()']])
-            ->add('save', SubmitType::class, ['label' => 'Create Task'])
+            ->add('username', TextType::class, ['label_attr' => array('class' => 'form-label'),  'attr' => [ 'class' => 'form-control' ] ])
+            ->add('password', TextType::class, ['label_attr' => array('class' => 'form-label'),   'attr' => [ 'class' => 'form-control' ] ])
+            ->add('connect', ButtonType::class, ['label'=> 'Test connection', 'attr' => ['onclick' => 'Connect()','class' => 'btn btn-info mt-2 ']])
+            ->add('save', SubmitType::class, ['label' => 'Create Task','attr'=> [ 'class' => ' btn btn-primary mt-2' ]])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -76,8 +78,24 @@ class InstaguiController extends AbstractController
 
             return $this->redirectToRoute('task_success');
         }
-        return $this->render('instagui/params.html.twig', [
-            'controller_name' => 'InstaguiController','page'=> 'paramètres', 'form'=>$form->createView()
+        $usr= $this->container->get('security.token_storage')->getToken()->getUser();
+       
+        $logger->info($usr->getUsername());
+        
+        return $this->render('instagui/profile.html.twig', [
+           'page'=> 'Profile', 'form'=>$form->createView()
+        ]);
+    }
+    /**
+     * @Route("/instagui/parameters", name="inst_params")
+     */
+    public function paramsPage(Request $request)
+    {   //check for login user redirect if null
+        
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');  
+        
+        return $this->render('instagui/parameters.html.twig', [
+            'controller_name' => 'InstaguiController','page'=> 'paramètres'
         ]);
     }
 
@@ -134,13 +152,19 @@ class InstaguiController extends AbstractController
     }
 
     /**
-    * @Route("/instagui/set_search_bot", name="set_search_bot", methods={"POST"},condition="request.isXmlHttpRequest()")
+    * @Route("/instagui/config_bot", name="set_config", methods={"POST"},condition="request.isXmlHttpRequest()")
     */
 
-    public function setBotParameters(Request $req){
+    public function setBotParameters(Request $req,LoggerInterface $logger,DBRequest $service){
 
-        $tags=$req->request->get('white_list_tags');
-        return new JsonResponse(['output'=> $tags]);
+        if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
+            return new JsonResponse(['error' => 'auth required'], 401);
+         }
+        $logger->info($this->getUser()->getUsername());
+        $value=$service->setParams($this->getUser(),$req->request->all()); 
+     return new JsonResponse(['output'=> $value]);
+
+
     }
 
     /**
