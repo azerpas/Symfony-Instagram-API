@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Account;
 use App\Entity\IgAccount;
 use App\Entity\Task;
 use App\Entity\User;
@@ -57,7 +58,7 @@ class InstaguiController extends AbstractController
     public function profilPage(Request $request,LoggerInterface $logger,DBRequest $DBRequest)
     {  $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $usrr = $this->getUser();
-        $ig = new IgAccount();
+        $ig = new Account();
         $form = $this->createFormBuilder($ig)
             ->add('username', TextType::class, ['label_attr' => array('class' => 'form-label'),  'attr' => [ 'class' => 'form-control' ] ])
             ->add('password', TextType::class, ['label_attr' => array('class' => 'form-label'),   'attr' => [ 'class' => 'form-control' ] ])
@@ -67,8 +68,10 @@ class InstaguiController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $ig = $form->getData();
+
             // Insert into database the Instagram Account into usrr "accounts" column using DBRequest service.
             $DBRequest->assignInstagramAccount($usrr->getUsername(),$ig->getUsername(),$ig->getPassword());
+
             return $this->redirectToRoute('task_success');
         }
         $usr= $this->container->get('security.token_storage')->getToken()->getUser();
@@ -202,8 +205,8 @@ class InstaguiController extends AbstractController
     public function userAccounts(){
         $usr = $this->getDoctrine()
             ->getRepository(User::class)
-            ->find(6);
-        return new Response('Test '.$usr->getUsername());
+            ->find($this->getUser());
+        return new Response('Test '.$usr->getIgAccounts());
     }
 
 }
