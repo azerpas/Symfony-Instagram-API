@@ -194,4 +194,5 @@ class InstaguiController extends AbstractController
             return new JsonResponse(["output" => "Error processing"],403);
         }
     }
+
 }
