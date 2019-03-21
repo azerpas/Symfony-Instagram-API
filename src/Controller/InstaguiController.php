@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\IgAccount;
 use App\Entity\Task;
+use App\Entity\User;
 use App\Service\DBRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
@@ -193,6 +194,16 @@ class InstaguiController extends AbstractController
         }catch (\Exception $e) {
             return new JsonResponse(["output" => "Error processing"],403);
         }
+    }
+
+    /**
+     * @Route("/testDB", name="testDb")
+     */
+    public function userAccounts(){
+        $usr = $this->getDoctrine()
+            ->getRepository(User::class)
+            ->find(6);
+        return new Response('Test '.$usr->getUsername());
     }
 
 }

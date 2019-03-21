@@ -2,7 +2,9 @@
 
 namespace App\Service;
 use App\Entity\Account;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use http\Env\Response;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -38,7 +40,7 @@ class DBRequest{
         $account=$qb->select('a')
             ->from('Account', 'a')
             ->where('t.username =:username')
-            ->setParameter('userName', $username)
+            ->setParameter('username', $username)
             ->getQuery()
             ->getResult();
         if($account == null){
