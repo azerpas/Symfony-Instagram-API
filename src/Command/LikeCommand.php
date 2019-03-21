@@ -1,6 +1,6 @@
 <?php
 
-// src/Command/FollowCommand.php
+// src/Command/LikeCommand.php
 namespace App\Command;
 
 use InstagramAPI\Response\Model\FriendshipStatus;
@@ -12,18 +12,18 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\ArrayInput;
 
-class FollowCommand extends Command
+class LikeCommand extends Command
 {
     // the name of the command (the part after "bin/console")
-    protected static $defaultName = 'app:follow';
+    protected static $defaultName = 'app:like';
 
     protected function configure()
     {
         $this 
-        ->setDescription('Follow an Instagram user')
+        ->setDescription('Like an Instagram media')
         ->addArgument('username', InputArgument::REQUIRED, 'My username')
         ->addArgument('password', InputArgument::REQUIRED, 'My password')
-        ->addArgument('userId', InputArgument::REQUIRED, 'The Id of the account to follow')
+        ->addArgument('mediaId', InputArgument::REQUIRED, 'The Id of the media to like')
     ;
     }
 
@@ -36,14 +36,13 @@ class FollowCommand extends Command
         $username = $input->getArgument('username');
         $password = $input->getArgument('password');
         $ig = new \InstagramAPI\Instagram($debug, $truncatedDebug);
-        $toFollowId = $input->getArgument('userId');
+        $toLikeId = $input->getArgument('mediaId');
         try {
             $ig->login($username, $password);
-            $ig->people->follow($toFollowId);
-            $output->writeln('Follow done!');
+            $ig->media->like($toLikeId);
+            $output->writeln('Like done!');
         } catch (\Exception $e) {
             throw new \Exception('Something went wrong: ' . $e->getMessage());
         }
     }
-
 }
