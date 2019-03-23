@@ -121,6 +121,8 @@ function run_bot(toggle) {
     });
 }
 
+
+
 runTestIgAcc = () => {
     let username = $('#form_username').val();
     let password = $('#form_password').val();
@@ -185,4 +187,91 @@ runTestIgAcc = () => {
 
     });
     return true;
+}
+
+
+//set slot status on
+function activer(tmpid) {
+    //ajax server request
+    $.ajax({
+       type:'post',
+       data:{"slot":tmpid,"value":'on'} ,
+       url:'/ajax/set_slot',
+
+       success:function(data){
+           document.getElementById(tmpid).className = "btn btn-primary";
+           $.notify(
+               {
+                   icon:'fa fa-check-circle',
+                   title: "<strong>Success :</strong> ",
+                   message:"slot activate"
+               },
+               {
+                   type:'success',
+                   delay: 5000,
+                   timer: 1000,
+                   offset: 50
+               });
+       },
+       error: function(jqXHR, textStatus, errorThrown) {
+          
+           $.notify(
+               {
+                   icon:'fa fa-exclamation-circle',
+                   title: "<strong>"+textStatus+" :</strong> ",
+                   message:jqXHR.status+" "+errorThrown
+               },
+               {
+                   type:'danger',
+                   delay: 5000,
+                   timer: 1000,
+                   offset: 50
+               });
+       },
+   }); 
+    //hide modal window
+   $('#exampleModal').modal('hide');
+  
+}
+//set slot status off 
+function desactiver(tmpid) {
+    //ajax server request
+    $.ajax({
+       type:'post',
+       data:{"slot":tmpid,"value":'off'} ,
+       url:'/ajax/set_slot',
+
+       success:function(data){
+           document.getElementById(tmpid).className = "btn btn-basic";
+           $.notify(
+               {
+                   icon:'fa fa-check-circle',
+                   title: "<strong>Success :</strong> ",
+                   message:"slot deactivated"
+               },
+               {
+                   type:'success',
+                   delay: 5000,
+                   timer: 1000,
+                   offset: 50
+               });
+       },
+       error: function(jqXHR, textStatus, errorThrown) {
+          
+           $.notify(
+               {
+                   icon:'fa fa-exclamation-circle',
+                   title: "<strong>"+textStatus+" :</strong> ",
+                   message:jqXHR.status+" "+errorThrown
+               },
+               {
+                   type:'danger',
+                   delay: 5000,
+                   timer: 1000,
+                   offset: 50
+               });
+       },
+   }); 
+//hide modal window
+$('#exampleModal').modal('hide');
 }

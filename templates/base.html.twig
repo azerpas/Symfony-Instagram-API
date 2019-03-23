@@ -45,17 +45,16 @@
             <li><a href="home"> <i class="fas fa-home"></i>Home</a></li>
             <li><a href="bots"> <i class="fas fa-robot"></i>Bots</a></li>
             <li><a href="charts"> <i class="fas fa-bar-chart"></i>Statistiques</a></li> 
-            <li><a href="history"> <i class="fas fa-share"></i>Publications</a></li> 
-            <li><a href="history"> <i class="fas fa-heart"></i>Abonnées</a></li> 
-            <li><a href="history"> <i class="fas fa-user-plus"></i>Abonnement</a></li>  
+            <li><a href="history"> <i class="fas fa-newspaper"></i>Journal d'activité</a></li> 
           </ul>
         </div>
         <div class="admin-menu">
           <h5 class="sidenav-heading">Second menu</h5>
           <ul id="side-admin-menu" class="side-menu list-unstyled"> 
-            <li><a href="history"> <i class="fas fa-newspaper"></i>Journal d'activité</a></li> 
+            
             <li><a href="profile"> <i class="fas fa-user"></i>Profile</a></li>
             <li><a href="parameters" > <i class="fa fa-cog"></i>Paramétres</a></li>
+            <li><a href="scheduling" > <i class="fa fa-history"></i>Scheduling</a></li>
           </ul>
         </div>
       </div>
@@ -182,7 +181,7 @@
     <!-- Main File-->
     <script src="{{ asset('assets/js/front.js')}}"></script>
    
-  <script>
+   <script>
     $("input[type='number']").inputSpinner({postfix: '%'});
     
   //date picker
@@ -197,12 +196,15 @@
       };
       date_input.datepicker(options);
      });
-    $('#myModal').on('shown.bs.modal hide.bs.modal', function (event) {
-    var tmpid = $(document.activeElement).attr('id'); 
+    $('#exampleModal').on('shown.bs.modal', function (event) {
+    var tmpid = $(event.relatedTarget).attr('id'); 
+    document.getElementById("ModalLabel").innerHTML ="de "+tmpid+"h à "+(Number(tmpid)+1)+"h" ;
     console.log(tmpid);
-  $('#myInput').trigger('focus');
+    document.getElementById("activer").setAttribute("onclick","activer("+tmpid+")" );  
+    document.getElementById("desactiver").setAttribute("onclick","desactiver("+tmpid+")" );  
  
 })
+   
               
  </script>
         {% endblock %}

@@ -35,6 +35,15 @@ class InstaguiController extends AbstractController
         ]);
     }
     
+     /**
+     * @Route("/instagui/scheduling", name="inst_scheduling")
+     */
+    public function schedulingPage(DBRequest $bd)
+    {   $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $slots=$bd->getSlots($this->getUser());
+        return $this->render('instagui/scheduling.html.twig', [ 'page'=> 'scheduling','slots' =>$slots]);
+    }
+    
     /**
      * @Route("/instagui/bots", name="inst_bots")
      */

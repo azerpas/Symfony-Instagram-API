@@ -47,11 +47,11 @@ class Account
     private $settings;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="igAccounts")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="array", nullable=true)
      */
-    private $user_id;
+    private $slots ;
 
+   
     public function getId(): ?int
     {
         return $this->id;
@@ -129,15 +129,16 @@ class Account
         return $this;
     }
 
-    public function getUserId(): ?User
+    public function getSlots()
     {
-        return $this->user_id;
+        return $this->slots;
     }
 
-    public function setUserId(?User $user_id): self
+    public function setSlots($slots): self
     {
-        $this->user_id = $user_id;
-
+        $this->slots = $slots;
         return $this;
     }
+
+    
 }
