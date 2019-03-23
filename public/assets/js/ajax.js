@@ -33,7 +33,7 @@ function config() {
     $.ajax({
         type:'post',
         data:$("[name=configForm]").serialize() ,
-        url:'/instagui/config_bot',
+        url:'/ajax/config_bot',
        
         success: function(data){
             console.log(data.output);
@@ -83,7 +83,7 @@ function run_bot(toggle) {
     $.ajax({
         type:'post',
         data:{"bot":bot,"value":value} ,
-        url:'/instagui/set_bot_status',
+        url:'/ajax/set_bot_status',
 
         success:function(data){
             $.notify(
