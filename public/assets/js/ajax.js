@@ -24,12 +24,9 @@
    });
 
 
-// send config forms to server
+// set bot config
 function config() {
-    //get parameters value 
-    
-    
-    
+   
     $.ajax({
         type:'post',
         data:$("[name=configForm]").serialize() ,
@@ -274,4 +271,45 @@ function desactiver(tmpid) {
    }); 
 //hide modal window
 $('#exampleModal').modal('hide');
+}
+
+editProfile = () => {
+    $.ajax({
+        type:'post',
+        data:$("[name=profile]").serialize() ,
+        url:'/ajax/edit_profile',
+       
+        success: function(data){
+            console.log(data.output);
+             $.notify(
+                 {
+                     icon:'fa fa-check-circle',
+                     title: "<strong>Success :</strong> ",
+                     message:'Configuration sauvgarder'
+                 },
+                 {
+                     type:'success',
+                     delay: 5000,
+                     timer: 1000,
+                     offset: 50
+                 });
+        },
+        error: function(response) {
+                      
+                       //on affiche les erreurs...
+            $.notify(
+                {
+                    icon:'fa fa-exclamation-circle',
+                    title: "<strong>"+textStatus+" :</strong> ",
+                    message:jqXHR.status+" "+errorThrown
+                },
+                {
+                    type:'danger',
+                    delay: 5000,
+                    timer: 1000,
+                    offset: 50
+                }
+             );
+        },
+    });
 }

@@ -75,6 +75,7 @@ class DBRequest{
     * @param email
     */
     public function editProfile($user,$pwd,$email){  
+
         if(strlen($email)!=0)$user->setEmail($email); 
         if(strlen($pwd)!=0)$user->setPassword($pwd);
         $this->em->persist($user);

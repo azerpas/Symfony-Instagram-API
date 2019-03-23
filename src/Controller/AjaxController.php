@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Service\DBRequest;
 class AjaxController extends AbstractController
 {
@@ -33,14 +34,16 @@ class AjaxController extends AbstractController
     * @Route("/ajax/edit_profile", name="edit_profile", methods={"POST"},condition="request.isXmlHttpRequest()")
     */
 
-    public function editProfile(Request $req,DBRequest $bd){
+    public function editProfile(Request $req,DBRequest $bd,UserPasswordEncoderInterface $passwordEncoder){
      
         if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
             return new JsonResponse(['error' => 'auth required'], 401);
          }
         if($req->request->get('pwdConfirm')!== $req->request->get('pwd')) 
             return new JsonResponse(['error'=> ""],200);
-        $value=$bd->editProfile($this->getUser(),$req->request->get('pwd'),$req->request->get('email'));  
+        if(strlen($req->request->get('pwd'))!=0)    
+         $password = $passwordEncoder->encodePassword($this->getUser(),$req->request->get('pwd'));
+        $value=$bd->editProfile($this->getUser(),$password,$req->request->get('email'));  
         
         return new JsonResponse(['Success'=> "profile"],200);
 
