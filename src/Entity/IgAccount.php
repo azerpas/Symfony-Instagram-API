@@ -1,4 +1,5 @@
 <?php
+// src/Entity/IgAccountt.php
 namespace App\Entity;
 
 class IgAccount

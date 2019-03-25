@@ -2,6 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Account;
+use App\Entity\Task;
+use App\Entity\User;
+use App\Service\DBRequest;
 use App\Entity\IgAccount;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
@@ -18,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repository\AccountRepository;
 use Psr\Log\LoggerInterface;
-use App\Service\DBRequest;
+
 class InstaguiController extends AbstractController
 {
     /**
@@ -51,36 +55,29 @@ class InstaguiController extends AbstractController
     /**
      * @Route("/instagui/profile", name="inst_profil")
      */
-    public function profilPage( Request $request,LoggerInterface $logger)
+    public function profilPage(Request $request,LoggerInterface $logger,DBRequest $DBRequest)
     {  $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-         
-        $task = new IgAccount();
-        $form = $this->createFormBuilder($task)
+        $usrr = $this->getUser();
+        $ig = new Account();
+        $form = $this->createFormBuilder($ig)
             ->add('username', TextType::class, ['label_attr' => array('class' => 'form-label'),  'attr' => [ 'class' => 'form-control' ] ])
             ->add('password', TextType::class, ['label_attr' => array('class' => 'form-label'),   'attr' => [ 'class' => 'form-control' ] ])
-            ->add('connect', ButtonType::class, ['label'=> 'Test connection', 'attr' => ['onclick' => 'Connect()','class' => 'btn btn-info mt-2 ']])
+            ->add('connect', ButtonType::class, ['label'=> 'Test connection', 'attr' => ['onclick' => 'runTestIgAcc()','class' => 'btn btn-info mt-2 ']])
             ->add('save', SubmitType::class, ['label' => 'Create Task','attr'=> [ 'class' => ' btn btn-primary mt-2' ]])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $task = $form->getData();
-            //echo serialize($task);
+            $ig = $form->getData();
 
-            //$this->signInIg($task->getUsername(),$task->getPassword());
-            // make it return a response 200 if process RUN without ERROR
-
-            // ... perform some action, such as saving the task to the database
-            // for example, if Task is a Doctrine entity, save it!
-            // $entityManager = $this->getDoctrine()->getManager();
-            // $entityManager->persist($task);
-            // $entityManager->flush();
+            // Insert into database the Instagram Account into usrr "accounts" column using DBRequest service.
+            $DBRequest->assignInstagramAccount($usrr->getUsername(),$ig->getUsername(),$ig->getPassword());
 
             return $this->redirectToRoute('task_success');
         }
         $usr= $this->container->get('security.token_storage')->getToken()->getUser();
-       
         $logger->info($usr->getUsername());
-        
+        $logger->info($usrr->getUsername());
+
         return $this->render('instagui/profile.html.twig', [
            'page'=> 'Profile', 'form'=>$form->createView()
         ]);
@@ -102,7 +99,7 @@ class InstaguiController extends AbstractController
      * @Route("/instagui/signInTest")
      * @return Response
      */
-    public function IgAccount(){
+    public function signInIg(){
         //$kernel = $this->container->get('kernel');
         $process = new Process('php bin/console insta:instance alexis ruffier');
         $process->setWorkingDirectory(getcwd());
@@ -127,7 +124,7 @@ class InstaguiController extends AbstractController
     }
 
     public function sign(Request $request){
-        $task = new IgAccount();
+        $task = new Task();
         $task->setTask('Form for instagram');
         $form = $this->createFormBuilder($task)
             ->add('task', TextType::class)
