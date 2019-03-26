@@ -52,11 +52,11 @@
                        <div class="form-group row">
                            <label class="form-control-label col-3">Scraping private accounts?</label>
                            <div class="i-checks col-3 ">
-                               <input id="radioCustom11" type="radio" value="1" name="a" class="form-control-custom radio-custom">
+                               <input id="radioCustom11" type="radio" value="1" name="private" class="form-control-custom radio-custom">
                                <label for="radioCustom11">Yes</label>
                            </div>
                            <div class="i-checks col-3">
-                               <input id="radioCustom22" type="radio" checked="" value="0" name="a" class="form-control-custom radio-custom">
+                               <input id="radioCustom22" type="radio" checked="" value="0" name="private" class="form-control-custom radio-custom">
                                <label for="radioCustom22">No</label>
                            </div>
                        </div>
@@ -71,13 +71,13 @@
                        </label>
                        <p>How many follow per...</p>
                        <div class="form-group row">
-                           <input id="number" data-prefix="Hour" type="number" value="50" class="col-6">
+                           <input id="number" data-prefix="Hour" name="followH" type="number" value="50" class="col-6">
                        </div>
                        <div class="form-group row">
-                           <input id="number" data-prefix="Days" type="number" value="50" class="col-6">
+                           <input id="number" data-prefix="Days" name="followD" type="number" value="50" class="col-6">
                        </div>
                        <div class="form-group row">
-                           <input id="number" data-prefix="Month"  type="number" value="50" class="col-6">
+                           <input id="number" data-prefix="Month"  name="followM" type="number" value="50" class="col-6">
                        </div>
                             
                        <!-- follow config end  -->
@@ -89,16 +89,16 @@
                        </label>
                        <div class="form-group row">
                            <label class="form-control-label col-3 vcenter">Days before unfollowing</label>
-                           <input id="number" data-prefix="Days" type="number" value="6" class="col-6">
+                           <input id="number" data-prefix="Days" type="number" name="unfollowTime" value="6" class="col-6">
                        </div>
                        <div class="form-group row">
                            <label class="form-control-label col-3">Add unfollowing users to blacklist </label>
                            <div class="i-checks col-3 ">
-                               <input id="radio-oui" type="radio" value="1" name="radio" class="form-control-custom radio-custom">
+                               <input id="radio-oui" type="radio" value="1" name="blackList" class="form-control-custom radio-custom">
                                <label for="radio-oui">Yes</label>
                            </div>
                            <div class="i-checks col-3">
-                               <input id="radio-non" type="radio" checked="" value="0" name="radio" class="form-control-custom radio-custom">
+                               <input id="radio-non" type="radio" checked="" value="0" name="blacklList" class="form-control-custom radio-custom">
                                <label for="radio-non">No</label>
                            </div>
                        </div>
@@ -113,19 +113,19 @@
                        <p>Which post the bot will like before following</p>
                        <div class="form-group row">
                            <div class="i-checks ">
-                               <input id="like-1" type="radio" value="1" name="radio-like" class="form-control-custom radio-custom">
+                               <input id="like-1" type="radio" value="1" name="like" class="form-control-custom radio-custom">
                                <label class="form-control-label" for="like-1">Most liked post</label>
                            </div>
                        </div>
                        <div class="form-group row">
                            <div class="i-checks">
-                               <input id="like-2" type="radio" value="2" name="radio-like" class="form-control-custom radio-custom">
+                               <input id="like-2" type="radio" value="2" name="like" class="form-control-custom radio-custom">
                                <label class="form-control-label " for="like-2">Most recent post</label>
                            </div>
                        </div>
                        <div class="form-group row">
                            <div class="i-checks  ">
-                               <input id="like-3" type="radio" value="3" name="radio-like" class="form-control-custom radio-custom">
+                               <input id="like-3" type="radio" value="3" name="like" class="form-control-custom radio-custom">
                                <label class="form-control-label " for="like-3">Tagged post</label>
                            </div>
                        </div>
@@ -139,31 +139,31 @@
                        <p>Message settings</p>
                        <div class="form-group row">
                            <label class="form-control-label col-3 vcenter">Waiting time</label>
-                           <input id="number" data-prefix="Min" type="number" value="6" class="col-3">
+                           <input id="number" data-prefix="Min" type="number" value="6" name="waitingTimeMin" class="col-3">
                            <div class="col-3">
-                               <select class="selectpicker">
-                                   <option>seconds</option>
-                                   <option>minutes</option>
-                                   <option>hours</option>
-                                   <option>days</option>
+                               <select class="selectpicker" name="minType">
+                                   <option value="s">seconds</option>
+                                   <option value="m">minutes</option>
+                                   <option value="h">hours</option>
+                                   <option value="d">days</option>
                                </select>
                            </div>
                        </div>
                        <div class="form-group row">
                            <label class="form-control-label col-3"></label>
-                           <input id="number" data-prefix="Max" type="number" value="6" class="col-3">
+                           <input id="number" data-prefix="Max" type="number" value="6" name="waitingTimeMax" class="col-3">
                            <div class="col-3">
-                               <select class="selectpicker">
-                                   <option>seconds</option>
-                                   <option>minutes</option>
-                                   <option>hours</option>
-                                   <option>days</option>
+                               <select class="selectpicker" name="maxType">
+                                   <option value="s">seconds</option>
+                                   <option value="m">minutes</option>
+                                   <option value="h">hours</option>
+                                   <option value="d">days</option>
                                </select>
                            </div>
                        </div>
                        <div class="form-group row">
                            <label class="form-label col-3">MESSAGE</label>
-                           <textarea rows="8" class="form-control col-6">Hello World!!!!!!!!</textarea>
+                           <textarea rows="8" class="form-control col-6" name="message">Hello World!!!!!!!!</textarea>
                        </div>
                        <!-- message send  end  -->
                    </form>

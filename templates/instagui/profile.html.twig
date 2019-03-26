@@ -18,44 +18,39 @@
                               <div class="col-4">
                                   <img src="{{asset('assets/img/avatar.png')}}" alt="person" class="img-fluid rounded-circle">
                               </div>
-                              <div class="media-body col-6">
-                                  <h4>Username</h4>
-                                  <p class="text-muted mb-0">admin</p>
-                                  <p class="text-muted mb-0">email@vetixy.fr</p>
+                              <div class="media-body col-8">
+                                  <h4>Profile</h4>
+                                  <p class="text-muted mb-0"> <h6>{{ user.username }}</h6></p>
+                                  <h6><p class="text-muted mb-0">{{ user.email }}</p></h6>
                               </div>
                           </div>
                       </div>
                   </div>
-                  <form class="card">
+                  <form class="card" name="profile">
                       <div class="card-header">
                           <h3 class="card-title">Edit Profile</h3>
                       </div>
                       <div class="card-body">
                           <div class="row mb-3">
                               <div class="col-auto d-flex align-items-center"><span style="background-image: {{asset('assets/img/avatar.png')}}" class="avatar avatar-lg"></span></div>
-                              <div class="col">
-                                  <div class="form-group">
-                                      <label class="form-label">Name</label>
-                                      <input placeholder="Your name" class="form-control">
-                                  </div>
-                              </div>
+                              
                           </div>
                           <div class="form-group">
                               <label class="form-label">Email</label>
-                              <input placeholder="you@domain.com" class="form-control">
+                              <input placeholder="you@domain.com" name="email" class="form-control">
                           </div>
                           <div class="form-group">
                               <label class="form-label">Password</label>
-                              <input type="password" value="password" class="form-control">
+                              <input type="password"  name="pwd" class="form-control">
                           </div>
                           <div class="form-group">
                               <label class="form-label">Confirm Password</label>
-                              <input type="password" value="password" class="form-control">
+                              <input type="password"  name="pwdConfirm" class="form-control">
                           </div>
 
                       </div>
                       <div class="card-footer text-right">
-                          <button class="btn btn-primary">Save</button>
+                          <button class="btn btn-primary" onclick="editProfile()">Save</button>
                       </div>
                   </form>
               </div>

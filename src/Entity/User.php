@@ -78,7 +78,7 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return (string) $this->Username;
     }
 
     /**
@@ -163,34 +163,5 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Account[]
-     */
-    public function getIgAccounts(): Collection
-    {
-        return $this->igAccounts;
-    }
-
-    public function addIgAccount(Account $igAccount): self
-    {
-        if (!$this->igAccounts->contains($igAccount)) {
-            $this->igAccounts[] = $igAccount;
-            $igAccount->setUserId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeIgAccount(Account $igAccount): self
-    {
-        if ($this->igAccounts->contains($igAccount)) {
-            $this->igAccounts->removeElement($igAccount);
-            // set the owning side to null (unless already changed)
-            if ($igAccount->getUserId() === $this) {
-                $igAccount->setUserId(null);
-            }
-        }
-
-        return $this;
-    }
+   
 }
