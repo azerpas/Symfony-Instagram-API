@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -45,9 +46,9 @@ class User implements UserInterface
     private $BackUp;
 
     /**
-     * @ORM\Column(type="array", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $accounts = [];
+    private $accounts;
 
     public function getId(): ?int
     {
@@ -146,12 +147,12 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getAccounts(): ?array
+    public function getAccounts(): ?int
     {
         return $this->accounts;
     }
 
-    public function setAccounts(?array $accounts): self
+    public function setAccounts(?int $accounts): self
     {
         $this->accounts = $accounts;
 
