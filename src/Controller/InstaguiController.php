@@ -34,7 +34,7 @@ class InstaguiController extends AbstractController
             'controller_name' => 'InstaguiController','page'=> 'home'
         ]);
     }
-    
+
      /**
      * @Route("/instagui/scheduling", name="inst_scheduling")
      */
@@ -44,7 +44,7 @@ class InstaguiController extends AbstractController
         $status=$bd->getStatus($this->getUser());
         return $this->render('instagui/scheduling.html.twig', [ 'page'=> 'scheduling','slots' =>$slots,'status'=>$status]);
     }
-    
+
     /**
      * @Route("/instagui/bots", name="inst_bots")
      */
@@ -80,14 +80,14 @@ class InstaguiController extends AbstractController
             $ig = $form->getData();
 
             // Insert into database the Instagram Account into usrr "accounts" column using DBRequest service.
-            $DBRequest->assignInstagramAccount($usrr->getUsername(),$ig->getUsername(),$ig->getPassword());
+            $DBRequest->assignInstagramAccount($usrr,$ig->getUsername(),$ig->getPassword());
 
             return $this->redirectToRoute('task_success');
         }
         $usr= $this->container->get('security.token_storage')->getToken()->getUser();
         $logger->info($usr->getUsername());
         $logger->info($usrr->getUsername());
-        
+
         return $this->render('instagui/profile.html.twig', [
            'page'=> 'Profile', 'form'=>$form->createView(), 'user'=>$this->getUser()
         ]);
@@ -97,12 +97,33 @@ class InstaguiController extends AbstractController
      */
     public function paramsPage(Request $request)
     {   //check for login user redirect if null
-        
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');  
-        
+
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         return $this->render('instagui/parameters.html.twig', [
             'controller_name' => 'InstaguiController','page'=> 'paramètres'
         ]);
+    }
+
+    /**
+     * @Route("/instagui/signInTest")
+     * @return Response
+     */
+    public function signInIg(){
+        //$kernel = $this->container->get('kernel');
+        $process = new Process('php bin/console insta:instance alexis ruffier');
+        $process->setWorkingDirectory(getcwd());
+        $process->setWorkingDirectory("../");
+        //$process->setWorkingDirectory($kernel->getProjectDir());
+        $process->run(function ($type, $buffer) {
+            if (Process::ERR === $type) {
+                echo 'ERR > '.$buffer;
+                return new Response("Canno't connect to Instagram, please check your params");
+            } else {
+                echo 'OUT > '.$buffer.'<br>';
+            }
+        });
+        return new Response("Successfully launched process");
     }
 
     /**
@@ -136,7 +157,34 @@ class InstaguiController extends AbstractController
         ]);
     }
 
-   
+    /**
+     * @Route("/instagui/config_bot", name="set_config", methods={"POST"},condition="request.isXmlHttpRequest()")
+     */
+
+    public function setBotParameters(Request $req,LoggerInterface $logger,DBRequest $service){
+
+        if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
+            return new JsonResponse(['error' => 'auth required'], 401);
+        }
+        $logger->info($this->getUser()->getUsername());
+        $value=$service->setParams($this->getUser(),$req->request->all());
+        return new JsonResponse(['output'=> $value]);
+
+
+    }
+
+    /**
+     * @Route("/instagui/set_bot_status", name="set_bot_status", methods={"POST"},condition="request.isXmlHttpRequest()")
+     */
+
+    public function setBotStatus(Request $req){
+
+        $bot=$req->request->get('bot');
+        $value=$req->request->get('value');
+        $message=$bot." bot turned ".$value;
+        return new JsonResponse(['output'=> $message]);
+
+    }
 
     /**
      * @Route("/instagui/testIgAccount", name="test_ig_account", methods={"POST"},condition="request.isXmlHttpRequest()")
@@ -160,15 +208,16 @@ class InstaguiController extends AbstractController
             return new JsonResponse(["output" => "Error processing"],403);
         }
     }
-
     /**
-     * @Route("/testDB", name="testDb")
+     * @Route("/findAccount")
      */
-    public function userAccounts(){
-        $usr = $this->getDoctrine()
-            ->getRepository(User::class)
-            ->find($this->getUser());
-        return new Response('Test '.$usr->getIgAccounts());
+    public function testAccountTableDB(DBRequest $service,LoggerInterface $logger){
+        $logger->info('Starting insert to DB');
+        $account = $this->getDoctrine()
+            ->getRepository(Account::class)
+            ->selectAccount($this->getUser(),'testAccount','testPassword');
+        $service->assignInstagramAccount($this->getUser(),$account,'testAccount','testPassword');
+        $logger->info('went well');
+        return new Response('test');
     }
-
 }

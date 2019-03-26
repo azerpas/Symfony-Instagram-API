@@ -156,12 +156,12 @@ class User implements UserInterface
         return $this->accounts;
     }
 
-    public function setAccounts(?int $accounts): self
+    public function setAccounts($accounts): self
     {
         $this->accounts = $accounts;
 
         return $this;
     }
 
-   
+
 }
