@@ -3,10 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Account;
+use App\Entity\IgAccount;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Service\DBRequest;
-use App\Entity\IgAccount;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,6 +33,16 @@ class InstaguiController extends AbstractController
         return $this->render('instagui/home.html.twig', [
             'controller_name' => 'InstaguiController','page'=> 'home'
         ]);
+    }
+
+     /**
+     * @Route("/instagui/scheduling", name="inst_scheduling")
+     */
+    public function schedulingPage(DBRequest $bd)
+    {   $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $slots=$bd->getSlots($this->getUser());
+        $status=$bd->getStatus($this->getUser());
+        return $this->render('instagui/scheduling.html.twig', [ 'page'=> 'scheduling','slots' =>$slots,'status'=>$status]);
     }
 
     /**
@@ -79,7 +89,7 @@ class InstaguiController extends AbstractController
         $logger->info($usrr->getUsername());
 
         return $this->render('instagui/profile.html.twig', [
-            'page'=> 'Profile', 'form'=>$form->createView()
+           'page'=> 'Profile', 'form'=>$form->createView(), 'user'=>$this->getUser()
         ]);
     }
     /**
@@ -93,6 +103,27 @@ class InstaguiController extends AbstractController
         return $this->render('instagui/parameters.html.twig', [
             'controller_name' => 'InstaguiController','page'=> 'paramètres'
         ]);
+    }
+
+    /**
+     * @Route("/instagui/signInTest")
+     * @return Response
+     */
+    public function signInIg(){
+        //$kernel = $this->container->get('kernel');
+        $process = new Process('php bin/console insta:instance alexis ruffier');
+        $process->setWorkingDirectory(getcwd());
+        $process->setWorkingDirectory("../");
+        //$process->setWorkingDirectory($kernel->getProjectDir());
+        $process->run(function ($type, $buffer) {
+            if (Process::ERR === $type) {
+                echo 'ERR > '.$buffer;
+                return new Response("Canno't connect to Instagram, please check your params");
+            } else {
+                echo 'OUT > '.$buffer.'<br>';
+            }
+        });
+        return new Response("Successfully launched process");
     }
 
     /**
