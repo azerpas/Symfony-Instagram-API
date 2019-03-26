@@ -1,3 +1,5 @@
+.env
+
 .idea
 last_followers
 ###> symfony/framework-bundle ###

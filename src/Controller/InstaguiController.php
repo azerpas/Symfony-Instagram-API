@@ -80,7 +80,7 @@ class InstaguiController extends AbstractController
             $ig = $form->getData();
 
             // Insert into database the Instagram Account into usrr "accounts" column using DBRequest service.
-            $DBRequest->assignInstagramAccount($usrr,$ig->getUsername(),$ig->getPassword());
+            $DBRequest->assignInstagramAccount($usrr->getUsername(),$ig->getUsername(),$ig->getPassword());
 
             return $this->redirectToRoute('task_success');
         }
