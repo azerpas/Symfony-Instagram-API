@@ -16,10 +16,10 @@ class DBRequest{
         $this->lg = $logger;
     }
     /**
-    * @method set bot params in account entity
-    * @param user  user  entity object
-    * @param params parameters array
-    */
+     * @method set bot params in account entity
+     * @param user  user  entity object
+     * @param params parameters array
+     */
     public function setParams($user,$params){
         $account = new Account();
         $account = $user->getAccounts();
@@ -32,22 +32,15 @@ class DBRequest{
         return "Success";
     }
     /**
-    * @method assign instagram instance to user or create it if not exist 
-    */
-    public function assignInstagramAccount($user,$username,$password){
-        //check if account exist
-        $qb =  $this->em->createQueryBuilder();
-        $account=$qb->select('a')
-            ->from('Account', 'a')
-            ->where('t.username =:username')
-            ->setParameter('username', $username)
-            ->getQuery()
-            ->getResult();
+     * @method assign instagram instance to user or create it if not exist
+     */
+    public function assignInstagramAccount($user,$account,$username,$password){
         if($account == null){
             //not exist
             $account=new Account();
             $account->setUsername($username);
             $account->setPassword($password);
+            $account->setUserId($user);
             $this->em->persist($account);
             $this->em->flush();
         }
@@ -56,4 +49,5 @@ class DBRequest{
         $this->em->persist($user);
         $this->em->flush();
     }
+
 }

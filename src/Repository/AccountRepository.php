@@ -36,15 +36,26 @@ class AccountRepository extends ServiceEntityRepository
     }
     */
 
-    /*
+
     public function findOneBySomeField($value): ?Account
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
+            ->andWhere('a.username = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()
-        ;
+            ;
     }
-    */
+
+    /**
+     * @method assign instagram instance to user or create it if not exist
+     */
+    public function selectAccount($user,$username,$password){
+        //check if account exist
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.username = ?1')
+            ->setParameter('1', $username)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
