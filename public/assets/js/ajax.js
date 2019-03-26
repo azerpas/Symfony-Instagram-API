@@ -69,17 +69,17 @@ function config() {
 
 // turn on/off a bot   
 function run_bot(toggle) {
-    var bot= toggle.id;//get bot name
+   
 
     if($(toggle).prop("checked") === true){
-        var value="on";//set value on
+        var status=true;//set value on
     }else{
-        var value="off";//set value off
+        var status=false;//set value off
     }
     //ajax server request
     $.ajax({
         type:'post',
-        data:{"bot":bot,"value":value} ,
+        data:{"status":status} ,
         url:'/ajax/set_bot_status',
 
         success:function(data){

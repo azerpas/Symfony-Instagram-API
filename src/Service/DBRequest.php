@@ -28,7 +28,7 @@ class DBRequest{
         $account->setSettings(json_encode($params)); 
         $this->em->persist($account);
         $this->em->flush();
-        return  new JsonResponse(array('message' => 'success'), 200);;
+        return  new JsonResponse(array('message' => 'success'), 200);
        }
        
     
@@ -62,7 +62,7 @@ class DBRequest{
         public function getSlots($user){  
             $account=$user->getAccounts();
             
-            if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this account '), 419);
+            if($account==null) return null;
             
             return $slots= unserialize($account->getSlots());
            } 
@@ -84,6 +84,10 @@ class DBRequest{
             
     /**
     * @method assign instagram instance to user or create it if not exist 
+    * @param 
+    * @param
+    * @param
+    * @return
     */
     public function assignInstagramAccount($user,$username,$password){
         //check if account exist
@@ -107,5 +111,35 @@ class DBRequest{
         $user->setAccounts($account);
         $this->em->persist($user);
         $this->em->flush();
+    }
+
+     /**
+    * @method  
+    * @param status on/off
+    * @return
+    */
+    public function setStatus($user,$status)
+    {   
+       
+        $account=$user->getAccounts();
+        if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this user '), 419);
+        if($status == "true") $account->setStatus(true); 
+        else $account->setStatus(false);
+        $this->em->persist($account);
+        $this->em->flush();
+        return  true;
+
+
+    }
+      /**
+    * @method  
+     *@param user
+    * @return
+    */
+    public function getStatus($user)
+    {   
+        $account=$user->getAccounts();
+        if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this user '), 419); 
+        return $account->getStatus();  
     }
 }

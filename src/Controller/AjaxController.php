@@ -69,14 +69,17 @@ class AjaxController extends AbstractController
     /**
     * @Route("/ajax/set_bot_status", name="set_bot_status", methods={"POST"},condition="request.isXmlHttpRequest()")
     */
-
-    public function setBotStatus(Request $req){
-
-        $bot=$req->request->get('bot');
-        $value=$req->request->get('value');
-        $message=$bot." bot turned ".$value;
-        return new JsonResponse(['output'=> $message]);
+  
+    public function setBotStatus(Request $req,DBRequest $db){
+       
+        $response=$db->setStatus($this->getUser(),$req->request->get('status'));
+        
+        if($response)
+        return new JsonResponse(['output'=> "success"],200);
+        else   return new JsonResponse(['output'=> "error"]);
 
     }
+
+   
 
 }

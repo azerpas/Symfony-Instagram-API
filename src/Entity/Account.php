@@ -51,6 +51,11 @@ class Account
      */
     private $slots ;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $status;
+
    
     public function getId(): ?int
     {
@@ -137,6 +142,18 @@ class Account
     public function setSlots($slots): self
     {
         $this->slots = $slots;
+        return $this;
+    }
+
+    public function getStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
+
         return $this;
     }
 

@@ -41,7 +41,8 @@ class InstaguiController extends AbstractController
     public function schedulingPage(DBRequest $bd)
     {   $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $slots=$bd->getSlots($this->getUser());
-        return $this->render('instagui/scheduling.html.twig', [ 'page'=> 'scheduling','slots' =>$slots]);
+        $status=$bd->getStatus($this->getUser());
+        return $this->render('instagui/scheduling.html.twig', [ 'page'=> 'scheduling','slots' =>$slots,'status'=>$status]);
     }
     
     /**
@@ -88,7 +89,7 @@ class InstaguiController extends AbstractController
         $logger->info($usrr->getUsername());
         
         return $this->render('instagui/profile.html.twig', [
-           'page'=> 'Profile', 'form'=>$form->createView()
+           'page'=> 'Profile', 'form'=>$form->createView(), 'user'=>$this->getUser()
         ]);
     }
     /**

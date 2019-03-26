@@ -18,10 +18,10 @@
                               <div class="col-4">
                                   <img src="{{asset('assets/img/avatar.png')}}" alt="person" class="img-fluid rounded-circle">
                               </div>
-                              <div class="media-body col-6">
-                                  <h4>Username</h4>
-                                  <p class="text-muted mb-0">admin</p>
-                                  <p class="text-muted mb-0">email@vetixy.fr</p>
+                              <div class="media-body col-8">
+                                  <h4>Profile</h4>
+                                  <p class="text-muted mb-0"> <h6>{{ user.username }}</h6></p>
+                                  <h6><p class="text-muted mb-0">{{ user.email }}</p></h6>
                               </div>
                           </div>
                       </div>
@@ -41,11 +41,11 @@
                           </div>
                           <div class="form-group">
                               <label class="form-label">Password</label>
-                              <input type="password" value="password" name="pwd" class="form-control">
+                              <input type="password"  name="pwd" class="form-control">
                           </div>
                           <div class="form-group">
                               <label class="form-label">Confirm Password</label>
-                              <input type="password" value="password" name="pwdConfirm" class="form-control">
+                              <input type="password"  name="pwdConfirm" class="form-control">
                           </div>
 
                       </div>
