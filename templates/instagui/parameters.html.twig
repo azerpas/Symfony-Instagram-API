@@ -7,7 +7,171 @@
 {% endblock %}
 {% block Section %}
       <!-- Counts Section -->
-      <section class="dashboard-counts section-padding">  
+      <section class="dashboard-counts section-padding container-fluid ">  
+           <div class="card mt-3">
+               <div class="card-header" style="text-align: center">
+                   <h3> GENERAL PARAMETERS </h3>
+               </div>
+               <div class="card-body">
+                   <form name="configForm">
+                       <!-- search  config start  -->
+                       <label class="form-control-label col-3 vcenter">
+                           <h3> SEARCH </h3>
+                       </label>
+                       <p>Input settings to sort the accounts the bot will follow</p>
+                       <div class="form-group row">
+                           <label class="form-control-label col-3 vcenter">Followers </label>
+                           <input name="minfollow"  data-prefix="MIN" type="number" value="50" class="col-4">
+                           <input name="maxfollow" data-prefix="MAX" type="number" value="50" class="col-4">
+                       </div>
+                       <div class="form-group row">
+                           <label class="form-control-label col-3">Following </label>
+                           <input name="minfollowing" data-prefix="MIN" type="number" value="50" class="col-4">
+                           <input name="maxfollowing" data-prefix="MAX" type="number" value="50" class="col-4">
+                       </div>
+                       <div class="form-group row">
+                           <label class="form-control-label col-3">Posts </label>
+                           <input name="minpublication" data-prefix="MIN" type="number" value="50" class="col-4">
+                           <input name="maxpublication" data-prefix="MAX" type="number" value="50" class="col-4">
+                       </div>
+                       <div class="form-group row">
+                           <label class="form-control-label col-3">Profile picture </label>
+                           <div class="i-checks col-3 ">
+                               <input id="radioCustom1" type="radio" value="1" name="b" class="form-control-custom radio-custom">
+                               <label for="radioCustom1">WITH a profile pic</label>
+                           </div>
+                           <div class="i-checks col-3">
+                               <input id="radioCustom2" type="radio" checked="" value="-1" name="b" class="form-control-custom radio-custom">
+                               <label for="radioCustom2">WITHOUT a profile pic</label>
+                           </div>
+                           <div class="i-checks col-3">
+                               <input id="radioCustom3" type="radio"  value="0" name="b" class="form-control-custom radio-custom">
+                               <label for="radioCustom3">What ever</label>
+                           </div>
+                       </div>
+                       <div class="form-group row">
+                           <label class="form-control-label col-3">Scraping private accounts?</label>
+                           <div class="i-checks col-3 ">
+                               <input id="radioCustom11" type="radio" value="1" name="a" class="form-control-custom radio-custom">
+                               <label for="radioCustom11">Yes</label>
+                           </div>
+                           <div class="i-checks col-3">
+                               <input id="radioCustom22" type="radio" checked="" value="0" name="a" class="form-control-custom radio-custom">
+                               <label for="radioCustom22">No</label>
+                           </div>
+                       </div>
+                       <!-- search config end   -->
+                              
+                       <!--separator -->
+                       <div class="w-100"><hr></div>
+
+                       <!-- follow config start  -->
+                       <label class="form-control-label col-3 vcenter">
+                           <h3> FOLLOW </h3>
+                       </label>
+                       <p>How many follow per...</p>
+                       <div class="form-group row">
+                           <input id="number" data-prefix="Hour" type="number" value="50" class="col-6">
+                       </div>
+                       <div class="form-group row">
+                           <input id="number" data-prefix="Days" type="number" value="50" class="col-6">
+                       </div>
+                       <div class="form-group row">
+                           <input id="number" data-prefix="Month"  type="number" value="50" class="col-6">
+                       </div>
+                            
+                       <!-- follow config end  -->
+                       <!--separator -->
+                       <div class="w-100"><hr></div>
+                       <!-- unfollow config start  -->
+                       <label class="form-control-label col-3 vcenter">
+                           <h3> UNFOLLOW </h3>
+                       </label>
+                       <div class="form-group row">
+                           <label class="form-control-label col-3 vcenter">Days before unfollowing</label>
+                           <input id="number" data-prefix="Days" type="number" value="6" class="col-6">
+                       </div>
+                       <div class="form-group row">
+                           <label class="form-control-label col-3">Add unfollowing users to blacklist </label>
+                           <div class="i-checks col-3 ">
+                               <input id="radio-oui" type="radio" value="1" name="radio" class="form-control-custom radio-custom">
+                               <label for="radio-oui">Yes</label>
+                           </div>
+                           <div class="i-checks col-3">
+                               <input id="radio-non" type="radio" checked="" value="0" name="radio" class="form-control-custom radio-custom">
+                               <label for="radio-non">No</label>
+                           </div>
+                       </div>
+                       <!-- unfollow config end  -->
+                       <!-- follow config end  -->
+                       <!--separator -->
+                       <div class="w-100"><hr></div>
+                       <!-- like config start  -->
+                       <label class="form-control-label col-3 vcenter">
+                           <h3> LIKE </h3>
+                       </label>
+                       <p>Which post the bot will like before following</p>
+                       <div class="form-group row">
+                           <div class="i-checks ">
+                               <input id="like-1" type="radio" value="1" name="radio-like" class="form-control-custom radio-custom">
+                               <label class="form-control-label" for="like-1">Most liked post</label>
+                           </div>
+                       </div>
+                       <div class="form-group row">
+                           <div class="i-checks">
+                               <input id="like-2" type="radio" value="2" name="radio-like" class="form-control-custom radio-custom">
+                               <label class="form-control-label " for="like-2">Most recent post</label>
+                           </div>
+                       </div>
+                       <div class="form-group row">
+                           <div class="i-checks  ">
+                               <input id="like-3" type="radio" value="3" name="radio-like" class="form-control-custom radio-custom">
+                               <label class="form-control-label " for="like-3">Tagged post</label>
+                           </div>
+                       </div>
+                       <!-- like config end  -->
+                       <!--separator -->
+                       <div class="w-100"><hr></div>
+                       <!-- message send  start  -->
+                       <label class="form-control-label col-3 vcenter">
+                           <h3> MESSAGE </h3>
+                       </label>
+                       <p>Message settings</p>
+                       <div class="form-group row">
+                           <label class="form-control-label col-3 vcenter">Waiting time</label>
+                           <input id="number" data-prefix="Min" type="number" value="6" class="col-3">
+                           <div class="col-3">
+                               <select class="selectpicker">
+                                   <option>seconds</option>
+                                   <option>minutes</option>
+                                   <option>hours</option>
+                                   <option>days</option>
+                               </select>
+                           </div>
+                       </div>
+                       <div class="form-group row">
+                           <label class="form-control-label col-3"></label>
+                           <input id="number" data-prefix="Max" type="number" value="6" class="col-3">
+                           <div class="col-3">
+                               <select class="selectpicker">
+                                   <option>seconds</option>
+                                   <option>minutes</option>
+                                   <option>hours</option>
+                                   <option>days</option>
+                               </select>
+                           </div>
+                       </div>
+                       <div class="form-group row">
+                           <label class="form-label col-3">MESSAGE</label>
+                           <textarea rows="8" class="form-control col-6">Hello World!!!!!!!!</textarea>
+                       </div>
+                       <!-- message send  end  -->
+                   </form>
+                   <div class="form-group">
+                       <button class="btn btn-primary float-right" type="button" onclick="config()">SAVE</button>
+                   </div>
+               </div>
+           </div>
       </section>     
 {% endblock %}
 {% block Footer %}

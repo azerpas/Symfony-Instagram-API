@@ -2,10 +2,14 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Component\Security\Core\User\UserInterface;
-
+use App\Entity\Account;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\JoinColumn;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(name="user_account")
@@ -155,6 +159,37 @@ class User implements UserInterface
     public function setAccounts(?int $accounts): self
     {
         $this->accounts = $accounts;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Account[]
+     */
+    public function getIgAccounts(): Collection
+    {
+        return $this->igAccounts;
+    }
+
+    public function addIgAccount(Account $igAccount): self
+    {
+        if (!$this->igAccounts->contains($igAccount)) {
+            $this->igAccounts[] = $igAccount;
+            $igAccount->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIgAccount(Account $igAccount): self
+    {
+        if ($this->igAccounts->contains($igAccount)) {
+            $this->igAccounts->removeElement($igAccount);
+            // set the owning side to null (unless already changed)
+            if ($igAccount->getUserId() === $this) {
+                $igAccount->setUserId(null);
+            }
+        }
 
         return $this;
     }

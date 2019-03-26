@@ -46,6 +46,12 @@ class Account
      */
     private $settings;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="igAccounts")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user_id;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -119,6 +125,18 @@ class Account
     public function setSettings($settings): self
     {
         $this->settings = $settings;
+
+        return $this;
+    }
+
+    public function getUserId(): ?User
+    {
+        return $this->user_id;
+    }
+
+    public function setUserId(?User $user_id): self
+    {
+        $this->user_id = $user_id;
 
         return $this;
     }
