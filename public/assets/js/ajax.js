@@ -24,16 +24,13 @@
    });
 
 
-// send config forms to server
+// set bot config
 function config() {
-    //get parameters value 
-    
-    
-    
+   
     $.ajax({
         type:'post',
         data:$("[name=configForm]").serialize() ,
-        url:'/instagui/config_bot',
+        url:'/ajax/config_bot',
        
         success: function(data){
             console.log(data.output);
@@ -72,18 +69,18 @@ function config() {
 
 // turn on/off a bot   
 function run_bot(toggle) {
-    var bot= toggle.id;//get bot name
+   
 
     if($(toggle).prop("checked") === true){
-        var value="on";//set value on
+        var status=true;//set value on
     }else{
-        var value="off";//set value off
+        var status=false;//set value off
     }
     //ajax server request
     $.ajax({
         type:'post',
-        data:{"bot":bot,"value":value} ,
-        url:'/instagui/set_bot_status',
+        data:{"status":status} ,
+        url:'/ajax/set_bot_status',
 
         success:function(data){
             $.notify(
@@ -120,6 +117,8 @@ function run_bot(toggle) {
         },
     });
 }
+
+
 
 runTestIgAcc = () => {
     let username = $('#form_username').val();
@@ -185,4 +184,132 @@ runTestIgAcc = () => {
 
     });
     return true;
+}
+
+
+//set slot status on
+function activer(tmpid) {
+    //ajax server request
+    $.ajax({
+       type:'post',
+       data:{"slot":tmpid,"value":'on'} ,
+       url:'/ajax/set_slot',
+
+       success:function(data){
+           document.getElementById(tmpid).className = "btn btn-primary";
+           $.notify(
+               {
+                   icon:'fa fa-check-circle',
+                   title: "<strong>Success :</strong> ",
+                   message:"slot activate"
+               },
+               {
+                   type:'success',
+                   delay: 5000,
+                   timer: 1000,
+                   offset: 50
+               });
+       },
+       error: function(jqXHR, textStatus, errorThrown) {
+          
+           $.notify(
+               {
+                   icon:'fa fa-exclamation-circle',
+                   title: "<strong>"+textStatus+" :</strong> ",
+                   message:jqXHR.status+" "+errorThrown
+               },
+               {
+                   type:'danger',
+                   delay: 5000,
+                   timer: 1000,
+                   offset: 50
+               });
+       },
+   }); 
+    //hide modal window
+   $('#exampleModal').modal('hide');
+  
+}
+//set slot status off 
+function desactiver(tmpid) {
+    //ajax server request
+    $.ajax({
+       type:'post',
+       data:{"slot":tmpid,"value":'off'} ,
+       url:'/ajax/set_slot',
+
+       success:function(data){
+           document.getElementById(tmpid).className = "btn btn-basic";
+           $.notify(
+               {
+                   icon:'fa fa-check-circle',
+                   title: "<strong>Success :</strong> ",
+                   message:"slot deactivated"
+               },
+               {
+                   type:'success',
+                   delay: 5000,
+                   timer: 1000,
+                   offset: 50
+               });
+       },
+       error: function(jqXHR, textStatus, errorThrown) {
+          
+           $.notify(
+               {
+                   icon:'fa fa-exclamation-circle',
+                   title: "<strong>"+textStatus+" :</strong> ",
+                   message:jqXHR.status+" "+errorThrown
+               },
+               {
+                   type:'danger',
+                   delay: 5000,
+                   timer: 1000,
+                   offset: 50
+               });
+       },
+   }); 
+//hide modal window
+$('#exampleModal').modal('hide');
+}
+
+editProfile = () => {
+    $.ajax({
+        type:'post',
+        data:$("[name=profile]").serialize() ,
+        url:'/ajax/edit_profile',
+       
+        success: function(data){
+            console.log(data.output);
+             $.notify(
+                 {
+                     icon:'fa fa-check-circle',
+                     title: "<strong>Success :</strong> ",
+                     message:'Configuration sauvgarder'
+                 },
+                 {
+                     type:'success',
+                     delay: 5000,
+                     timer: 1000,
+                     offset: 50
+                 });
+        },
+        error: function(response) {
+                      
+                       //on affiche les erreurs...
+            $.notify(
+                {
+                    icon:'fa fa-exclamation-circle',
+                    title: "<strong>"+textStatus+" :</strong> ",
+                    message:jqXHR.status+" "+errorThrown
+                },
+                {
+                    type:'danger',
+                    delay: 5000,
+                    timer: 1000,
+                    offset: 50
+                }
+             );
+        },
+    });
 }

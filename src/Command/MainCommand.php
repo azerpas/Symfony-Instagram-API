@@ -33,7 +33,9 @@ class MainCommand{
         // isTime
         // usersToInteract
         // do while
-        // service(like -> follow)
+        //  new process(like -> follow)
+        // if search active
+        //  new process(search)
         return true;
     }
 }

@@ -25,6 +25,7 @@ class AuthController extends Controller{
             $password = $passwordEncoder->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
             $user->setRoles(['ROLE_USER']);
+            $user->setAccounts(null);
             // To add, check if username already taken, then render page with every arguments with changing username
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
