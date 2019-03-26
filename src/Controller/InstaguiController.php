@@ -106,27 +106,6 @@ class InstaguiController extends AbstractController
     }
 
     /**
-     * @Route("/instagui/signInTest")
-     * @return Response
-     */
-    public function signInIg(){
-        //$kernel = $this->container->get('kernel');
-        $process = new Process('php bin/console insta:instance alexis ruffier');
-        $process->setWorkingDirectory(getcwd());
-        $process->setWorkingDirectory("../");
-        //$process->setWorkingDirectory($kernel->getProjectDir());
-        $process->run(function ($type, $buffer) {
-            if (Process::ERR === $type) {
-                echo 'ERR > '.$buffer;
-                return new Response("Canno't connect to Instagram, please check your params");
-            } else {
-                echo 'OUT > '.$buffer.'<br>';
-            }
-        });
-        return new Response("Successfully launched process");
-    }
-
-    /**
      * @Route("/instagui/taskSucess",name="task_success")
      */
     public function taskSucess(){

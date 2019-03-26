@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Component\Security\Core\User\UserInterface;
 use App\Entity\Account;
 use Doctrine\ORM\Mapping\ManyToOne;
@@ -49,17 +50,9 @@ class User implements UserInterface
     private $BackUp;
 
     /**
-     * @ManyToOne(targetEntity="Account")
-     * @JoinColumn(name="accounts", referencedColumnName="id")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $accounts;
-
-   
-
-    public function __construct()
-    {
-        $this->igAccounts = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -158,12 +151,12 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getAccounts(): ?Account
+    public function getAccounts(): ?int
     {
         return $this->accounts;
     }
 
-    public function setAccounts(?array $accounts): self
+    public function setAccounts(?int $accounts): self
     {
         $this->accounts = $accounts;
 

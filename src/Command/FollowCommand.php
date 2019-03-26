@@ -20,7 +20,7 @@ class FollowCommand extends Command
     protected function configure()
     {
         $this 
-        //Add respectively the username and password of the user and the userId to follow
+        ->setDescription('Follow an Instagram user')
         ->addArgument('username', InputArgument::REQUIRED, 'My username')
         ->addArgument('password', InputArgument::REQUIRED, 'My password')
         ->addArgument('userId', InputArgument::REQUIRED, 'The Id of the account to follow')
@@ -29,19 +29,6 @@ class FollowCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /*
-        $command = $this->getApplication()->find('insta:instance');
-
-        $arguments = [
-            'command'  => 'insta:instance',
-            'username' => $input->getArgument('username') ,
-            'password' => $input->getArgument('password') ,
-        ];
-
-        $instanceInput = new ArrayInput($arguments);
-        $ig = $command->run($instanceInput, $output);
-        */
-
         /////// CONFIG ///////
         $debug          = false;
         $truncatedDebug = false;
@@ -53,19 +40,10 @@ class FollowCommand extends Command
         try {
             $ig->login($username, $password);
             $ig->people->follow($toFollowId);
-            $output->write('Follow effectué!');
+            $output->writeln('Follow done!');
         } catch (\Exception $e) {
             throw new \Exception('Something went wrong: ' . $e->getMessage());
         }
-
-        /*$toFollowId = $input->getArgument('userId');
-        try {
-            $ig->people->follow($toFollowId);
-            $output->write('Succes!');
-        }
-        catch (\Exception $e) {
-            throw new \Exception('Something went wrong: ' . $e->getMessage());
-      }*/
     }
 
 }
