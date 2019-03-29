@@ -34,7 +34,7 @@ class DBRequest{
         $this->em->persist($account);
         $this->em->flush();
         return  new JsonResponse(array('message' => 'success'), 200);
-       }
+    }
 
 
        /**
