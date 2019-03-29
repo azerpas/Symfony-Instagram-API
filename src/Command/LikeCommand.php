@@ -40,7 +40,7 @@ class LikeCommand extends Command
         try {
             $ig->login($username, $password);
             $ig->media->like($toLikeId);
-            $output->writeln('Like done!');
+            //$output->writeln('Like done!');
         } catch (\Exception $e) {
             throw new \Exception('Something went wrong: ' . $e->getMessage());
         }

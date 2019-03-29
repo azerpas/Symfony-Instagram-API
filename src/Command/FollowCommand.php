@@ -40,7 +40,7 @@ class FollowCommand extends Command
         try {
             $ig->login($username, $password);
             $ig->people->follow($toFollowId);
-            $output->writeln('Follow done!');
+            //$output->writeln('Follow done!');
         } catch (\Exception $e) {
             throw new \Exception('Something went wrong: ' . $e->getMessage());
         }
