@@ -13,8 +13,11 @@ class MainCommand{
      * if so fetching them from BD and checking if currently in time slot
      * @return: Boolean
      */
-    public function isTime(){
-        //
+    public function isTime(DBRequest $db){
+        $slots = $db->getSlots($this->user);
+        if($slots == null){ //|| $slots == {}){
+
+        }
         return true;
     }
 
