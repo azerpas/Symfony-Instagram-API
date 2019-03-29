@@ -11,10 +11,21 @@ use InstagramAPI\Request\Hashtag;
 use App\Service\DBRequest;
 
 class botCommand extends Command
-  
+{
+    protected static $defaultName = 'insta:bot';
 
-{    protected static $defaultName = 'insta:bot';
-      
+    /**
+     * @var DBRequest $dbRequest
+     */
+    protected $dbRequest;
+
+    public function __construct(DBRequest $DBRequest, string $name = null)
+    {
+        $this->dbRequest = $DBRequest;
+
+        parent::__construct($name);
+    }
+
     protected function configure()
     {
         $this
@@ -26,11 +37,10 @@ class botCommand extends Command
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
-    {   $slots= App\Service\DBRequest::getSlots() ;
-        
+    {
         $time = new \DateTime();
         $time->format('H');
-        if ($slots[$time]=="on"){
+        if ($this->dbRequest->getSlots()[$time]=="on"){
 
         }
        
