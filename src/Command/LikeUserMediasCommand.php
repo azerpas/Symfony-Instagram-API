@@ -37,11 +37,30 @@ class LikeUserMediasCommand extends Command
         $password = $input->getArgument('password');
         $ig = new \InstagramAPI\Instagram($debug, $truncatedDebug);
         $toLikeId = $input->getArgument('userId');
+        $mustEndWith = '_';
+        $mustEndWith .= $toLikeId;
         $mediaIds = [];
-        array_push($mediaIds,'2006884526655188486_4474655514');
-	    array_push($mediaIds,'2003100221113902419_4474655514');
         try {
             $ig->login($username, $password);
+            $infos=$ig->timeline->getUserFeed($toLikeId);
+            $tok = strtok($infos, ",");
+
+            while ($tok !== false) {
+                if ($this->startsWith($tok,'"id":')) {
+                    $tok_temp = str_replace('"','',$tok);
+                    $tok_temp = str_replace('id:','',$tok_temp);
+                    if ($this->endsWith($tok_temp,$mustEndWith)) {
+                        array_push($mediaIds,$tok_temp);
+                    }
+                }
+                $tok = strtok(",");
+            }
+            //$output->writeln('Media Ids have been added in mediaIds');
+            /*foreach ($mediaIds as $mediaId) {
+                $output->writeln($mediaId);
+            }*/
+            //$output->write(sizeof($mediaIds));
+            //$output->writeln(' mediaIds');
             $likesNumber=0;
             $likeCommand = $this->getApplication()->find('app:like');
             $randomNumbers = [];
