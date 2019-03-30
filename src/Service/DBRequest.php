@@ -90,22 +90,34 @@ class DBRequest{
     /**
      * @method assign instagram instance to user or create it if not exist
      */
-    public function assignInstagramAccount($user,$account,$username,$password){
+    public function assignInstagramAccount(User $user,$account,$username,$password, LoggerInterface $logger){
         if($account == null){
             //not exist
             $account=new Account();
             $account->setUsername($username);
             $account->setPassword($password);
-            $account->setUserId($user);
+            $account->setUser(0,$user); // here
             $this->em->persist($account);
             $this->em->flush();
+            $logger->info('pushed to account table');
         }
         //exist
-        $user->setAccounts($account);
+        $user->setAccount(0,$account);
         $this->em->persist($user);
         $this->em->flush();
+        $logger->info('pushed to user table');
     }
 
+    /**
+     * @method: create instagram(account) instance
+     */
+    public function createInstagramAccount(User $user,Account $account){
+        $account->setUsername($account->getUsername());
+        $account->setPassword($account->getPassword());
+        $account->setUser(0,$user); // here
+        $this->em->persist($account);
+        $this->em->flush();
+    }
 
      /**
     * @method

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Account;
+use App\Repository\AccountRepository;
 use App\Entity\IgAccount;
 use App\Entity\Task;
 use App\Entity\User;
@@ -20,7 +21,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Repository\AccountRepository;
 use Psr\Log\LoggerInterface;
 
 class InstaguiController extends AbstractController
@@ -68,8 +68,8 @@ class InstaguiController extends AbstractController
     public function profilPage(Request $request,LoggerInterface $logger,DBRequest $DBRequest)
     {  $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $usrr = $this->getUser();
-        $ig = new Account();
-        $form = $this->createFormBuilder($ig)
+        $account = new Account();
+        $form = $this->createFormBuilder($account)
             ->add('username', TextType::class, ['label_attr' => array('class' => 'form-label'),  'attr' => [ 'class' => 'form-control' ] ])
             ->add('password', TextType::class, ['label_attr' => array('class' => 'form-label'),   'attr' => [ 'class' => 'form-control' ] ])
             ->add('connect', ButtonType::class, ['label'=> 'Test connection', 'attr' => ['onclick' => 'runTestIgAcc()','class' => 'btn btn-info mt-2 ']])
@@ -77,10 +77,26 @@ class InstaguiController extends AbstractController
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $ig = $form->getData();
+            $account = $form->getData(); // we fetch the input
+
+            // We check if the account (username & password) given by the
+            // user is contained in the table Account
+            $result = $this->getDoctrine()
+                ->getRepository(Account::class)
+                ->selectAccount($account->getUsername());
+                // check this method into /src/Repository/AccountRepository.php
+            if($result == null){
+                // if NOT, then we create the account and submit it to the BD
+                $DBRequest->createInstagramAccount($usrr,$account);
+            }
+            else{
+                // else the result become the account instance
+                $account = $result;
+            }
+
 
             // Insert into database the Instagram Account into usrr "accounts" column using DBRequest service.
-            $DBRequest->assignInstagramAccount($usrr->getUsername(),$ig->getUsername(),$ig->getPassword());
+            $DBRequest->assignInstagramAccount($usrr,$account,$account->getUsername(),$account->getPassword(),$logger);
 
             return $this->redirectToRoute('task_success');
         }
