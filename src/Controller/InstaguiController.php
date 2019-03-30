@@ -100,12 +100,20 @@ class InstaguiController extends AbstractController
 
             return $this->redirectToRoute('task_success');
         }
-        $usr= $this->container->get('security.token_storage')->getToken()->getUser();
-        $logger->info($usr->getUsername());
-        $logger->info($usrr->getUsername());
 
+        // -------------- TEST -------------- //
+        $logger->info($usrr->getUsername());
+        $logger->info(serialize($usrr->getAccounts()));
+        if($usrr->getAccount(0) != null){ // test if user has accounts
+            $logger->info($usrr->getAccount(0)->getUsername());
+            $accs = $usrr->getAccounts();
+        }
+        else{ // else it returns null (for .twig)
+            $accs = null;
+        }
+        // -------------- /TEST/ -------------- //
         return $this->render('instagui/profile.html.twig', [
-           'page'=> 'Profile', 'form'=>$form->createView(), 'user'=>$this->getUser()
+           'page'=> 'Profile', 'form'=>$form->createView(), 'user'=>$this->getUser(), 'accounts'=>$accs
         ]);
     }
     /**
