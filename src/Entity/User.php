@@ -49,10 +49,17 @@ class User implements UserInterface
      */
     private $BackUp;
 
+    
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * Many Users have Many Accounts.
+     * @ORM\ManyToMany(targetEntity="Account", inversedBy="users")
+     * @ORM\JoinTable(name="users_accounts")
      */
     private $accounts;
+
+    public function __construct() {
+        $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -151,16 +158,22 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getAccounts(): ?int
+    public function getAccounts()
     {
         return $this->accounts;
     }
-
+    public function getAccount(?int $key):?Account
+    {
+      return $this->accounts->get($key);
+    }
     public function setAccounts($accounts): self
     {
         $this->accounts = $accounts;
 
-        return $this;
+    }
+    public function setAccount(?int $key,?Account $acc)
+    {   $account=$this->accounts->get($key);
+         $account= $acc;
     }
 
 
