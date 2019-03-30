@@ -27,8 +27,8 @@ class DBRequest{
     * @param params parameters array
     */
     public function setParams($user,$params){
-        $account=new Account();
-        $account=$user->getAccounts();
+       
+        $account=$user->getAccount(1);
         if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this account '), 419);
         $account->setSettings(json_encode($params));
         $this->em->persist($account);
@@ -44,7 +44,7 @@ class DBRequest{
         * @param value on/off
         */
         public function setSlot($user,$slot,$value){
-            $account=$user->getAccounts();
+            $account=$user->getAccount(0);
             if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this account '), 419);
 
 
@@ -65,10 +65,10 @@ class DBRequest{
         * @param user  user  entity object
         */
         public function getSlots($user){
-            $account=$user->getAccounts();
-
+           
+            $account=$user->getAccount(0);
+          
             if($account==null) return null;
-
             return $slots= unserialize($account->getSlots());
            }
 
@@ -115,7 +115,7 @@ class DBRequest{
     public function setStatus($user,$status)
     {
 
-        $account=$user->getAccounts();
+        $account=$user->getAccount(0);
         if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this user '), 419);
         if($status == "true") $account->setStatus(true);
         else $account->setStatus(false);
@@ -132,7 +132,7 @@ class DBRequest{
     */
     public function getStatus($user)
     {
-        $account=$user->getAccounts();
+        $account=$user->getAccount(0);
         if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this user '), 419);
         return $account->getStatus();
     }

@@ -49,12 +49,21 @@ class Account
     /**
      * @ORM\Column(type="array", nullable=true)
      */
-    private $slots ;
+    private $slots;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $status;
+      /**
+     * Many Accounts have Many Users.
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="accounts")
+     */
+    private $users;
+
+    public function __construct() {
+        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
    
     public function getId(): ?int
@@ -157,5 +166,26 @@ class Account
         return $this;
     }
 
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    public function setUsers($users):self
+    {
+        $this->users=$users;
+    }
+
+    public function getUser(?int $key)
+    {
+        return $this->users->get($key); 
+    }
+    
+    public function setUser(?int $key,?User $userAccount)
+    { 
+        $user=$this->users->get($key);
+        $user= $userAccount;
+
+    }
     
 }

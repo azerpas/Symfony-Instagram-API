@@ -157,34 +157,9 @@ class InstaguiController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/instagui/config_bot", name="set_config", methods={"POST"},condition="request.isXmlHttpRequest()")
-     */
+   
 
-    public function setBotParameters(Request $req,LoggerInterface $logger,DBRequest $service){
-
-        if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
-            return new JsonResponse(['error' => 'auth required'], 401);
-        }
-        $logger->info($this->getUser()->getUsername());
-        $value=$service->setParams($this->getUser(),$req->request->all());
-        return new JsonResponse(['output'=> $value]);
-
-
-    }
-
-    /**
-     * @Route("/instagui/set_bot_status", name="set_bot_status", methods={"POST"},condition="request.isXmlHttpRequest()")
-     */
-
-    public function setBotStatus(Request $req){
-
-        $bot=$req->request->get('bot');
-        $value=$req->request->get('value');
-        $message=$bot." bot turned ".$value;
-        return new JsonResponse(['output'=> $message]);
-
-    }
+   
 
     /**
      * @Route("/instagui/testIgAccount", name="test_ig_account", methods={"POST"},condition="request.isXmlHttpRequest()")
