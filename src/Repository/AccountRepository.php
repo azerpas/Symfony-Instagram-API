@@ -50,7 +50,7 @@ class AccountRepository extends ServiceEntityRepository
     /**
      * @method assign instagram instance to user or create it if not exist
      */
-    public function selectAccount($user,$username,$password){
+    public function selectAccount($username){
         //check if account exist
         return $this->createQueryBuilder('a')
             ->andWhere('a.username = ?1')
