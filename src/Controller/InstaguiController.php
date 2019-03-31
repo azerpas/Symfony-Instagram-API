@@ -38,10 +38,10 @@ class InstaguiController extends AbstractController
      /**
      * @Route("/instagui/scheduling", name="inst_scheduling")
      */
-    public function schedulingPage(DBRequest $bd)
+    public function schedulingPage(DBRequest $DBRequest,LoggerInterface $logger)
     {   $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $slots=$bd->getSlots($this->getUser());
-        $status=$bd->getStatus($this->getUser());
+        $slots=$DBRequest->getSlots($this->getUser(),$logger);
+        $status=$DBRequest->getStatus($this->getUser());
         return $this->render('instagui/scheduling.html.twig', [ 'page'=> 'scheduling','slots' =>$slots,'status'=>$status]);
     }
 
