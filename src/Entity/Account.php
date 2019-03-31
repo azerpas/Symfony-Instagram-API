@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -61,8 +63,14 @@ class Account
      */
     private $users;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\People", mappedBy="account")
+     */
+    private $people;
+
     public function __construct() {
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->people = new ArrayCollection();
     }
 
    
@@ -186,6 +194,37 @@ class Account
         $user=$this->users->get($key);
         $user= $userAccount;
 
+    }
+
+    /**
+     * @return Collection|People[]
+     */
+    public function getPeople(): Collection
+    {
+        return $this->people;
+    }
+
+    public function addPerson(People $person): self
+    {
+        if (!$this->people->contains($person)) {
+            $this->people[] = $person;
+            $person->setAccount($this);
+        }
+
+        return $this;
+    }
+
+    public function removePerson(People $person): self
+    {
+        if ($this->people->contains($person)) {
+            $this->people->removeElement($person);
+            // set the owning side to null (unless already changed)
+            if ($person->getAccount() === $this) {
+                $person->setAccount(null);
+            }
+        }
+
+        return $this;
     }
     
 }

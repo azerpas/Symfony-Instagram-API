@@ -1,55 +1,46 @@
 <?php
 
-namespace App\Command;
-
-set_time_limit(0);
-date_default_timezone_set('UTC');
+namespace App\Service;
 
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
-use InstagramAPI\Request\Hashtag;
-use InstagramAPI\Signatures;
-use App\Service\DBRequest;
+use http\Env\Response;
 use Psr\Log\LoggerInterface;
-class SearchByTagCommand extends ContainerAwareCommand
-{    protected static $defaultName = 'search:tag';
+use App\Service\DBRequest;;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+class InstaInterface{
      /**
      * @var DBRequest
      */
-     private $db;
-      /**
+    private $db;
+     /**
      * @var LoggerInterface
      */
-     private $logger;
-     public function __construct(DBrequest $bdRequest,LoggerInterface $logger){
+    private $logger;
+    protected $bd;
+    protected $lg;
+    public function __construct(DBrequest $bdRequest,LoggerInterface $logger){
         $this->logger = $logger;
         $this->db = $bdRequest;
         parent::__construct();
 
     }
-    protected function configure()
-    {
-        $this
-            ->setName('search:tag')
-            ->setDescription('Seach intagram account') 
-            ->addArgument('username', InputArgument::REQUIRED, 'My username')
-            ->addArgument('password', InputArgument::REQUIRED, 'My password')
-            ->addArgument('tags',InputArgument::IS_ARRAY,'Hashtags list?')
-        ;
-    }
+    /**
+     * @method search instagram users 
+     * @param account
+     * @param tags 
+     */
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+
+    protected function searchByTag($account)
     {    /////// CONFIG ///////
         $debug          = true;
         $truncatedDebug = true;
         //////////////////////
-        $username = $input->getArgument('username');
-        $password = $input->getArgument('password');
-        $tags= $input->getArgument('tags');
+        $username = $account->getUsername();
+        $password = $account->getPassword();
+        //$tags=$account->getTags();
+        $tags=array("chat") ;
         
         //$this->logger->info('Waking up the sun');
         //get instagram instance
@@ -79,18 +70,11 @@ class SearchByTagCommand extends ContainerAwareCommand
               sleep(2);
               $cpt++;
             }while ( $maxId !== null && 1>$cpt);
-           
-           
-            $account=$this->db->getUser("fre")->getAccount(0);
             
              $this->db->addPeople($account,$users);
         }
-        
 
-     
     }
 
-   
 
-    
-}
+}    

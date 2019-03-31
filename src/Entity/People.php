@@ -22,7 +22,7 @@ class People
     private $username;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      */
     private $instaId;
 
@@ -51,6 +51,11 @@ class People
      */
     private $updated;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\account", inversedBy="people")
+     */
+    private $account;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -68,12 +73,12 @@ class People
         return $this;
     }
 
-    public function getInstaId(): ?int
+    public function getInstaId(): ?string
     {
         return $this->instaId;
     }
 
-    public function setInstaId(int $instaId): self
+    public function setInstaId(string $instaId): self
     {
         $this->instaId = $instaId;
 
@@ -136,6 +141,18 @@ class People
     public function setUpdated(?\DateTimeInterface $updated): self
     {
         $this->updated = $updated;
+
+        return $this;
+    }
+
+    public function getAccount(): ?account
+    {
+        return $this->account;
+    }
+
+    public function setAccount(?account $account): self
+    {
+        $this->account = $account;
 
         return $this;
     }
