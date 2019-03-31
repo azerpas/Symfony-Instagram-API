@@ -91,7 +91,8 @@ class DBRequest{
      * @method: assign instagram instance to user or create it if not exist
      */
     public function assignInstagramAccount(User $user,$account,$username,$password, LoggerInterface $logger){
-        $user->setAccount(0,$account);
+        $key = $user->getAccounts()->count();
+        $user->setAccount($key,$account);
         $this->em->persist($user);
         $this->em->flush();
         $logger->info('pushed to users_accounts table (ManyToMany)');
@@ -103,7 +104,8 @@ class DBRequest{
     public function createInstagramAccount(User $user,Account $account){
         $account->setUsername($account->getUsername());
         $account->setPassword($account->getPassword());
-        $account->setUser(0,$user); // here
+        $key = $account->getUsers()->count();
+        $account->setUser($key,$user);
         $this->em->persist($account);
         $this->em->flush();
     }
