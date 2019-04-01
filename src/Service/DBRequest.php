@@ -212,4 +212,19 @@ class DBRequest{
         return $this->em->getRepository('App\Entity\Account')->findAll();
     }
 
+    /**
+     * @method set user search settings
+     */
+    public function setSearchSettings(User $user,$search_settings){
+        //
+        // WARNING: STILL NEED TO ADD OPTION TO CHOOSE ACCOUNT, WE'LL GET IN $req->request->get()
+        //          WHICH ACCOUNT HAS BEEN SELECTED
+        // CURRENTLY ADDING TO FIRST USER ATTACHED ACCOUNT ON DATABASE
+        //
+        $account=$user->getAccount(0);
+        $account->setSearchSettings($search_settings);
+        $this->em->persist($account);
+        $this->em->flush();
+    }
+
 }
