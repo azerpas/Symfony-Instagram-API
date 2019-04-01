@@ -35,14 +35,23 @@ class PeopleRepository extends ServiceEntityRepository
         ;
     }
     */
-
+   
+    public function findAllByAccount($account)
+    {  
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.account = :acc')
+            ->setParameter('acc', $account)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
     
     public function findOneByUsername($username,$account): ?People
-    {
+    {   
         return $this->createQueryBuilder('p')
-            ->andWhere('p.username = :uesr')
+            ->andWhere('p.username = :uesr') 
             ->andWhere('p.account = :acc')
-            ->setParameter('user', $username)
+            ->setParameter('user', $username) 
             ->setParameter('acc', $account)
             ->getQuery()
             ->getOneOrNullResult()

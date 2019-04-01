@@ -47,37 +47,33 @@ class DBRequest{
         if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this account '), 419);
 
 
-        $slots=unserialize($account->getSlots());
-        $slots[$slot]=$value;
-        $this->lg->debug($value);
-
-
-        $account->setSlots(serialize($slots));
-        $this->em->persist($account);
-        $this->em->flush();
-        return $account;
+            $slots=json_decode($account->getSlots());
+            if($value=="off") $slots[$slot]=false;
+            else $slots[$slot]=true;
+            $this->lg->info($value."   ".json_encode($slots).$slot );
+              
+           // $slots=array_fill(0, 24, false);
+            $account->setSlots(json_encode($slots));
+            $this->em->persist($account);
+            $this->em->flush();
+            return $account;
 
     }
 
-    /**
-     * @method getSlots slots list
-     * @param user  user  entity object
-     * @return Account::slots
-     */
-    public function getSlots(User $user,LoggerInterface $logger){
+    
+         /**
+        * @method get slots list
+        * @param user  user  entity object
+        */
+        public function getSlots($user){
+           
+            $account=$user->getAccount(0);
+          
+            if($account==null) return null;
 
-        $accounts=$user->getAccounts();
-        $logger->info($accounts->count());
-        for($i = 0; $i<$accounts->count(); $i++){
-            $logger->info(serialize($accounts->get($i)->getSlots()));
-        }
-        if($accounts==null) return null;
-        $logger->info('not null');
-        $logger->info(unserialize($accounts[0]->getSlots()));
-        // ?????? each account created got $slots null per default
-        // we need to setSlots() in DBRequest::createInstagramAccount()
-        return $slots= unserialize($accounts[0]->getSlots());
-    }
+           // return  array_pad(array(), 24, false);
+            return  json_decode($account->getSlots());
+           }
 
 
     /**
@@ -111,6 +107,8 @@ class DBRequest{
     public function createInstagramAccount(User $user,Account $account){
         $account->setUsername($account->getUsername());
         $account->setPassword($account->getPassword());
+        $account->setSlots(json_encode(array_fill(0, 24, false)));
+        $account->setUser(0,$user); // here
         $searchSettings = new stdClass();
         $searchSettings->pseudos = [];
         $searchSettings->hashtags = [];
@@ -210,6 +208,13 @@ class DBRequest{
      */
     public function getAllAccounts(){
         return $this->em->getRepository('App\Entity\Account')->findAll();
+    }
+    /**
+     * @method get People list 
+     * @return People[] list of People 
+     */
+    public function getAllPeopleForAccount($account){
+        return $this->em->getRepository('App\Entity\People')->findAllByAccount($account);
     }
 
     /**
