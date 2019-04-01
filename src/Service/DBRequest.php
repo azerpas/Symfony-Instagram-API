@@ -3,6 +3,7 @@
 namespace App\Service;
 use App\Entity\Account;
 use App\Entity\User;
+use App\Entity\People;
 use Doctrine\ORM\EntityManagerInterface;
 use http\Env\Response;
 use Psr\Log\LoggerInterface;
@@ -25,7 +26,7 @@ class DBRequest{
      */
     public function setParams(User $user,$params){
        
-        $account=$user->getAccount(1);
+        $account=$user->getAccount(0);
         if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this account '), 419);
         $account->setSettings(json_encode($params));
         $this->em->persist($account);
@@ -101,7 +102,7 @@ class DBRequest{
         $user->setAccount($key,$account);
         $this->em->persist($user);
         $this->em->flush();
-        $logger->info('pushed to users_accounts table (ManyToMany)');
+        $this->lg->info('pushed to users_accounts table (ManyToMany)');
     }
 
     /**
@@ -151,18 +152,64 @@ class DBRequest{
         return $account->getStatus();
     }
 
-    /**
-     * @method set user search settings
-     */
-    public function setSearchSettings(User $user,$search_settings){
-        //
-        // WARNING: STILL NEED TO ADD OPTION TO CHOOSE ACCOUNT, WE'LL GET IN $req->request->get()
-        //          WHICH ACCOUNT HAS BEEN SELECTED
-        // CURRENTLY ADDING TO FIRST USER ATTACHED ACCOUNT ON DATABASE
-        //
-        $account=$user->getAccount(0);
-        $account->setSearchSettings($search_settings);
-        $this->em->persist($account);
-        $this->em->flush();
+       /**
+    * @method add catched user list to people table
+     *@param account
+     *@param people list of instagram users 
+     * @return
+    */
+     public function  addPeople($account,$people)
+    { 
+        foreach ($people as $user)
+        { 
+           if(!$this->personExist($account,$user["id"]))
+              { $person=new People();
+                $person->setUsername($user["username"]);
+                $person->setInstaId($user["id"]);
+                $person->setToFollow(true);
+                $person->setFollowDate(new \DateTime('@'.strtotime('now')));
+                $person->setIsFollowingBack(false);
+                $person->setNbFollowers(0);
+                $person->setAccount($account);
+                $person->setUpdated(new \DateTime('@'.strtotime('now')));
+                echo json_encode($person);
+                $this->em->persist($person);  
+                 $this->em->flush();
+                $account->addPerson($person); 
+                $this->em->persist($account);  
+                $this->em->flush();
+              }
+        }
     }
+
+    /**
+     * @method check if user exist in people table
+     * @param $account
+     * @param $user
+     * @return boolean false  if not exist/ true if exist 
+     */
+     public function personExist($account,$instaID)
+     { 
+      $insta=$this->em->getRepository('App\Entity\People')->findOneByInstaId($instaID,$account->getId());
+      if($insta != null) return true;
+      return false;
+        
+    }
+    /**
+     * @method
+     * @param
+     * @return User 
+     */
+    public function getUser($username){
+        return $this->em->getRepository('App\Entity\User')->findOneByUsername($username); 
+    }
+
+    /**
+     * @method get all accounts list
+     * @return account[] list of all accounts 
+     */
+    public function getAllAccounts(){
+        return $this->em->getRepository('App\Entity\Account')->findAll();
+    }
+
 }
