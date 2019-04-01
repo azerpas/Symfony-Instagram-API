@@ -81,16 +81,39 @@ class AjaxController extends AbstractController
     }
 
     /**
-     * @Route("/ajax/search_settings", name="search_settings", methods={"POST","GET"}
+     * @Route("/ajax/search_settings", name="search_settings", methods={"POST","GET"})
      */
     public function searchSettings(Request $req, DBRequest $DBRequest){
+        //
+        // WARNING: STILL NEED TO ADD OPTION TO CHOOSE ACCOUNT, WE'LL GET IN $req->request->get()
+        //          WHICH ACCOUNT HAS BEEN SELECTED
+        // CURRENTLY ADDING TO FIRST USER ATTACHED ACCOUNT ON DATABASE
+        //
+        $search_settings = unserialize($this->getUser()->getAccount(0)->getSearchSettings());
         if($req->isMethod("POST")){
-            $req->request->all();
+            $keyword = $req->request->get('keyword');
+            if (strpos($keyword,"@")===0){ // if contains @ then pseudo
+                $keyword = str_replace("@","",$keyword); // replacing @ with nothing
+                array_push($search_settings->pseudos,$keyword); // pushing current keyword into Account pseudos settings
+                $search_settings = serialize($search_settings);
+                $DBRequest->setSearchSettings($this->getUser(),$search_settings);
+                return new JsonResponse(['output'=>'Successfully added: '.$keyword],200);
+            }
+            if (strpos($keyword,"#")===0){ // if contains # then hashtag
+                $keyword = str_replace("#","",$keyword);
+                array_push($search_settings->hashtags,$keyword);
+                $search_settings = serialize($search_settings);
+                $DBRequest->setSearchSettings($this->getUser(),$search_settings);
+                return new JsonResponse(['output'=>'Successfully added: '.$keyword],200);
+            }
+            return new JsonResponse(['output'=>'Could not read the keyword: '.$keyword],400);
         }
-        else{
-
+        elseif($req->isMethod("GET")){
+            return new JsonResponse(['method'=>'GET','output'=> serialize($search_settings)],200);
         }
+        return new JsonResponse(['method'=>'No declared method','output'=> serialize($search_settings)],400);
     }
+
 
    
 
