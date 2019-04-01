@@ -198,5 +198,12 @@ class DBRequest{
     public function getAllAccounts(){
         return $this->em->getRepository('App\Entity\Account')->findAll();
     }
+    /**
+     * @method get People list 
+     * @return People[] list of People 
+     */
+    public function getAllPeopleForAccount($account){
+        return $this->em->getRepository('App\Entity\People')->findAllByAccount($account);
+    }
 
 }
