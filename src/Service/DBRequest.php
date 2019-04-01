@@ -49,12 +49,13 @@ class DBRequest{
             if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this account '), 419);
 
 
-            $slots=unserialize($account->getSlots());
-            $slots[$slot]=$value;
-            $this->lg->debug($value);
-
-
-            $account->setSlots(serialize($slots));
+            $slots=json_decode($account->getSlots());
+            if($value=="off") $slots[$slot]=false;
+            else $slots[$slot]=true;
+            $this->lg->info($value."   ".json_encode($slots).$slot );
+              
+           // $slots=array_fill(0, 24, false);
+            $account->setSlots(json_encode($slots));
             $this->em->persist($account);
             $this->em->flush();
             return $account;
@@ -70,7 +71,9 @@ class DBRequest{
             $account=$user->getAccount(0);
           
             if($account==null) return null;
-            return $slots= unserialize($account->getSlots());
+
+           // return  array_pad(array(), 24, false);
+            return  json_decode($account->getSlots());
            }
 
 
@@ -104,6 +107,7 @@ class DBRequest{
     public function createInstagramAccount(User $user,Account $account){
         $account->setUsername($account->getUsername());
         $account->setPassword($account->getPassword());
+        $account->setSlots(json_encode(array_fill(0, 24, false)));
         $account->setUser(0,$user); // here
         $this->em->persist($account);
         $this->em->flush();

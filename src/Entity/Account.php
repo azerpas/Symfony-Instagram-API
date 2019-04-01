@@ -49,7 +49,7 @@ class Account
     private $settings;
 
     /**
-     * @ORM\Column(type="array", nullable=true)
+     * @ORM\Column(type="json_array", nullable=true)
      */
     private $slots;
 
