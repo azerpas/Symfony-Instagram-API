@@ -36,15 +36,28 @@ class PeopleRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?People
+    
+    public function findOneByUsername($username,$account): ?People
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('p.username = :uesr')
+            ->andWhere('p.account = :acc')
+            ->setParameter('user', $username)
+            ->setParameter('acc', $account)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
+    public function findOneByInstaId($instaID,$account): ?People
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.instaId = :val')
+            ->andWhere('p.account = :acc')
+            ->setParameter('val', $instaID)
+            ->setParameter('acc', $account)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+    
 }
