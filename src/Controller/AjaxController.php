@@ -80,6 +80,18 @@ class AjaxController extends AbstractController
 
     }
 
+    /**
+     * @Route("/ajax/search_settings", name="search_settings", methods={"POST","GET"}
+     */
+    public function searchSettings(Request $req, DBRequest $DBRequest){
+        if($req->isMethod("POST")){
+            $req->request->all();
+        }
+        else{
+
+        }
+    }
+
    
 
 }

@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}INSTAGUI{% endblock %}
+
+{% block Navbar %}
+    {{parent()}}
+{% endblock %}
+{% block Section %}
+    <div class="container">
+        <section class="section-padding">
+            <div class="row">
+                <div class="card col-sm">
+                    <div class="card-header">
+                        <h5>Pseudos @
+                            <a class="position-absolute" style="right: 1em" href="#">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <ul style="height: 120px;overflow:auto;" class="list-group">
+                        {% if pseudos %}
+                            {% for i in blacklist %}
+                                <li class="list-group-item"> {# Need to add .active #}
+                                    {{ i }} {# Need to add delete button and modify button #}
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            No pseudos, please add some
+                        {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="vl" style="border-left: 6px solid green; border-left-color: #33b35a; height: 500px;"></div>
+                <div class="card col-sm">
+                    <div class="card-header">
+                        <h5>Hashtag #
+                            <a class="position-absolute" style="right: 1em" href="#">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <ul style="height: 120px;overflow:auto;" class="list-group">
+                            {% if hashtags %}
+                                {% for i in blacklist %}
+                                    <li class="list-group-item"> {# Need to add .active #}
+                                        {{ i }} {# Need to add delete button and modify button #}
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                No hashtags, please add some
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="vl" style="border-left: 6px solid green;border-left-color: #33b35a; height: 500px;"></div>
+                <div class="card col-sm">
+                    <div class="card-header">
+                        <h5>Blacklist <i class="fas fa-list"></i>
+                            <a class="position-absolute" style="right: 1em" href="#">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <ul style="height: 120px;overflow:auto;" class="list-group">
+                            {% if blacklist %}
+                                {% for i in blacklist %}
+                                    <li class="list-group-item"> {# Need to add .active #}
+                                        {{ i }} {# Need to add delete button and modify button #}
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                No blacklist, please add some terms
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+{% block Footer %}
+    {{parent()}}
+{% endblock %}
+

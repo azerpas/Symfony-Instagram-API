@@ -23,6 +23,11 @@
   
    });
 
+function searchSettings() {
+    $.ajax({
+       type:'post'
+    });
+}
 
 // set bot config
 function config() {
