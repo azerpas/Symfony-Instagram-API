@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use http\Env\Response;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use stdClass;
 
 class DBRequest{
     protected $em;
@@ -23,7 +24,7 @@ class DBRequest{
      * @param params parameters array
      * @return JsonResponse
      */
-    public function setParams($user,$params){
+    public function setParams(User $user,$params){
        
         $account=$user->getAccount(0);
         if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this account '), 419);
@@ -85,7 +86,7 @@ class DBRequest{
      * @param User::password user password
      * @param User::email
      */
-    public function editProfile($user,$pwd,$email){
+    public function editProfile(User $user,$pwd,$email){
 
         if(strlen($email)!=0)$user->setEmail($email);
         if(strlen($pwd)!=0)$user->setPassword($pwd);
@@ -110,6 +111,11 @@ class DBRequest{
     public function createInstagramAccount(User $user,Account $account){
         $account->setUsername($account->getUsername());
         $account->setPassword($account->getPassword());
+        $searchSettings = new stdClass();
+        $searchSettings->pseudos = [];
+        $searchSettings->hashtags = [];
+        $searchSettings->blacklist = [];
+        $account->setSearchSettings(serialize($searchSettings));
         $key = $account->getUsers()->count();
         $account->setUser($key,$user);
         $this->em->persist($account);
@@ -121,7 +127,7 @@ class DBRequest{
     * @param status on/off
     * @return
     */
-    public function setStatus($user,$status)
+    public function setStatus(User $user,$status)
     {
 
         $account=$user->getAccount(0);
@@ -139,7 +145,7 @@ class DBRequest{
      *@param user
     * @return
     */
-     public function getStatus($user)
+    public function getStatus(User $user)
     {
         $account=$user->getAccount(0);
         if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this user '), 419);

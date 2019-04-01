@@ -35,6 +35,16 @@ class InstaguiController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/instagui/search", name="inst_search")
+     */
+    public function searchPage()
+    {   $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        return $this->render('instagui/search.html.twig', [
+            'controller_name' => 'InstaguiController','page'=> 'Search', 'hashtags'=>'', 'pseudos'=>'', 'blacklist'=>''
+        ]);
+    }
+
      /**
      * @Route("/instagui/scheduling", name="inst_scheduling")
      */
@@ -66,7 +76,8 @@ class InstaguiController extends AbstractController
      * @Route("/instagui/profile", name="inst_profil")
      */
     public function profilPage(Request $request,LoggerInterface $logger,DBRequest $DBRequest)
-    {  $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $usrr = $this->getUser();
         $account = new Account();
         $form = $this->createFormBuilder($account)
