@@ -65,7 +65,7 @@ class LikeAndFollowUsersCommand extends Command
                     'userId' => $person,
                 ];
                 $followInput = new ArrayInput($followCommandArguments);
-                sleep();
+                sleep(Random(3,6));
                 $followCommand->run($followInput, $output); 
                 //Set toFollow to 'true' and toFollowDate to Date  
             }
