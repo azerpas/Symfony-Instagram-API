@@ -38,10 +38,10 @@ class InstaguiController extends AbstractController
      /**
      * @Route("/instagui/scheduling", name="inst_scheduling")
      */
-    public function schedulingPage(DBRequest $bd)
+    public function schedulingPage(DBRequest $DBRequest,LoggerInterface $logger)
     {   $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $slots=$bd->getSlots($this->getUser());
-        $status=$bd->getStatus($this->getUser());
+        $slots=$DBRequest->getSlots($this->getUser(),$logger);
+        $status=$DBRequest->getStatus($this->getUser());
         return $this->render('instagui/scheduling.html.twig', [ 'page'=> 'scheduling','slots' =>$slots,'status'=>$status]);
     }
 
@@ -71,7 +71,7 @@ class InstaguiController extends AbstractController
         $account = new Account();
         $form = $this->createFormBuilder($account)
             ->add('username', TextType::class, ['label_attr' => array('class' => 'form-label'),  'attr' => [ 'class' => 'form-control' ] ])
-            ->add('password', TextType::class, ['label_attr' => array('class' => 'form-label'),   'attr' => [ 'class' => 'form-control' ] ])
+            ->add('password', PasswordType::class, ['label_attr' => array('class' => 'form-label'),   'attr' => [ 'class' => 'form-control' ] ])
             ->add('connect', ButtonType::class, ['label'=> 'Test connection', 'attr' => ['onclick' => 'runTestIgAcc()','class' => 'btn btn-info mt-2 ']])
             ->add('save', SubmitType::class, ['label' => 'Create Task','attr'=> [ 'class' => ' btn btn-primary mt-2' ]])
             ->getForm();
@@ -98,7 +98,7 @@ class InstaguiController extends AbstractController
             // Insert into database the Instagram Account into usrr "accounts" column using DBRequest service.
             $DBRequest->assignInstagramAccount($usrr,$account,$account->getUsername(),$account->getPassword(),$logger);
 
-            return $this->redirectToRoute('task_success');
+            return $this->redirectToRoute('inst_profil');
         }
 
         // -------------- TEST -------------- //

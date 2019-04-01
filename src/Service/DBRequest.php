@@ -16,17 +16,13 @@ class DBRequest{
         $this->em = $entityManager;
         $this->lg = $logger;
     }
+
     /**
      * @method set bot params in account entity
      * @param user  user  entity object
      * @param params parameters array
+     * @return JsonResponse
      */
-
-   /**
-    * @method set bot params in account entity
-    * @param user  user  entity object
-    * @param params parameters array
-    */
     public function setParams($user,$params){
        
         $account=$user->getAccount(0);
@@ -38,48 +34,57 @@ class DBRequest{
     }
 
 
-       /**
-        * @method set slot status
-        * @param user  user  entity object
-        * @param slot time slot
-        * @param value on/off
-        */
-        public function setSlot($user,$slot,$value){
-            $account=$user->getAccount(0);
-            if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this account '), 419);
-
-
-            $slots=unserialize($account->getSlots());
-            $slots[$slot]=$value;
-            $this->lg->debug($value);
-
-
-            $account->setSlots(serialize($slots));
-            $this->em->persist($account);
-            $this->em->flush();
-            return $account;
-
-           }
-
-         /**
-        * @method get slots list
-        * @param user  user  entity object
-        */
-        public function getSlots($user){
-           
-            $account=$user->getAccount(0);
-          
-            if($account==null) return null;
-            return $slots= unserialize($account->getSlots());
-           }
-
-
-       /**
-    * @method edit Profile
-    * @param user
-    * @param pwd user password
-    * @param email
+    /**
+    * @method set slot status
+    * @param user  user  entity object
+    * @param slot time slot
+    * @param value on/off
+    * @return JsonResponse
     */
+    public function setSlot(User $user,$slot,$value){
+        $account=$user->getAccount(0);
+        if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this account '), 419);
+
+
+        $slots=unserialize($account->getSlots());
+        $slots[$slot]=$value;
+        $this->lg->debug($value);
+
+
+        $account->setSlots(serialize($slots));
+        $this->em->persist($account);
+        $this->em->flush();
+        return $account;
+
+    }
+
+    /**
+     * @method getSlots slots list
+     * @param user  user  entity object
+     * @return Account::slots
+     */
+    public function getSlots(User $user,LoggerInterface $logger){
+
+        $accounts=$user->getAccounts();
+        $logger->info($accounts->count());
+        for($i = 0; $i<$accounts->count(); $i++){
+            $logger->info(serialize($accounts->get($i)->getSlots()));
+        }
+        if($accounts==null) return null;
+        $logger->info('not null');
+        $logger->info(unserialize($accounts[0]->getSlots()));
+        // ?????? each account created got $slots null per default
+        // we need to setSlots() in DBRequest::createInstagramAccount()
+        return $slots= unserialize($accounts[0]->getSlots());
+    }
+
+
+    /**
+     * @method edit Profile
+     * @param User
+     * @param User::password user password
+     * @param User::email
+     */
     public function editProfile($user,$pwd,$email){
 
         if(strlen($email)!=0)$user->setEmail($email);
@@ -91,8 +96,9 @@ class DBRequest{
     /**
      * @method: assign instagram instance to user or create it if not exist
      */
-    public function assignInstagramAccount(User $user,$account,$username,$password){
-        $user->setAccount(0,$account);
+    public function assignInstagramAccount(User $user,$account,$username,$password, LoggerInterface $logger){
+        $key = $user->getAccounts()->count();
+        $user->setAccount($key,$account);
         $this->em->persist($user);
         $this->em->flush();
         $this->lg->info('pushed to users_accounts table (ManyToMany)');
@@ -104,7 +110,8 @@ class DBRequest{
     public function createInstagramAccount(User $user,Account $account){
         $account->setUsername($account->getUsername());
         $account->setPassword($account->getPassword());
-        $account->setUser(0,$user); // here
+        $key = $account->getUsers()->count();
+        $account->setUser($key,$user);
         $this->em->persist($account);
         $this->em->flush();
     }
