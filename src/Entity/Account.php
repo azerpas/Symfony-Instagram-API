@@ -190,10 +190,8 @@ class Account
     }
     
     public function setUser(?int $key,?User $userAccount)
-    { 
-        $user=$this->users->get($key);
-        $user= $userAccount;
-
+    {
+        return $this->users->set($key,$userAccount);
     }
 
     /**

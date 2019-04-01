@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use http\Env\Response;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use stdClass;
 
 class DBRequest{
     protected $em;
@@ -16,18 +17,14 @@ class DBRequest{
         $this->em = $entityManager;
         $this->lg = $logger;
     }
+
     /**
      * @method set bot params in account entity
      * @param user  user  entity object
      * @param params parameters array
+     * @return JsonResponse
      */
-
-   /**
-    * @method set bot params in account entity
-    * @param user  user  entity object
-    * @param params parameters array
-    */
-    public function setParams($user,$params){
+    public function setParams(User $user,$params){
        
         $account=$user->getAccount(0);
         if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this account '), 419);
@@ -38,15 +35,16 @@ class DBRequest{
     }
 
 
-       /**
-        * @method set slot status
-        * @param user  user  entity object
-        * @param slot time slot
-        * @param value on/off
-        */
-        public function setSlot($user,$slot,$value){
-            $account=$user->getAccount(0);
-            if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this account '), 419);
+    /**
+    * @method set slot status
+    * @param user  user  entity object
+    * @param slot time slot
+    * @param value on/off
+    * @return JsonResponse
+    */
+    public function setSlot(User $user,$slot,$value){
+        $account=$user->getAccount(0);
+        if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this account '), 419);
 
 
             $slots=json_decode($account->getSlots());
@@ -60,8 +58,9 @@ class DBRequest{
             $this->em->flush();
             return $account;
 
-           }
+    }
 
+    
          /**
         * @method get slots list
         * @param user  user  entity object
@@ -77,13 +76,13 @@ class DBRequest{
            }
 
 
-       /**
-    * @method edit Profile
-    * @param user
-    * @param pwd user password
-    * @param email
-    */
-    public function editProfile($user,$pwd,$email){
+    /**
+     * @method edit Profile
+     * @param User
+     * @param User::password user password
+     * @param User::email
+     */
+    public function editProfile(User $user,$pwd,$email){
 
         if(strlen($email)!=0)$user->setEmail($email);
         if(strlen($pwd)!=0)$user->setPassword($pwd);
@@ -94,8 +93,9 @@ class DBRequest{
     /**
      * @method: assign instagram instance to user or create it if not exist
      */
-    public function assignInstagramAccount(User $user,$account,$username,$password){
-        $user->setAccount(0,$account);
+    public function assignInstagramAccount(User $user,$account,$username,$password, LoggerInterface $logger){
+        $key = $user->getAccounts()->count();
+        $user->setAccount($key,$account);
         $this->em->persist($user);
         $this->em->flush();
         $this->lg->info('pushed to users_accounts table (ManyToMany)');
@@ -109,6 +109,13 @@ class DBRequest{
         $account->setPassword($account->getPassword());
         $account->setSlots(json_encode(array_fill(0, 24, false)));
         $account->setUser(0,$user); // here
+        $searchSettings = new stdClass();
+        $searchSettings->pseudos = [];
+        $searchSettings->hashtags = [];
+        $searchSettings->blacklist = [];
+        $account->setSearchSettings(serialize($searchSettings));
+        $key = $account->getUsers()->count();
+        $account->setUser($key,$user);
         $this->em->persist($account);
         $this->em->flush();
     }
@@ -118,7 +125,7 @@ class DBRequest{
     * @param status on/off
     * @return
     */
-    public function setStatus($user,$status)
+    public function setStatus(User $user,$status)
     {
 
         $account=$user->getAccount(0);
@@ -136,7 +143,7 @@ class DBRequest{
      *@param user
     * @return
     */
-     public function getStatus($user)
+    public function getStatus(User $user)
     {
         $account=$user->getAccount(0);
         if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this user '), 419);
@@ -208,6 +215,21 @@ class DBRequest{
      */
     public function getAllPeopleForAccount($account){
         return $this->em->getRepository('App\Entity\People')->findAllByAccount($account);
+    }
+
+    /**
+     * @method set user search settings
+     */
+    public function setSearchSettings(User $user,$search_settings){
+        //
+        // WARNING: STILL NEED TO ADD OPTION TO CHOOSE ACCOUNT, WE'LL GET IN $req->request->get()
+        //          WHICH ACCOUNT HAS BEEN SELECTED
+        // CURRENTLY ADDING TO FIRST USER ATTACHED ACCOUNT ON DATABASE
+        //
+        $account=$user->getAccount(0);
+        $account->setSearchSettings($search_settings);
+        $this->em->persist($account);
+        $this->em->flush();
     }
 
 }

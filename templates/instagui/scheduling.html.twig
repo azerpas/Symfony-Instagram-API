@@ -7,33 +7,26 @@
 {% endblock %}
 
 {% block Section %}
- <section class="dashboard-counts section-padding">  
-       <div class="card  ">
-  
-                      
-                                
-                         
-                            <div class="card-header row">
-                              <h4 class="col-10">Créneaux</h4>
-                              <div class="col-2">
-                              <input type="checkbox" id="run" name="toggle-event" class="justify-content-end" data-onstyle="success" {{ status?"checked" }} data-toggle="toggle" onchange="run_bot(this)">
-                              </div>
-                          
-                            </div>
-                            <div class="card-body">
-                               {% if slots == null %}
-                                <div class="h4">aucun compte n'est assigné </div>
-                               {% else %}
-                              <div class="table-responsive">
-                                <table class="table">
-                                  <thead>
-                                    <tr>
-                                     {% for i in 0..11 %}
-                                      <th>{{ i|length == 1 ? 0 }}{{i}}:00 {{ i|length == 1 ? 0 }}{{ i +1 }}:00 </th>
-                                      {% endfor %}
-                                      <!-- Button trigger modal -->
-
-
+    <section class="dashboard-counts section-padding">
+        <div class="card  ">
+            <div class="card-header row">
+                <h4 class="col-10">Créneaux</h4>
+                <div class="col-2">
+                    <input type="checkbox" id="run" name="toggle-event" class="justify-content-end" data-onstyle="success" {{ status?"checked" }} data-toggle="toggle" onchange="run_bot(this)">
+                </div>
+            </div>
+            <div class="card-body">
+                {% if slots == null %}
+                    <div class="h4">aucun compte n'est assigné </div>
+                {% else %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    {% for i in 0..11 %}
+                                        <th>{{ i|length == 1 ? 0 }}{{i}}:00 {{ i|length == 1 ? 0 }}{{ i +1 }}:00 </th>
+                                    {% endfor %}
+                                    <!-- Button trigger modal -->
                                     </tr>
                                   </thead>
                                   <tbody>

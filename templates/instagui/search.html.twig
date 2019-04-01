@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}INSTAGUI{% endblock %}
+
+{% block Navbar %}
+    {{parent()}}
+{% endblock %}
+{% block Section %}
+    <div class="container">
+        <section class="section-padding">
+            <div class="row">
+                <div class="card col-sm">
+                    <div class="card-header">
+                        <h5>Pseudos @
+                            <a class="position-absolute" style="right: 1em" href="#">
+                                <i class="fas fa-plus" data-toggle="modal" data-target="#exampleModal"></i>
+                            </a>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <ul style="height: 120px;overflow:auto;" class="list-group">
+                        {% if pseudos %}
+                            {% for i in blacklist %}
+                                <li class="list-group-item"> {# Need to add .active #}
+                                    {{ i }} {# Need to add delete button and modify button #}
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            No pseudos, please add some
+                        {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="vl" style="border-left: 6px solid green; border-left-color: #33b35a; height: 500px;"></div>
+                <div class="card col-sm">
+                    <div class="card-header">
+                        <h5>Hashtag #
+                            <a class="position-absolute" style="right: 1em" href="#">
+                                <i class="fas fa-plus" data-toggle="modal" data-target="#exampleModal"></i>
+                            </a>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <ul style="height: 120px;overflow:auto;" class="list-group">
+                            {% if hashtags %}
+                                {% for i in blacklist %}
+                                    <li class="list-group-item"> {# Need to add .active #}
+                                        {{ i }} {# Need to add delete button and modify button #}
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                No hashtags, please add some
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="vl" style="border-left: 6px solid green;border-left-color: #33b35a; height: 500px;"></div>
+                <div class="card col-sm">
+                    <div class="card-header">
+                        <h5>Blacklist <i class="fas fa-list"></i>
+                            <a class="position-absolute" style="right: 1em" href="#">
+                                <i class="fas fa-plus" data-toggle="modal" data-target="#exampleModal"></i>
+                            </a>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <ul style="height: 120px;overflow:auto;" class="list-group">
+                            {% if blacklist %}
+                                {% for i in blacklist %}
+                                    <li class="list-group-item"> {# Need to add .active #}
+                                        {{ i }} {# Need to add delete button and modify button #}
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                No blacklist, please add some terms
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add a keyword!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">@</span>
+                        <input type="text" class="form-control" placeholder="Pseudo" aria-label="Pseudo" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="sPseudo" onclick="searchSettings(this)"><i class="fas fa-plus"></i></button>
+                            <button class="btn btn-outline-secondary" type="button"><i class="fas fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">#</span>
+                        <input type="text" class="form-control" placeholder="Hashtag" aria-label="Hashtag" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="sHash" onclick="searchSettings(this)"><i class="fas fa-plus"></i></button>
+                            <button class="btn btn-outline-secondary" type="button"><i class="fas fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1"><i class="fas fa-exclamation-circle"></i></span>
+                        <input type="text" class="form-control" placeholder="Blacklist keyword" aria-label="Blacklist keyword" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="sBlack" onclick="searchSettings(this)"><i class="fas fa-plus"></i></button>
+                            <button class="btn btn-outline-secondary" type="button"><i class="fas fa-minus"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block Footer %}
+    {{parent()}}
+{% endblock %}
+
