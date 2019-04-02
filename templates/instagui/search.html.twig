@@ -20,7 +20,7 @@
                     <div class="card-body">
                         <ul style="height: 120px;overflow:auto;" class="list-group">
                         {% if pseudos %}
-                            {% for i in blacklist %}
+                            {% for i in pseudos %}
                                 <li class="list-group-item"> {# Need to add .active #}
                                     {{ i }} {# Need to add delete button and modify button #}
                                 </li>
@@ -43,7 +43,7 @@
                     <div class="card-body">
                         <ul style="height: 120px;overflow:auto;" class="list-group">
                             {% if hashtags %}
-                                {% for i in blacklist %}
+                                {% for i in hashtags %}
                                     <li class="list-group-item"> {# Need to add .active #}
                                         {{ i }} {# Need to add delete button and modify button #}
                                     </li>

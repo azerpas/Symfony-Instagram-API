@@ -40,8 +40,9 @@ class InstaguiController extends AbstractController
      */
     public function searchPage()
     {   $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $search_settings = unserialize($this->getUser()->getActuelAccount()->getSearchSettings());
         return $this->render('instagui/search.html.twig', [
-            'controller_name' => 'InstaguiController','page'=> 'Search', 'hashtags'=>'', 'pseudos'=>'', 'blacklist'=>''
+            'controller_name' => 'InstaguiController','page'=> 'Search', 'hashtags'=>$search_settings->hashtags, 'pseudos'=>$search_settings->pseudos, 'blacklist'=>''
         ]);
     }
 
@@ -237,7 +238,6 @@ class InstaguiController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY'); 
         $db->getNextAccount($this->getUser());
         return $this->redirectToRoute('inst_home');
-       
     }
      /**
      * @Route("/instagui/previousAccount",name="previousAccount")

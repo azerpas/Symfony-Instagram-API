@@ -221,11 +221,6 @@ class DBRequest{
      * @method set user search settings
      */
     public function setSearchSettings(User $user,$search_settings){
-        //
-        // WARNING: STILL NEED TO ADD OPTION TO CHOOSE ACCOUNT, WE'LL GET IN $req->request->get()
-        //          WHICH ACCOUNT HAS BEEN SELECTED
-        // CURRENTLY ADDING TO FIRST USER ATTACHED ACCOUNT ON DATABASE
-        //
         $account=$user->getActuelAccount();
         $account->setSearchSettings($search_settings);
         $this->em->persist($account);
