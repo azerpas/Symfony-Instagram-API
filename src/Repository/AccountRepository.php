@@ -46,6 +46,19 @@ class AccountRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
             ;
     }
+     
+    public function  findOneByUsername($username): ?Account
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.username = :val')
+            ->setParameter('val', $username)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
+
+   
 
     /**
      * @method assign instagram instance to user or create it if not exist

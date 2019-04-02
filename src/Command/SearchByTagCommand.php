@@ -44,14 +44,19 @@ class SearchByTagCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {    /////// CONFIG ///////
-        $debug          = true;
-        $truncatedDebug = true;
+        $debug          = false;
+        $truncatedDebug = false;
         //////////////////////
+        
+        //get account params
         $username = $input->getArgument('username');
         $password = $input->getArgument('password');
+        $account=$this->db->findAccountByUsername($username);
         $tags= $input->getArgument('tags');
+        $settings=$account->getSettings();
+        $blacklist=$account->getBlacklist();
         
-        //$this->logger->info('Waking up the sun');
+        
         //get instagram instance
         $ig = new \InstagramAPI\Instagram($debug,$truncatedDebug); 
         try {
@@ -61,6 +66,10 @@ class SearchByTagCommand extends ContainerAwareCommand
         } catch (\Exception $e) {
             throw new \Exception('Something went wrong: ' . $e->getMessage());
         }
+
+
+
+
         foreach ($tags as $tag){
             $maxId=null;
             $users=[];
@@ -69,10 +78,14 @@ class SearchByTagCommand extends ContainerAwareCommand
             do {
              
             $feed = $ig->hashtag->getFeed($tag, $rankToken, $maxId);
-             
+            dump($feed);
             foreach ($feed->getItems() as $item ) {
-              
-             array_push($users,array("id"=>$item->getUser()->getPk(),"username"=> $item->getUser()->getUsername())) ;
+             $instaId=$item->getUser()->getPk(); 
+             $username=$item->getUser()->getUsername();
+             //check if blacklisted 
+                
+
+             array_push($users,array("id"=>$instaId,"username"=>$username )) ;
              
                }
               $maxId=$feed->getNextMaxId();
@@ -81,7 +94,7 @@ class SearchByTagCommand extends ContainerAwareCommand
             }while ( $maxId !== null && 1>$cpt);
            
            
-            $account=$this->db->getUser("fre")->getAccount(0);
+           
             
              $this->db->addPeople($account,$users);
         }

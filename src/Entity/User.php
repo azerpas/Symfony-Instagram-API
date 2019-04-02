@@ -57,6 +57,11 @@ class User implements UserInterface
      */
     private $accounts;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\account")
+     */
+    private $actuelAccount;
+
     public function __construct() {
         $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
     }
@@ -175,6 +180,18 @@ class User implements UserInterface
     public function setAccount(?int $key,?Account $acc)
     {
         return $this->accounts->set($key,$acc);
+    }
+
+    public function getActuelAccount(): ?account
+    {
+        return $this->actuelAccount;
+    }
+
+    public function setActuelAccount(?account $actuelAccount): self
+    {
+        $this->actuelAccount = $actuelAccount;
+
+        return $this;
     }
 
 

@@ -26,7 +26,7 @@ class DBRequest{
      */
     public function setParams(User $user,$params){
        
-        $account=$user->getAccount(0);
+        $account=$user->getActuelAccount();
         if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this account '), 419);
         $account->setSettings(json_encode($params));
         $this->em->persist($account);
@@ -43,7 +43,7 @@ class DBRequest{
     * @return JsonResponse
     */
     public function setSlot(User $user,$slot,$value){
-        $account=$user->getAccount(0);
+        $account=$user->getActuelAccount();;
         if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this account '), 419);
 
 
@@ -67,7 +67,7 @@ class DBRequest{
         */
         public function getSlots($user){
            
-            $account=$user->getAccount(0);
+            $account=$user->getActuelAccount();
           
             if($account==null) return null;
 
@@ -226,10 +226,48 @@ class DBRequest{
         //          WHICH ACCOUNT HAS BEEN SELECTED
         // CURRENTLY ADDING TO FIRST USER ATTACHED ACCOUNT ON DATABASE
         //
-        $account=$user->getAccount(0);
+        $account=$user->getActuelAccount();
         $account->setSearchSettings($search_settings);
         $this->em->persist($account);
         $this->em->flush();
     }
+    /**
+     * @method get next Account 
+     */
+    public function getNextAccount(User $user){
+        $actuelAccount=$user->getActuelAccount();
+        $accounts=$user->getAccounts();
+        $index=$accounts->indexOf($actuelAccount);
+        if($index==$accounts->count()-1)$index=0;
+        else $index++;
+        $user->setActuelAccount($accounts->get($index)); 
+        $this->em->persist($user);
+        $this->em->flush();
+    }
+    /**
+     * @method get previous Account 
+     */
+    public function getPreviousAccount(User $user){
+        $actuelAccount=$user->getActuelAccount();
+        $accounts=$user->getAccounts();
+        $index=$accounts->indexOf($actuelAccount);
+        if($index==0)$index=$accounts->count();
+        $index=$index-1;
+        $user->setActuelAccount($accounts->get($index)); 
+        $this->em->persist($user);
+        $this->em->flush();
+    }
+    /**
+     * @method get Actuel Account 
+     */
+    public function getActuelAccount(User $user){
+          return  $user->getActuelAccount();
+    }
+    /**
+     * @method get account by username
+     */
+    public function findAccountByUsername($username){
+        return $this->em->getRepository('App\Entity\Account')->findOneByUsername($username);
+  }
 
 }

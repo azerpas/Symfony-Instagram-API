@@ -230,4 +230,21 @@ class InstaguiController extends AbstractController
         $logger->info('went well');
         return new Response('test');
     }
+    /**
+     * @Route("/instagui/nextAccount",name="nextAccount")
+     */
+    public function nextAccount (DBRequest $db,LoggerInterface $logger){
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY'); 
+        $db->getNextAccount($this->getUser());
+        return $this->redirectToRoute('inst_home');
+       
+    }
+     /**
+     * @Route("/instagui/previousAccount",name="previousAccount")
+     */
+    public function previousAccount (DBRequest $db,LoggerInterface $logger){
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY'); 
+        $db->getPreviousAccount($this->getUser());
+        return $this->redirectToRoute('inst_home');
+    }
 }
