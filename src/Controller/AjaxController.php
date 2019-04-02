@@ -84,12 +84,7 @@ class AjaxController extends AbstractController
      * @Route("/ajax/search_settings", name="search_settings", methods={"POST","GET"})
      */
     public function searchSettings(Request $req, DBRequest $DBRequest){
-        //
-        // WARNING: STILL NEED TO ADD OPTION TO CHOOSE ACCOUNT, WE'LL GET IN $req->request->get()
-        //          WHICH ACCOUNT HAS BEEN SELECTED
-        // CURRENTLY ADDING TO FIRST USER ATTACHED ACCOUNT ON DATABASE
-        //
-        $search_settings = unserialize($this->getUser()->getAccount(0)->getSearchSettings());
+        $search_settings = unserialize($this->getUser()->getActuelAccount()->getSearchSettings());
         if($req->isMethod("POST")){
             $keyword = $req->request->get('keyword');
             if (strpos($keyword,"@")===0){ // if contains @ then pseudo
