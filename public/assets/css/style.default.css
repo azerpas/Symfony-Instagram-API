@@ -514,6 +514,7 @@ nav.navbar a.menu-btn:hover {
   background: #292929;
   padding: 14px;
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .side-navbar .sidenav-header img {
@@ -530,6 +531,9 @@ nav.navbar a.menu-btn:hover {
   margin: 10px 0 0;
   text-transform: uppercase;
   letter-spacing: .1em;
+  /* align-self: center; */
+  width: auto;
+  word-break: break-all;
 }
 
 .side-navbar .sidenav-heading {

@@ -57,8 +57,8 @@
                 </div>
                 <div class="col-7">
                 <img src="{{asset('assets/img/instagram.jpg')}}" alt="person" class="img-fluid rounded-circle">
-                  
-                    <h2 class="h5">{{ app.user.actuelAccount.username }}</h2>
+                    {#{{ app.user.actuelAccount.username }}#}
+                    <h2 class="h5">{% if app.user.actuelAccount %} {{app.user.actuelAccount.username}} {% else %} No actual account {% endif %}</h2>
                 </div>
                 <div class="col-2">
                 <a href="nextAccount"> <i class="fas fa-arrow-right"></i></a>
@@ -162,7 +162,7 @@
       <div class="breadcrumb-holder">
         <div class="container-fluid">
           <ul class="breadcrumb">
-            <li class="breadcrumb-item"><a href="index.html">{{ app.user.actuelAccount.username }}</a></li>
+            <li class="breadcrumb-item"><a href="index.html">{% if app.user.actuelAccount %} {{app.user.actuelAccount.username}} {% else %} No actual account {% endif %}</a></li>
             <li class="breadcrumb-item active">{{page}}</li>
           </ul>
         </div>
