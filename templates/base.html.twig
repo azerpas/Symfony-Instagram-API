@@ -33,7 +33,7 @@
         <div class="sidenav-header d-flex align-items-center justify-content-center">
             <!-- User Info-->
             <div class="sidenav-header-inner text-center"><img src="{{asset('assets/img/avatar.png')}}" alt="person" class="img-fluid rounded-circle">
-                <h2 class="h5">VETIXY</h2><span>Web Developer</span>
+                <h2 class="h5">User</h2><span>Web Developer</span>
             </div>
             <!-- Small Brand information, appears on minimized sidebar-->
             <div class="sidenav-header-logo">
@@ -42,18 +42,49 @@
         </div>
         <!-- Sidebar Navigation Menus-->
         <div class="main-menu">
-            <h5 class="sidenav-heading">Main</h5>
-            <ul id="side-main-menu" class="side-menu list-unstyled">
+            <h5 class="sidenav-heading">SWITCH ACCOUNT</h5>
+             <!-- Sidebar Header    -->
+       
+        
+        <div class="sidenav-header d-flex align-items-center justify-content-center ">
+            <!-- User Info-->
+             <!-- User Info-->
+              
+            
+            <div class="sidenav-header-inner text-center row align-items-center ">
+                <div class="col-2">
+                <a href="previousAccount"> <i class="fas fa-arrow-left"></i></a>
+                </div>
+                <div class="col-7">
+                <img src="{{asset('assets/img/instagram.jpg')}}" alt="person" class="img-fluid rounded-circle">
+                  
+                    <h2 class="h5">{{ app.user.actuelAccount.username }}</h2>
+                </div>
+                <div class="col-2">
+                <a href="nextAccount"> <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+             
+            
+
+         <!-- Small Brand information, appears on minimized sidebar-->
+            <div class="sidenav-header-logo">
+                <a href="profile" class="brand-small text-center"> 
+                <img src="{{asset('assets/img/instagram.jpg')}}" alt="person" class="img-fluid rounded-circle">
+                </a>
+            </div>
+
+        </div>
+        
+        
+        <div class="admin-menu">
+            <h5 class="sidenav-heading">MENU</h5>
+            <ul id="side-admin-menu" class="side-menu list-unstyled">
                 <li><a href="home"> <i class="fas fa-home"></i>Home</a></li>
                 <li><a href="bots"> <i class="fas fa-robot"></i>Bots</a></li>
                 <li><a href="search"><i class="fas fa-search"></i>Search</a></li>
                 <li><a href="charts"> <i class="fas fa-bar-chart"></i>Statistiques</a></li>
                 <li><a href="history"> <i class="fas fa-newspaper"></i>Journal d'activité</a></li>
-            </ul>
-        </div>
-        <div class="admin-menu">
-            <h5 class="sidenav-heading">Second menu</h5>
-            <ul id="side-admin-menu" class="side-menu list-unstyled">
                 <li><a href="profile"> <i class="fas fa-user"></i>Profile</a></li>
                 <li><a href="parameters" > <i class="fa fa-cog"></i>Paramétres</a></li>
                 <li><a href="scheduling" > <i class="fa fa-history"></i>Scheduling</a></li>
@@ -131,7 +162,7 @@
       <div class="breadcrumb-holder">
         <div class="container-fluid">
           <ul class="breadcrumb">
-            <li class="breadcrumb-item"><a href="index.html">VETIXY</a></li>
+            <li class="breadcrumb-item"><a href="index.html">{{ app.user.actuelAccount.username }}</a></li>
             <li class="breadcrumb-item active">{{page}}</li>
           </ul>
         </div>
