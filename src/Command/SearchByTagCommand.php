@@ -38,25 +38,26 @@ class SearchByTagCommand extends ContainerAwareCommand
             ->setDescription('Seach intagram account') 
             ->addArgument('username', InputArgument::REQUIRED, 'My username')
             ->addArgument('password', InputArgument::REQUIRED, 'My password')
-            ->addArgument('tags',InputArgument::IS_ARRAY,'Hashtags list?')
         ;
     }
+    // ->addArgument('tags',InputArgument::IS_ARRAY,'Hashtags list?')
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {    /////// CONFIG ///////
         $debug          = false;
         $truncatedDebug = false;
         //////////////////////
-        
+        $output->writeln('FIRST');
         //get account params
         $username = $input->getArgument('username');
         $password = $input->getArgument('password');
+        $output->writeln($username);
         $account=$this->db->findAccountByUsername($username);
-        $tags= $input->getArgument('tags');
+        //$tags= $input->getArgument('tags');
         $settings=$account->getSettings();
         $blacklist=$account->getBlacklist();
-        
-        
+        $tags = unserialize($account->getSearchSettings())->hashtags;
+
         //get instagram instance
         $ig = new \InstagramAPI\Instagram($debug,$truncatedDebug); 
         try {
@@ -67,35 +68,28 @@ class SearchByTagCommand extends ContainerAwareCommand
             throw new \Exception('Something went wrong: ' . $e->getMessage());
         }
 
-
-
-
         foreach ($tags as $tag){
             $maxId=null;
             $users=[];
             $cpt=0;
             $rankToken = Signatures::generateUUID();
             do {
-             
-            $feed = $ig->hashtag->getFeed($tag, $rankToken, $maxId);
-            dump($feed);
-            foreach ($feed->getItems() as $item ) {
-             $instaId=$item->getUser()->getPk(); 
-             $username=$item->getUser()->getUsername();
-             //check if blacklisted 
-                
+                $feed = $ig->hashtag->getFeed($tag, $rankToken, $maxId);
+                foreach ($feed->getItems() as $item ) {
+                    $instaId=$item->getUser()->getPk();
+                    $username=$item->getUser()->getUsername();
 
-             array_push($users,array("id"=>$instaId,"username"=>$username )) ;
-             
-               }
-              $maxId=$feed->getNextMaxId();
-              sleep(2);
-              $cpt++;
+                    //check if blacklisted
+
+
+                    array_push($users,array("id"=>$instaId,"username"=>$username )) ;
+
+                }
+                $maxId=$feed->getNextMaxId();
+                sleep(2);
+                $cpt++;
             }while ( $maxId !== null && 1>$cpt);
-           
-           
-           
-            
+
              $this->db->addPeople($account,$users);
         }
         

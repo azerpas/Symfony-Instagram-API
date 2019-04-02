@@ -7,11 +7,17 @@
 {% endblock %}
 {% block Section %}
       <!-- Counts Section -->
-      <section class="dashboard-counts section-padding">  
-         {% set bot = 'search' %}    
-         {{ include( 'instagui/component/search.html.twig',sandboxed = true) }}
-          {% set bot = 'message_sender' %}    
-         {{ include( 'instagui/component/message.html.twig',sandboxed = true) }}
+      <section class="dashboard-counts section-padding">
+          <div class="card">
+              <div class="card-header">
+                  <h3 class="card-title">Test command</h3>
+              </div>
+              <div class="card-body">
+                  <div class="form-group">
+                      {{ form(form) }}
+                  </div>
+              </div>
+          </div>
       </section>     
 {% endblock %}
 {% block Footer %}

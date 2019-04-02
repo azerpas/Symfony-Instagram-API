@@ -260,6 +260,7 @@ class DBRequest{
     }
     /**
      * @method get account by username
+     * @return Account
      */
     public function findAccountByUsername($username){
         return $this->em->getRepository('App\Entity\Account')->findOneByUsername($username);

@@ -59,9 +59,28 @@ class InstaguiController extends AbstractController
     /**
      * @Route("/instagui/bots", name="inst_bots")
      */
-    public function botsPage()
+    public function botsPage(Request $request)
     {   $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        return $this->render('instagui/bots.html.twig', ['controller_name' => 'InstaguiController','page'=> 'bots']);
+        $form = $this->createFormBuilder()
+            ->add('Try search command', SubmitType::class, ['label' => 'Try search command','attr'=> [ 'class' => ' btn btn-primary mt-2' ]])
+            ->getForm();
+        $form->handleRequest($request);
+        //$hashtags = unserialize($this->getUser()->getActuelAccount()->getSearchSettings())->hashtags;
+        if ($form->isSubmitted() && $form->isValid()) {
+            $process = new Process('php bin/console search:tag '.$this->getUser()->getActuelAccount()->getUsername().' '.$this->getUser()->getActuelAccount()->getPassword());
+            $process->setWorkingDirectory(getcwd());
+            $process->setWorkingDirectory("../");
+            $process->run(function ($type, $buffer) {
+                if (Process::ERR === $type) {
+                    echo 'ERR > '.$buffer;
+                    return new Response("Canno't connect to Instagram, please check your params");
+                } else {
+                    echo 'OUT > '.$buffer.'<br>';
+                }
+            });
+            return new Response("Successfully launched process");
+        }
+        return $this->render('instagui/bots.html.twig', ['controller_name' => 'InstaguiController','form'=>$form->createView(),'page'=> 'bots']);
     }
 
     /**
