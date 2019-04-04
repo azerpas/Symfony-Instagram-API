@@ -266,4 +266,14 @@ class DBRequest{
         return $this->em->getRepository('App\Entity\Account')->findOneByUsername($username);
   }
 
+    /**
+     * @method get account by username
+     * @param instaID ID of person to find
+     * @param account account which contains People table
+     * @return person a person from People table
+     */
+    public function getPeopleByInstaID($instaID,$account) {
+        return $this->em->getRepository('App\Entity\People')->findOneByInstaId($instaID,$account);
+    }
+    
 }

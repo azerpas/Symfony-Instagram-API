@@ -11,16 +11,34 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\ArrayInput;
+use App\Service\DBRequest;
+use Psr\Log\LoggerInterface;
 
 class LikeAndFollowUsersCommand extends Command
 {
     // the name of the command (the part after "bin/console")
     protected static $defaultName = 'app:likeAndFollowUsers';
 
+    /**
+     * @var DBRequest
+     */
+    private $db;
+    
+    /**
+    * @var LoggerInterface
+    */
+    private $logger;
+    
+    public function __construct(DBrequest $dbRequest,LoggerInterface $logger){
+        $this->logger = $logger;
+        $this->db = $dbRequest;
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this 
-        ->setDescription('Like Medias and follow Instagram users from the People table for an account')
+        ->setDescription('Like medias and follow Instagram users from the People table for an account')
         ->addArgument('username', InputArgument::REQUIRED, 'My username')
         ->addArgument('password', InputArgument::REQUIRED, 'My password')
     ;
@@ -36,23 +54,26 @@ class LikeAndFollowUsersCommand extends Command
         $password = $input->getArgument('password');
         $ig = new \InstagramAPI\Instagram($debug, $truncatedDebug);
         try {
+            //Login Instagram account
             $ig->login($username, $password);
+            //Get account instance
+            $account=$this->db->findAccountByUsername($username);
+            $output->writeln($account->getUsername());
+            //$output->writeln('account collected!');
             //DBRequest to get peopleToInteract
-            $peopleToInteract = [];
-            array_push($peopleToInteract,2114362733);
-            array_push($peopleToInteract,7171634018);
-            array_push($peopleToInteract,3869473816);
+            $peopleToInteract = $this->db->getAllPeopleForAccount($account);
+            //$output->writeln('people collected!');
             $likeUserMediasCommand = $this->getApplication()->find('app:likeUserMedias');
             $followCommand = $this->getApplication()->find('app:follow'); 
-            //LikeUserMedias and follow people
+            //LikeUserMedias and follow people of account
             foreach($peopleToInteract as $person) {
                 //Like 2 pictures of person
+                $output->writeln($person->getUsername());
                 $likeUserMediasArguments = [
                     'command' => 'app:likeUserMedias',
                     'username' => $username,
                     'password' => $password,
-                    //'userId' => $person->getId(),
-                    'userId' => $person,
+                    'userId' => $person->getInstaID(),
                 ];
                 $likeUserMediasInput = new ArrayInput($likeUserMediasArguments);
                 $likeUserMediasCommand->run($likeUserMediasInput, $output);
@@ -61,13 +82,18 @@ class LikeAndFollowUsersCommand extends Command
                     'command' => 'app:follow',
                     'username' => $username,
                     'password' => $password,
-                    //'userId' => $person->getId(),
-                    'userId' => $person,
+                    'userId' => $person->getInstaID(),    
                 ];
                 $followInput = new ArrayInput($followCommandArguments);
-                sleep(Random(3,6));
+                sleep(rand(3,6));
                 $followCommand->run($followInput, $output); 
-                //Set toFollow to 'true' and toFollowDate to Date  
+                //Update person in People table by
+                //setting toFollow to 'false' and update Date in updated 
+                //$this->db->getPeopleByInstaId($person->getInstaID(),$account)->setToFollow(false);
+                //$this->db->getPeopleByInstaId($person->getInstaID(),$account)->setUpdated(new \DateTime('@'.strtotime('now')));
+                //$output->writeln($person->getUsername().' followed correctly and updated in People table');
+                //Pause of 30 secondes between the treatment of each person
+                sleep(30);
             }
         }
         catch (\Exception $e) {
