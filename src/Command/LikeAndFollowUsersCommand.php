@@ -5,14 +5,15 @@ namespace App\Command;
 
 use InstagramAPI\Response\Model\FriendshipStatus;
 use Symfony\Component\Console\Command\Command;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\ArrayInput;
-use App\Service\DBRequest;
 use Psr\Log\LoggerInterface;
+//use App\Service\DBRequest;
 
 class LikeAndFollowUsersCommand extends Command
 {
@@ -20,18 +21,18 @@ class LikeAndFollowUsersCommand extends Command
     protected static $defaultName = 'app:likeAndFollowUsers';
 
     /**
-     * @var DBRequest
-     */
-    private $db;
-    
-    /**
     * @var LoggerInterface
     */
     private $logger;
+
+    /**
+    * @var EntityManagerInterface
+    */
+    private $em;    
     
-    public function __construct(DBrequest $dbRequest,LoggerInterface $logger){
+    public function __construct(EntityManagerInterface $entityManager,LoggerInterface $logger){
         $this->logger = $logger;
-        $this->db = $dbRequest;
+        $this->em = $entityManager;
         parent::__construct();
     }
 
@@ -54,21 +55,14 @@ class LikeAndFollowUsersCommand extends Command
         $password = $input->getArgument('password');
         $ig = new \InstagramAPI\Instagram($debug, $truncatedDebug);
         try {
-            //Login Instagram account
             $ig->login($username, $password);
-            //Get account instance
-            $account=$this->db->findAccountByUsername($username);
-            $output->writeln($account->getUsername());
-            //$output->writeln('account collected!');
-            //DBRequest to get peopleToInteract
-            $peopleToInteract = $this->db->getAllPeopleForAccount($account);
-            //$output->writeln('people collected!');
+            $account = $this->em->getRepository('App\Entity\Account')->findOneByUsername($username);
+            //$output->writeln('Account to interact with : '.$account->getUsername());
+            $peopleToInteract = $this->em->getRepository('App\Entity\People')->findAllByAccount($account);
             $likeUserMediasCommand = $this->getApplication()->find('app:likeUserMedias');
             $followCommand = $this->getApplication()->find('app:follow'); 
-            //LikeUserMedias and follow people of account
             foreach($peopleToInteract as $person) {
-                //Like 2 pictures of person
-                $output->writeln($person->getUsername());
+                //$output->writeln($person->getUsername().' '.$person->getInstaID());
                 $likeUserMediasArguments = [
                     'command' => 'app:likeUserMedias',
                     'username' => $username,
@@ -77,7 +71,6 @@ class LikeAndFollowUsersCommand extends Command
                 ];
                 $likeUserMediasInput = new ArrayInput($likeUserMediasArguments);
                 $likeUserMediasCommand->run($likeUserMediasInput, $output);
-                //Follow person
                 $followCommandArguments = [
                     'command' => 'app:follow',
                     'username' => $username,
@@ -87,12 +80,11 @@ class LikeAndFollowUsersCommand extends Command
                 $followInput = new ArrayInput($followCommandArguments);
                 sleep(rand(3,6));
                 $followCommand->run($followInput, $output); 
-                //Update person in People table by
-                //setting toFollow to 'false' and update Date in updated 
-                //$this->db->getPeopleByInstaId($person->getInstaID(),$account)->setToFollow(false);
-                //$this->db->getPeopleByInstaId($person->getInstaID(),$account)->setUpdated(new \DateTime('@'.strtotime('now')));
+                $this->em->getRepository('App\Entity\People')->findOneByInstaId($person->getInstaID(),$account)->setToFollow(false);
+                $this->em->getRepository('App\Entity\People')->findOneByInstaId($person->getInstaID(),$account)->setUpdated(new \DateTime('@'.strtotime('now')));
+                $this->em->persist($person);  
+                $this->em->flush();
                 //$output->writeln($person->getUsername().' followed correctly and updated in People table');
-                //Pause of 30 secondes between the treatment of each person
                 sleep(30);
             }
         }
