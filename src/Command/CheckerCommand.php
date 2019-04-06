@@ -65,7 +65,7 @@ class CheckerCommand extends Command
             $account = $this->em->getRepository('App\Entity\Account')->findOneByUsername($username);
             $peopleToInteract = $this->em->getRepository('App\Entity\People')->findAllByAccount($account);
             $dateToday = new \DateTime('@'.strtotime('now'));
-            $output->writeln($dateToday->format('Y-m-d H:i:s'));
+            //$output->writeln($dateToday->format('Y-m-d H:i:s'));
             $uuid  = \InstagramAPI\Signatures::generateUUID();
             $maxId = null;
             $selfFollowersArray = [];
@@ -76,7 +76,7 @@ class CheckerCommand extends Command
                 }
                 $maxId = $response->getNextMaxId();
                 if ($maxId) {
-                    echo "Sleeping for 5s...\n";
+                    //echo "Sleeping for 5s...\n";
                     sleep(5);
                 }
             } while ($maxId !== null);
