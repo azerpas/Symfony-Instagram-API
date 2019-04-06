@@ -3,7 +3,7 @@
 // src/Command/CheckerCommand.php
 namespace App\Command;
 
-use App\Service\DBRequest;
+//use App\Service\DBRequest;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use InstagramAPI\Response\Model\FriendshipStatus;
@@ -21,11 +21,6 @@ class CheckerCommand extends Command
     protected static $defaultName = 'app:checker';
 
     /**
-     * @var DBRequest 
-     */
-    private $db;
-
-    /**
     * @var LoggerInterface
     */
     private $logger;
@@ -35,8 +30,7 @@ class CheckerCommand extends Command
     */
     private $em;    
     
-    public function __construct(DBRequest $dbrequest, EntityManagerInterface $entityManager,LoggerInterface $logger){
-        $this->db = $dbrequest;
+    public function __construct(EntityManagerInterface $entityManager,LoggerInterface $logger){
         $this->em = $entityManager;
         $this->logger = $logger;
         parent::__construct();
@@ -45,7 +39,7 @@ class CheckerCommand extends Command
     protected function configure()
     {
         $this 
-        ->setDescription('Checker')
+        ->setDescription('Checker of People table')
         ->addArgument('username', InputArgument::REQUIRED, 'My username')
         ->addArgument('password', InputArgument::REQUIRED, 'My password')
     ;
