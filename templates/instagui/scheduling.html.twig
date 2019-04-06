@@ -38,7 +38,7 @@
                                 <tr>
                                     {% for i in 0..11 %}
                                         <th>
-                                            <button id="{{ i }}" data-toggle="modal" data-target="#exampleModal" class="btn {{ slots[i] == false ? "btn btn-basic" :"btn btn-primary" }}"></button>
+                                            <button id="{{ i }}" data-toggle="modal" data-target="#exampleModal" class="btn {{ slots[i] == false ? "btn btn-danger" :"btn btn-primary" }}"></button>
                                         </th>
                                     {% endfor %}
                                 </tr>
@@ -61,7 +61,7 @@
                                 <tr>
                                   {% for i in 12..23 %}
                                       <th>
-                                          <button id="{{ i }}" data-toggle="modal" data-target="#exampleModal" class="btn {{ slots[i] == false ? "btn btn-basic" :"btn btn-primary" }}"></button>
+                                          <button id="{{ i }}" data-toggle="modal" data-target="#exampleModal" class="btn {{ slots[i] == false ? "btn btn-danger" :"btn btn-primary" }}"></button>
                                       </th>
                                   {% endfor %}
                                 </tr>

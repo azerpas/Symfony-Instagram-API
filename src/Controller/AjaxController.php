@@ -14,19 +14,32 @@ class AjaxController extends AbstractController
 {
 
 
-     /**
-    * @Route("/ajax/set_slot", name="set_slot_status", methods={"POST"},condition="request.isXmlHttpRequest()")
-    */
+    /**
+     * Setting a slot status (true or false)
+     * @Route("/ajax/set_slot", name="set_slot_status", methods={"POST"},condition="request.isXmlHttpRequest()")
+     */
 
-    public function setSlotStatus(Request $req,DBRequest $bd){
-     
-        if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
-            return new JsonResponse(['error' => 'auth required'], 401);
-         }
-        $value=$bd->setSlot($this->getUser(),$req->request->get('slot'),$req->request->get('value'));  
-        
-        return new JsonResponse(['Success'=> json_encode($value)],200);
+    public function setSlotStatus(Request $req){
 
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $em = $this->getDoctrine()->getManager();
+
+        $account = $this->getUser()->getActuelAccount();
+        if($account==null){
+            return new JsonResponse(['ERROR'=> 'No current account found'],419);
+        }
+        $slot = $req->request->get('slot'); // fetching slot given by user
+        $slots = json_decode($account->getSlots()); // getting accounts slots
+        if($req->request->get('value')=="off") {
+            $slots[$slot] = false;
+        }
+        else{
+            $slots[$slot]=true;
+        }
+        $account->setSlots(json_encode($slots));
+        $em->persist($account);
+        $em->flush();
+        return new JsonResponse(['Success'=> json_encode($req->request->get('value'))],200);
 
     }
 
@@ -58,10 +71,20 @@ class AjaxController extends AbstractController
 
         if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
             return new JsonResponse(['error' => 'auth required'], 401);
-         }
+        }
         $logger->info($this->getUser()->getUsername());
         $value=$service->setParams($this->getUser(),$req->request->all()); 
-     return new JsonResponse(['output'=> $value]);
+        return new JsonResponse(['output'=> $value]);
+        /* REPLACING DBRequest::setParams
+        $account = $this->getUser()->getActuelAccount();
+        if($account==null){
+            return new JsonResponse(['output'=>'no Instagram account asigned for this account'], 419);
+        }
+        $account->setSettings(json_encode($req->request->all()));
+        $this->em->persist($account);
+        $this->em->flush();
+        return new JsonResponse(['output'=> 'success'],200);;
+         */
 
 
     }
@@ -71,12 +94,27 @@ class AjaxController extends AbstractController
     */
   
     public function setBotStatus(Request $req,DBRequest $db){
-       
+        /*
         $response=$db->setStatus($this->getUser(),$req->request->get('status'));
-        
+
         if($response)
         return new JsonResponse(['output'=> "success"],200);
         else   return new JsonResponse(['output'=> "error"]);
+        */
+        $em = $this->getDoctrine()->getManager();
+        $account = $this->getUser()->getActuelAccount();
+        if($account==null) {
+            return new JsonResponse(['output'=> "no Instagram account assigned for this user "], 419);
+        }
+        if($req->request->get('status') == "true") {
+            $account->setStatus(true);
+        }
+        else {
+            $account->setStatus(false);
+        }
+        $em->persist($account);
+        $em->flush();
+        return new JsonResponse(['output'=> "Success"],200);
 
     }
 
@@ -85,13 +123,20 @@ class AjaxController extends AbstractController
      */
     public function searchSettings(Request $req, DBRequest $DBRequest){
         $search_settings = unserialize($this->getUser()->getActuelAccount()->getSearchSettings());
+        $em = $this->getDoctrine()->getManager();
         if($req->isMethod("POST")){
             $keyword = $req->request->get('keyword');
             if (strpos($keyword,"@")===0){ // if contains @ then pseudo
                 $keyword = str_replace("@","",$keyword); // replacing @ with nothing
                 array_push($search_settings->pseudos,$keyword); // pushing current keyword into Account pseudos settings
                 $search_settings = serialize($search_settings);
-                $DBRequest->setSearchSettings($this->getUser(),$search_settings);
+                //$DBRequest->setSearchSettings($this->getUser(),$search_settings);
+                // REPLACING DBRequest::setSearchSettings
+                $account = $this->getUser()->getActuelAccount();
+                $account->setSearchSettings($search_settings);
+                $em->persist($account);
+                $em->flush();
+                 //
                 return new JsonResponse(['output'=>'Successfully added: '.$keyword],200);
             }
             if (strpos($keyword,"#")===0){ // if contains # then hashtag
@@ -99,6 +144,12 @@ class AjaxController extends AbstractController
                 array_push($search_settings->hashtags,$keyword);
                 $search_settings = serialize($search_settings);
                 $DBRequest->setSearchSettings($this->getUser(),$search_settings);
+                // REPLACING DBRequest::setSearchSettings
+                $account = $this->getUser()->getActuelAccount();
+                $account->setSearchSettings($search_settings);
+                $em->persist($account);
+                $em->flush();
+                 //
                 return new JsonResponse(['output'=>'Successfully added: '.$keyword],200);
             }
             return new JsonResponse(['output'=>'Could not read the keyword: '.$keyword],400);
