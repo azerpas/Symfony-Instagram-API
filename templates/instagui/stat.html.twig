@@ -7,100 +7,98 @@
 {% endblock %}
 {% block Section %}
       
-      <section class="dashboard-counts section-padding">
-        <div class="container-fluid"> 
-       
-         <div class="card">
-                <div class="card-header card-header-transparent">
-                <div class="row"> 
-               
-                    <div class="col-2 ">
-                    <img src="{{asset('assets/img/instagram.jpg')}}" alt="person" class="img-fluid img-responsive rounded-circle">
-                    </div>
-                    <div class="col-10 "> 
-                      <h5 class="card-title text-uppercase">Vetixy</h5>
-                      <p class="card-text">bio</p>
-                    </div>  
-                </div>    
-                </div>
-               
-                <div class="card-body">
-                <div class="row">
-          
-            <!-- Count item widget-->
-            
-            <div class="col-4">
-              <div class="wrapper count-title d-flex justify-content-start">
-                <div class="icon"><i class="fas fa-heart d-flex justify-content-start"></i></div>
-                <div class="name"><strong class="text-uppercase d-flex justify-content-center">Abonnées </strong><span> </span>
-                  <div class="text-dark   h1 d-flex d-flex justify-content-start">34245</div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Count item widget-->
-            <div class="col-4">
-              <div class="wrapper count-title d-flex justify-content-start">
-                <div class="icon"><i class="fas fa-grin-hearts d-flex justify-content-start"></i></div>
-                <div class="name"><strong class="text-uppercase d-flex justify-content-start">Funs </strong><span> </span>
-                  <div class="text-dark   h1 d-flex justify-content-start">3424</div>
-                </div>
-              </div>
-            </div>
+    <section class="dashboard-counts section-padding">
+      <div class="container-fluid">
+          <div class="card">
 
-            <!-- Count item widget-->
-            <div class="col-4">
-              <div class="wrapper count-title d-flex justify-content-start">
-                <div class="icon"><i class="fas fa-user-plus d-flex justify-content-start"></i></div>
-                <div class="name"><strong class="text-uppercase d-flex justify-content-start">Abonnement</strong><span> </span>
-                  <div class="text-dark   h1 d-flex d-flex justify-content-start">15744</div>
+              <div class="card-header card-header-transparent">
+                  <div class="row">
+
+                      <div class="col-2 ">
+                          <img src="{{asset('assets/img/instagram.jpg')}}" alt="person" class="img-fluid img-responsive rounded-circle">
+                      </div>
+                      <div class="col-10 ">
+                          <h5 class="card-title text-uppercase">Vetixy</h5>
+                          <p class="card-text">bio</p>
+                      </div>
                 </div>
               </div>
-            </div>
-           </div> 
-        </div> 
-                  <div class="row  h-100">
-                    <div class="col-12">
+
+              <div class="card-body">
+                  <div class="row">
+                      <!-- Count item widget-->
+
+                      <div class="col-4">
+                          <div class="wrapper count-title d-flex justify-content-start">
+                              <div class="icon"><i class="fas fa-heart d-flex justify-content-start"></i></div>
+                              <div class="name">
+                                  <strong class="text-uppercase d-flex justify-content-center">Abonnées </strong><span> </span>
+                                  <div class="text-dark   h1 d-flex d-flex justify-content-start">34245</div>
+                              </div>
+                          </div>
+                      </div>
+
+                      <!-- Count item widget-->
+                      <div class="col-4">
+                          <div class="wrapper count-title d-flex justify-content-start">
+                              <div class="icon"><i class="fas fa-grin-hearts d-flex justify-content-start"></i></div>
+                              <div class="name"><strong class="text-uppercase d-flex justify-content-start">Funs </strong><span> </span>
+                                  <div class="text-dark   h1 d-flex justify-content-start">3424</div>
+                              </div>
+                          </div>
+                      </div>
+
+                      <!-- Count item widget-->
+                      <div class="col-4">
+                          <div class="wrapper count-title d-flex justify-content-start">
+                              <div class="icon"><i class="fas fa-user-plus d-flex justify-content-start"></i></div>
+                              <div class="name"><strong class="text-uppercase d-flex justify-content-start">Abonnement</strong><span> </span>
+                                  <div class="text-dark   h1 d-flex d-flex justify-content-start">15744</div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="row  h-100">
+                  <div class="col-12">
                       <div class="card-body">
-                        <canvas id="follow"></canvas>
-                      </div>               
+                          <canvas id="follow"></canvas>
+                      </div>
                   </div>
-                  </div>
-                  <div class="card-body">
-                   <div class="form-group row container">
-                <div class="col-lg-3 col-sm-12">
-                    <select class="selectpicker">
-                         <option>all</option>
-                        <option>year</option>
-                        <option>month</option>
-                        <option>week</option>
-                    </select>
-                </div>
-                <div class="col-lg-3 col-sm-12">
-                    <input class="form-control" id="dateDebut" name="dateDebut" placeholder="Date de début" type="text"/>
-
-                </div>
-                <div class="col-lg-3 col-sm-12">
-                     <select class="selectpicker">
-                        <option>accrued</option>
-                        <option>separate</option>
-                    </select>
-                </div> 
-                <div class="col-3 col-sm-12">
-                     <button class="btn btn-primary  float-right">Reload</button> 
-                </div>              
-               </div>  
               </div>
-        </div>
-        </div>
-      </section>
-       
-       
-      
-      <!-- Statistics Section-->
-       <section class="">  
-      </section>
-      <!-- Updates Section -->
+              <div class="card-body">
+                  <div class="form-group row container">
+                      <div class="col-lg-3 col-sm-12">
+                          <select class="selectpicker">
+                              <option>all</option>
+                              <option>year</option>
+                              <option>month</option>
+                              <option>week</option>
+                          </select>
+                      </div>
+                      <div class="col-lg-3 col-sm-12">
+                          <input class="form-control" id="dateDebut" name="dateDebut" placeholder="Date de début" type="text"/>
+                      </div>
+                      <div class="col-lg-3 col-sm-12">
+                          <select class="selectpicker">
+                              <option>accrued</option>
+                              <option>separate</option>
+                          </select>
+                      </div>
+                      <div class="col-3 col-sm-12">
+                          <button class="btn btn-primary  float-right">Reload</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </section>
+
+    <!-- Statistics Section-->
+    <section class="">
+    </section>
+    <!-- Updates Section -->
       
 {% endblock %}
 {% block Footer %}
