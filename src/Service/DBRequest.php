@@ -36,16 +36,16 @@ class DBRequest{
 
 
     /**
+    * NOT USING ANYMORE (AJAXCONTROLLER)
     * @method set slot status
     * @param user  user  entity object
     * @param slot time slot
     * @param value on/off
-    * @return JsonResponse
+    * @return
     */
     public function setSlot(User $user,$slot,$value){
         $account=$user->getActuelAccount();;
         if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this account '), 419);
-
 
             $slots=json_decode($account->getSlots());
             if($value=="off") $slots[$slot]=false;
@@ -61,19 +61,20 @@ class DBRequest{
     }
 
     
-         /**
-        * @method get slots list
-        * @param user  user  entity object
-        */
-        public function getSlots($user){
-           
-            $account=$user->getActuelAccount();
-          
-            if($account==null) return null;
+    /**
+    * @method get slots list
+    * NOT USING ANYMORE (AJAXCONTROLLER)
+    * @param user  user  entity object
+    */
+    public function getSlots($user){
 
-           // return  array_pad(array(), 24, false);
-            return  json_decode($account->getSlots());
-           }
+        $account=$user->getActuelAccount();
+
+        if($account==null) return null;
+
+       // return  array_pad(array(), 24, false);
+        return  json_decode($account->getSlots());
+    }
 
 
     /**
@@ -122,12 +123,12 @@ class DBRequest{
 
      /**
     * @method
+    * NOT USING ANYMORE (AJAXCONTROLLER)
     * @param status on/off
     * @return
     */
     public function setStatus(User $user,$status)
     {
-
         $account=$user->getAccount(0);
         if($account==null) return new JsonResponse(array('message' => 'no Instagram account asigned for this user '), 419);
         if($status == "true") $account->setStatus(true);
@@ -135,11 +136,10 @@ class DBRequest{
         $this->em->persist($account);
         $this->em->flush();
         return  true;
-
-
     }
       /**
     * @method
+    * NOT USING ANYMORE (AJAXCONTROLLER)
      *@param user
     * @return
     */
@@ -218,6 +218,7 @@ class DBRequest{
     }
 
     /**
+     * NOT USING ANYMORE (AJAXCONTROLLER)
      * @method set user search settings
      */
     public function setSearchSettings(User $user,$search_settings){

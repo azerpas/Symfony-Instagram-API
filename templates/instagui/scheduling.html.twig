@@ -19,71 +19,83 @@
                 {% if slots == null %}
                     <div class="h4">aucun compte n'est assigné </div>
                 {% else %}
+                    {# TABLE 0 to 11H59#}
+                    <div class="table-responsive">
+                        <table class="table">
+                            {# DISPLAYING HOUR PER HOUR#}
+                            <thead>
+                                <tr>
+                                    {% for i in 0..11 %}
+                                        <th>
+                                            {{ i|length == 1 ? 0 }}{{i}}:00 {{ i|length == 1 ? 0 }}{{ i +1 }}:00
+                                        </th>
+                                    {% endfor %}
+                                    <!-- Button trigger modal -->
+                                </tr>
+                            </thead>
+                            {# DISPLAYING BUTTONS TO ACTIVATE PER HOUR#}
+                            <tbody>
+                                <tr>
+                                    {% for i in 0..11 %}
+                                        <th>
+                                            <button id="{{ i }}" data-toggle="modal" data-target="#exampleModal" class="btn {{ slots[i] == false ? "btn btn-danger" :"btn btn-primary" }}"></button>
+                                        </th>
+                                    {% endfor %}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    {# TABLE 12 to 23H59#}
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
                                 <tr>
-                                    {% for i in 0..11 %}
-                                        <th>{{ i|length == 1 ? 0 }}{{i}}:00 {{ i|length == 1 ? 0 }}{{ i +1 }}:00 </th>
-                                    {% endfor %}
-                                    <!-- Button trigger modal -->
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr>
-                                      {% for i in 0..11 %}
-                                      <th><button id="{{ i }}" data-toggle="modal" data-target="#exampleModal" class="btn {{ slots[i] == false ? "btn btn-basic" :"btn btn-primary" }}"></th>
-                                      {% endfor %}
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
-                            <div class="table-responsive">
-                                <table class="table">
-                                  <thead>
-                                    <tr>
-                                       {% for i in 12..23 %}
-                                       <th >{{ i|length == 1 ? 0 }}{{i}}:00 {{ i|length == 1 ? 0 }}{{ i +1 }}:00 </th>
-                                       {% endfor %}
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr>
-                                      {% for i in 12..23 %}
-                                      <th><button id="{{ i }}" data-toggle="modal" data-target="#exampleModal" class="btn {{ slots[i] == false ? "btn btn-basic" :"btn btn-primary" }}"></th>
-                                      {% endfor %}
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div> 
-                           {% endif %} 
+                                   {% for i in 12..23 %}
+                                       <th >
+                                           {{ i|length == 1 ? 0 }}{{i}}:00 {{ i|length == 1 ? 0 }}{{ i +1 }}:00
+                                       </th>
+                                   {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                  {% for i in 12..23 %}
+                                      <th>
+                                          <button id="{{ i }}" data-toggle="modal" data-target="#exampleModal" class="btn {{ slots[i] == false ? "btn btn-danger" :"btn btn-primary" }}"></button>
+                                      </th>
+                                  {% endfor %}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
                       
-                      </div>
-                      </div>
+            </div>
+        </div>
 
 
-                               <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" >Activer / Désactiver </h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body" id="ModalLabel">
-        From hh:00 to hh:00
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" id="desactiver" onclick="desactiver(id)" class="btn btn-danger">Désactiver</button>
-        <button type="button" id="activer" onclick="activer(id)" class="btn btn-primary">Activer</button>
-      </div>
-    </div>
-  </div>
-</div> 
-                      </section>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" >Activer / Désactiver </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="ModalLabel">
+                        From hh:00 to hh:00
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" id="desactiver" onclick="desactiver(id)" class="btn btn-danger">Désactiver</button>
+                        <button type="button" id="activer" onclick="activer(id)" class="btn btn-primary">Activer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}
 
 {% block Footer %}
