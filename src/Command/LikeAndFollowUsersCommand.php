@@ -82,7 +82,7 @@ class LikeAndFollowUsersCommand extends Command
                 $followCommand->run($followInput, $output); 
                 $this->em->getRepository('App\Entity\People')->findOneByInstaId($person->getInstaID(),$account)->setToFollow(false);
                 $this->em->getRepository('App\Entity\People')->findOneByInstaId($person->getInstaID(),$account)->setUpdated(new \DateTime('@'.strtotime('now')));
-                $this->em->persist($this->em->getRepository('App\Entity\People')->findOneByInstaId($person->getInstaID(),$account));  
+                $this->em->persist($person);  
                 $this->em->flush();
                 //$output->writeln($person->getUsername().' followed correctly and updated in People table');
                 sleep(30);
