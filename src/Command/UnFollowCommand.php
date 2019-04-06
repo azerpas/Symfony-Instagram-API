@@ -41,8 +41,8 @@ class UnFollowCommand extends Command
       
         try {
             $ig->login($username, $password);
-            $ig->people->follow($input->getArgument($userId));
-            $output->write('unFollow effectue!');
+            $ig->people->unfollow($input->getArgument($userId));
+            //$output->write('unFollow effectue!');
         } catch (\Exception $e) {
             throw new \Exception('Something went wrong: ' . $e->getMessage());
         }
