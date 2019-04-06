@@ -92,6 +92,7 @@ class CheckerCommand extends Command
                         //$account->removePerson($person);
                         $this->em->persist($account);
                         $this->em->flush();
+                        sleep(15);
                     }    
                 }
                 else {
