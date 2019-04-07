@@ -104,7 +104,7 @@ class CheckerCommand extends Command
                         }
                         else {
                             $account->setBlacklist('@'.$person);
-                            //TO CHANGE REMOVEPERSON
+                            //TODO CHANGE REMOVEPERSON
                             //$account->removePerson($person);
                             $this->em->persist($account);
                             $this->em->flush();

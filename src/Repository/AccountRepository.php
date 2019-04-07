@@ -36,7 +36,11 @@ class AccountRepository extends ServiceEntityRepository
     }
     */
 
-
+    /**
+     * @param $value
+     * @return Account|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function findOneBySomeField($value): ?Account
     {
         return $this->createQueryBuilder('a')
@@ -46,7 +50,12 @@ class AccountRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
             ;
     }
-     
+
+    /**
+     * @param $username
+     * @return Account|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function  findOneByUsername($username): ?Account
     {
         return $this->createQueryBuilder('a')
@@ -58,10 +67,10 @@ class AccountRepository extends ServiceEntityRepository
     }
 
 
-   
-
     /**
-     * @method assign instagram instance to user or create it if not exist
+     * @param $username
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function selectAccount($username){
         //check if account exist
