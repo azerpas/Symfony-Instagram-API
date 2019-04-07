@@ -70,7 +70,7 @@ class MainCommand extends ContainerAwareCommand
                     });
                 }catch (\Exception $e){
                     $output->writeln("Account could not connect");
-                    continue; // if can't login than stop here 
+                    continue; // if can't login than stop here
                 }
 
                 $commands=array();
