@@ -9,6 +9,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\Service\DBRequest;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Process\Process;
+
+
 
 class TestCommand extends Command
 {
@@ -19,8 +23,11 @@ class TestCommand extends Command
      */
     private $db;
 
-    public function __construct(DBrequest $dbRequest){
+    private $entityManager;
+
+    public function __construct(DBrequest $dbRequest,EntityManagerInterface $entityManager){
         $this->db = $dbRequest;
+        $this->entityManager=$entityManager;
         parent::__construct();
     }
 
@@ -32,27 +39,11 @@ class TestCommand extends Command
         ;
     }
 
-    public function isTime($slots, OutputInterface $output){
-        if($slots == null){ //|| $slots == {}){
-            $output->writeln("No slots");
-        }
-        else{
-            $dt = new \DateTime();
-            // need timezone change
-            $dt = $dt->format("H");
-            $output->writeln($dt);
-            $slots = json_decode($slots);
-            for($i = 0; $i < count($slots) ; $i++){
-                // if this slot is set to true
-                // AND
-                // time equal current time -> return true
-                if($slots[$i] == true && $i == intval($dt)){
-                    return true;
-                }
-            }
-            return false;
-        }
-        return false;
+    private function isTime($account){
+        $slots = json_decode($account->getSlots());
+        if($slots==null)return false;
+        $time=new \DateTime('@'.strtotime('now'));
+        return $slots[$time->format('H')];
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -61,6 +52,8 @@ class TestCommand extends Command
         $debug          = false;
         $truncatedDebug = false;
         //////////////////////
+        ///
+        /*
         $username = $input->getArgument('username');
         $user = $this->db->getUser($username);
         $accounts = $user->getAccounts();
@@ -79,10 +72,34 @@ class TestCommand extends Command
             //elseif(isTime($slots)){}
             //elseif(!isTime($slots)){}
         }
-        try {
+        */
+        $accounts = $this->entityManager->getRepository('App\Entity\Account')->findAll();
+        foreach($accounts as $account){
+            if($account->getStatus() && $this->isTime($account)){
+                $output->writeln("enabled ".$account->getUsername());
+                try {
+                    //$ig = new \InstagramAPI\Instagram($debug, $truncatedDebug);
+                    //$ig->login($account->getUsername(), $account->getPassword());
+                    $command = 'php bin/console insta:instance '.$account->getUsername().' '.$account->getPassword();
+                    $process = new Process($command);
+                    $process->start();
+                    $process->setTimeout(10000);
+                    /*
+                    $process->run(function ($type, $buffer) {
+                        if (Process::ERR === $type) {
+                            throw  new \Exception('Error while trying to login');
+                        } else {
+                            echo 'OUT > '.$buffer;
+                        }
+                    });
+                    //*/
+                }
+                catch (\Exception $e) {
+                    $output->writeln("Error");
+                    throw new \Exception('Something went wrong: ' . $e->getMessage());
+                }
+            }
         }
-        catch (\Exception $e) {
-            throw new \Exception('Something went wrong: ' . $e->getMessage());
-        }
+
     }
 }

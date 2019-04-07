@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Account;
 use App\Entity\People;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -35,11 +36,17 @@ class PeopleRepository extends ServiceEntityRepository
         ;
     }
     */
-   
+
+    /**
+     * @param $account
+     * @return Account []
+     */
     public function findAllByAccount($account)
     {  
         return $this->createQueryBuilder('p')
             ->andWhere('p.account = :acc')
+            // TODO
+            // and toFollow true !!
             ->setParameter('acc', $account)
             ->getQuery()
             ->getResult()

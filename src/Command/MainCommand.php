@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use Couchbase\Exception;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -43,6 +44,7 @@ class MainCommand extends ContainerAwareCommand
      * @method: check if user have defined time slots
      * if so fetching them from BD and checking if currently in time slot
      * @return Boolean
+     * @throws
      */
     private function isTime($account){
         $slots = json_decode($account->getSlots());
@@ -52,10 +54,25 @@ class MainCommand extends ContainerAwareCommand
     }
 
    
-    protected function execute(){
+    protected function execute(InputInterface $input, OutputInterface $output){
         $accounts=$this->entityManager->getRepository('App\Entity\Account')->findAll();
         foreach($accounts as $account){
             if($account->getStatus() && $this->isTime($account)){
+                $output->writeln("Account: ".$account->getUsername());
+                try{
+                    $command = 'php bin/console insta:instance '.$account->getUsername().' '.$account->getPassword();
+                    $process = new Process($command);
+                    $process->setTimeout(6000);
+                    $process->run(function ($type, $buffer) {
+                        if (Process::ERR === $type) {
+                            throw  new \Exception('Error while trying to login');
+                        }
+                    });
+                }catch (\Exception $e){
+                    $output->writeln("Account could not connect");
+                    continue; // if can't login than stop here 
+                }
+
                 $commands=array();
                 array_push($commands,'php bin/console search:tag '.$account->getUsername().' '.$account->getPassword());
                 array_push($commands,'php bin/console app:likeAndFollowUsers '.$account->getUsername.' '.$account->getPassword()); 
