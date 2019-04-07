@@ -62,7 +62,9 @@ class LikeAndFollowUsersCommand extends Command
             $peopleToInteract = $this->em->getRepository('App\Entity\People')->findAllByAccount($account);
             $likeUserMediasCommand = $this->getApplication()->find('app:likeUserMedias');
             $followCommand = $this->getApplication()->find('app:follow'); 
-            foreach($peopleToInteract as $person) {
+            $counter = 0;
+            while ($counter<10) {
+                $person = $peopleToInteract[$counter];
                 //$output->writeln($person->getUsername().' '.$person->getInstaID());
                 $likeUserMediasArguments = [
                     'command' => 'app:likeUserMedias',
@@ -103,6 +105,7 @@ class LikeAndFollowUsersCommand extends Command
                 $this->em->flush();
                 //$output->writeln($person->getUsername().' followed correctly and updated in People table');
                 sleep(30);
+                $counter++;
             }
         }
         catch (\Exception $e) {
