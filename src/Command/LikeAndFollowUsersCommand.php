@@ -13,6 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\ArrayInput;
 use Psr\Log\LoggerInterface;
+use App\Entity\History;
 //use App\Service\DBRequest;
 
 class LikeAndFollowUsersCommand extends Command
@@ -71,6 +72,14 @@ class LikeAndFollowUsersCommand extends Command
                 ];
                 $likeUserMediasInput = new ArrayInput($likeUserMediasArguments);
                 $likeUserMediasCommand->run($likeUserMediasInput, $output);
+
+                // TODO : need to add CATCH
+                /* $history directly into $likeUserMediasCommand
+                $history = new History();
+                $history->setType("like");
+                $history->setFromAccount($account);
+                $history->setMessage("Liked ".);
+                */
                 $followCommandArguments = [
                     'command' => 'app:follow',
                     'username' => $username,
@@ -79,7 +88,16 @@ class LikeAndFollowUsersCommand extends Command
                 ];
                 $followInput = new ArrayInput($followCommandArguments);
                 sleep(rand(3,6));
-                $followCommand->run($followInput, $output); 
+                $followCommand->run($followInput, $output);
+
+                // TODO : need to add CATCH
+                $history = new History();
+                $history->setType("follow");
+                $history->setFromAccount($account);
+                $history->setMessage("Followed ". $person->getUsername());
+                $this->em->persist($history);
+                $this->em->flush();
+
                 $this->em->getRepository('App\Entity\People')->findOneByInstaId($person->getInstaID(),$account)->setToFollow(false);
                 $this->em->getRepository('App\Entity\People')->findOneByInstaId($person->getInstaID(),$account)->setUpdated(new \DateTime('@'.strtotime('now')));
                 $this->em->persist($person);  
