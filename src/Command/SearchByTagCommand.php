@@ -40,24 +40,25 @@ class SearchByTagCommand extends ContainerAwareCommand
             ->addArgument('password', InputArgument::REQUIRED, 'My password')
         ;
     }
-    // ->addArgument('tags',InputArgument::IS_ARRAY,'Hashtags list?')
+    
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {    /////// CONFIG ///////
         $debug          = false;
         $truncatedDebug = false;
         //////////////////////
-        $output->writeln('FIRST');
-        //get account params
+       
+        //getAccount
         $username = $input->getArgument('username');
         $password = $input->getArgument('password');
-        $output->writeln($username);
         $account=$this->db->findAccountByUsername($username);
-        //$tags= $input->getArgument('tags');
-        $settings=$account->getSettings();
+        
+        
+         //get account params
+        $settings=json_decode($account->getSettings());
         $blacklist=$account->getBlacklist();
         $tags = unserialize($account->getSearchSettings())->hashtags;
-
+       
         //get instagram instance
         $ig = new \InstagramAPI\Instagram($debug,$truncatedDebug); 
         try {
@@ -74,27 +75,101 @@ class SearchByTagCommand extends ContainerAwareCommand
             $cpt=0;
             $rankToken = Signatures::generateUUID();
             do {
-                $feed = $ig->hashtag->getFeed($tag, $rankToken, $maxId);
-                foreach ($feed->getItems() as $item ) {
-                    $instaId=$item->getUser()->getPk();
-                    $username=$item->getUser()->getUsername();
-
-                    //check if blacklisted
-
-
-                    array_push($users,array("id"=>$instaId,"username"=>$username )) ;
-
-                }
-                $maxId=$feed->getNextMaxId();
-                sleep(2);
-                $cpt++;
+            $feed = $ig->hashtag->getFeed($tag, $rankToken, $maxId);
+            
+             foreach ($feed->getItems() as $item ) {
+             $instaId=$item->getUser()->getPk(); 
+             $username=$item->getUser()->getUsername();
+             sleep(1);
+             $userInfo=$ig->people->getInfoByName($item->getUser()->getUsername());
+             //check params
+             if($this->UserMatch($settings,$userInfo))                
+             array_push($users,array("id"=>$instaId,"username"=>$username )) ;
+            
+               }
+               
+              $maxId=$feed->getNextMaxId();
+              sleep(1);
+              $cpt++;
             }while ( $maxId !== null && 1>$cpt);
 
              $this->db->addPeople($account,$users);
+             
         }
         
-
      
+     
+    }
+   
+   
+    /**
+     * @method check if the user matches with the params
+     * @param param account configuration
+     * @param userInfo 
+     * @return boolean 
+     */
+    private function UserMatch($param,$userInfo){
+        return true;
+        if(
+            ($userInfo->getUser()->getFollowerCount() < $param->minfollow) ||
+            ($userInfo->getUser()->getFollowerCount() > $param->maxfollow)||
+            ($userInfo->getUser()->getFollowingCount() < $param->minfollowing)||
+            ($userInfo->getUser()->getFollowingCount() > $param->maxfollowing)||
+            ($userInfo->getUser()->getMediaCount() > $param->minpublication)||
+            ($userInfo->getUser()->getMediaCount() > $param->maxpublication)
+           // ($param->private == 0 && $userInfo->getUser()->getIsPrivate()  )||
+           //  ($param->picture ==-1 &&  $userInfo->getUser()->hasAnonymousProfilePicture())
+        )return false;
+        return true;
+    }
+    private function getCurrentFollowers($ig)
+    {
+        echo "Get current followers\n";
+
+        $uuid  = \InstagramAPI\Signatures::generateUUID();
+        $maxId = null;
+        $array = [];
+
+        do {
+            $response = $ig->people->getSelfFollowers($uuid, null, $maxId);
+            foreach ($response->getUsers() as $item) {
+                $array[] = $item->getUsername();
+            }
+            $maxId = $response->getNextMaxId();
+            if ($maxId) {
+                echo "Sleeping for 5s...\n";
+                sleep(5);
+            }
+        } while ($maxId !== null);
+        return $array;
+    }
+
+    private function getCurrentSubscriptions($ig)
+    {
+        echo "Get people to unfollow\n";
+        $uuid  = \InstagramAPI\Signatures::generateUUID();
+        $maxId = null;
+        $array = [];
+
+        do {
+            /** @var $response */
+            $response = $ig->people->getSelfFollowing($uuid, null, $maxId);
+
+            foreach ($response->getUsers() as $item) {
+                $array[$item->getPk()] = $item->getUsername();
+                //if ($item->getUsername() === "balouterreneuve") {
+                //    dump($ig->people->getFriendship($item->getPk()));
+                //}
+            }
+
+            $maxId = $response->getNextMaxId();
+            if ($maxId) {
+                echo "Sleeping for 5s...\n";
+                sleep(5);
+            }
+        } while ($maxId !== null);
+
+        return $array;
     }
 
    
