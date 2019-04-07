@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}INSTAGUI{% endblock %}
+
+{% block Navbar %}
+    {{parent()}}
+{% endblock %}
+{% block Section %}
+    <div class="container">
+        <section class="section-padding">
+            <div class="row">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Type</th>
+                            <th scope="col">Message</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in history %}
+                        <tr>
+                            <th scope="row">
+                                {% if i.type == 'searchSet' %}
+                                    <i class="fas fa-search"></i> Search
+                                {% elseif i.type == 'follow' %}
+                                    <i class="fas fa-user-plus"></i> Follow
+                                {% elseif i.type == 'like' %}
+                                    <i class="fas fa-heart"></i> Like
+                                {% elseif i.type == 'foundPeople' %}
+                                    <i class="fas fa-users"></i> People found
+                                {% endif %}
+                            </th>
+                            <td>{{ i.message }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+{% block Footer %}
+    {{parent()}}
+{% endblock %}
+

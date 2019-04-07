@@ -4,6 +4,7 @@ namespace App\Service;
 use App\Entity\Account;
 use App\Entity\User;
 use App\Entity\People;
+use App\Entity\History;
 use Doctrine\ORM\EntityManagerInterface;
 use http\Env\Response;
 use Psr\Log\LoggerInterface;
@@ -150,18 +151,16 @@ class DBRequest{
         return $account->getStatus();
     }
 
-       /**
-    * @method add catched user list to people table
-     *@param account
-     *@param people list of instagram users 
+    /**
+     * @method add catched user list to people table
+     * @param account
+     * @param people list of instagram users
      * @return
-    */
-     public function  addPeople($account,$people)
-    { 
-        foreach ($people as $user)
-        { 
-           if(!$this->personExist($account,$user["id"]))
-              { $person=new People();
+     */
+    public function addPeople($account,$people){
+        foreach ($people as $user) {
+            if(!$this->personExist($account,$user["id"])) {
+                $person=new People();
                 $person->setUsername($user["username"]);
                 $person->setInstaId($user["id"]);
                 $person->setToFollow(true);
@@ -172,12 +171,18 @@ class DBRequest{
                 $person->setUpdated(new \DateTime('@'.strtotime('now')));
                 echo json_encode($person);
                 $this->em->persist($person);  
-                 $this->em->flush();
+                $this->em->flush();
                 $account->addPerson($person); 
                 $this->em->persist($account);  
                 $this->em->flush();
-              }
+            }
         }
+        $history = new History();
+        $history->setType("foundPeople");
+        $history->setMessage("Found ".count($people). " people to Interact with !");
+        $history->setFromAccount($account);
+        $this->em->persist($history);
+        $this->em->flush();
     }
 
     /**

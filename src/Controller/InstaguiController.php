@@ -84,6 +84,16 @@ class InstaguiController extends AbstractController
     }
 
     /**
+     * @Route("/instagui/history", name="inst_history")
+     */
+    public function historyPage(){
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        return $this->render('instagui/history.html.twig',[
+            'controller_name' => 'InstaguiController','page'=> 'history','history'=>$this->getUser()->getActuelAccount()->getHistories()
+        ]);
+    }
+
+    /**
      * @Route("/instagui/profile", name="inst_profil")
      */
     public function profilPage(Request $request,LoggerInterface $logger,DBRequest $DBRequest)
