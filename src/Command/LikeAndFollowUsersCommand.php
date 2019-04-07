@@ -59,7 +59,7 @@ class LikeAndFollowUsersCommand extends Command
             $ig->login($username, $password);
             $account = $this->em->getRepository('App\Entity\Account')->findOneByUsername($username);
             //$output->writeln('Account to interact with : '.$account->getUsername());
-            $peopleToInteract = $this->em->getRepository('App\Entity\People')->findAllByAccount($account);
+            $peopleToInteract = $this->em->getRepository('App\Entity\People')->findPeopleToFollowTrueByAccount($account);
             $likeUserMediasCommand = $this->getApplication()->find('app:likeUserMedias');
             $followCommand = $this->getApplication()->find('app:follow'); 
             $counter = 0;

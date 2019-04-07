@@ -57,7 +57,7 @@ class CheckerCommand extends Command
         try {
             $ig->login($username, $password);
             $account = $this->em->getRepository('App\Entity\Account')->findOneByUsername($username);
-            $peopleToInteract = $this->em->getRepository('App\Entity\People')->findAllByAccount($account);
+            $peopleToInteract = $this->em->getRepository('App\Entity\People')->findPeopleToFollowFalseByAccount($account);
             $dateToday = new \DateTime('@'.strtotime('now'));
             //$output->writeln($dateToday->format('Y-m-d H:i:s'));
             $uuid  = \InstagramAPI\Signatures::generateUUID();
