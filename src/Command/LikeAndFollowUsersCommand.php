@@ -74,12 +74,11 @@ class LikeAndFollowUsersCommand extends Command
                 $likeUserMediasCommand->run($likeUserMediasInput, $output);
 
                 // TODO : need to add CATCH
-                /* $history directly into $likeUserMediasCommand
                 $history = new History();
                 $history->setType("like");
                 $history->setFromAccount($account);
-                $history->setMessage("Liked ".);
-                */
+                $history->setMessage("Liked two medias of ".$person->getUsername());
+
                 $followCommandArguments = [
                     'command' => 'app:follow',
                     'username' => $username,
