@@ -76,10 +76,12 @@ class LikeAndFollowUsersCommand extends Command
                 $likeUserMediasCommand->run($likeUserMediasInput, $output);
 
                 // TODO : need to add CATCH
-                $history = new History();
-                $history->setType("like");
-                $history->setFromAccount($account);
-                $history->setMessage("Liked two medias of ".$person->getUsername());
+                $historyLike = new History();
+                $historyLike->setType("like");
+                $historyLike->setFromAccount($account);
+                $historyLike->setMessage("Liked two medias of ".$person->getUsername());
+                $this->em->persist($historyLike);
+                $this->em->flush();
 
                 $followCommandArguments = [
                     'command' => 'app:follow',
@@ -92,11 +94,11 @@ class LikeAndFollowUsersCommand extends Command
                 $followCommand->run($followInput, $output);
 
                 // TODO : need to add CATCH
-                $history = new History();
-                $history->setType("follow");
-                $history->setFromAccount($account);
-                $history->setMessage("Followed ". $person->getUsername());
-                $this->em->persist($history);
+                $historyFollow = new History();
+                $historyFollow->setType("follow");
+                $historyFollow->setFromAccount($account);
+                $historyFollow->setMessage("Followed ". $person->getUsername());
+                $this->em->persist($historyFollow);
                 $this->em->flush();
 
                 $this->em->getRepository('App\Entity\People')->findOneByInstaId($person->getInstaID(),$account)->setToFollow(false);
