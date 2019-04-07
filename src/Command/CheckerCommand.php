@@ -70,7 +70,7 @@ class CheckerCommand extends Command
                 }
                 $maxId = $response->getNextMaxId();
                 if ($maxId) {
-                    //echo "Sleeping for 5s...\n";
+                    echo "Sleeping for 5s...\n";
                     sleep(5);
                 }
             } while ($maxId !== null);
@@ -88,9 +88,9 @@ class CheckerCommand extends Command
                         $unfollowCommand->run($unfollowInput, $output);
                         //TO DO SETBLACKLIST
                         //$account->setBlacklist('@'.$person->getUsername());
-                        //TO CHANGE REMOVEPERSON
-                        //$account->removePerson($person);
                         $this->em->persist($account);
+                        $this->em->flush();
+                        $this->em->remove($person);
                         $this->em->flush();
                         sleep(15);
                     }    
@@ -103,10 +103,11 @@ class CheckerCommand extends Command
                             $this->flush();
                         }
                         else {
-                            $account->setBlacklist('@'.$person);
-                            //TO CHANGE REMOVEPERSON
-                            //$account->removePerson($person);
+                            //TO DO SETBLACKLIST
+                            //$account->setBlacklist('@'.$person->getUsername());
                             $this->em->persist($account);
+                            $this->em->flush();
+                            $this->em->remove($person);
                             $this->em->flush();
                         }
                     }
