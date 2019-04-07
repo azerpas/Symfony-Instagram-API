@@ -39,15 +39,45 @@ class PeopleRepository extends ServiceEntityRepository
 
     /**
      * @param $account
-     * @return Account []
+     * @return People []
      */
     public function findAllByAccount($account)
     {  
         return $this->createQueryBuilder('p')
             ->andWhere('p.account = :acc')
-            // TODO
-            // and toFollow true !!
             ->setParameter('acc', $account)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    
+    /**
+     * @param $account
+     * @return People [] where to_follow==true
+     */
+    public function findPeopleToFollowTrueByAccount($account)
+    {  
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.account = :acc')
+            ->andWhere('p.to_follow = :enabled')
+            ->setParameter('acc', $account)
+            ->setParameter('enabled', true)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    
+    /**
+     * @param $account
+     * @return People [] where to_follow==false
+     */
+    public function findPeopleToFollowFalseByAccount($account)
+    {  
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.account = :acc')
+            ->andWhere('p.to_follow = :disabled')
+            ->setParameter('acc', $account)
+            ->setParameter('disabled',false)
             ->getQuery()
             ->getResult()
         ;
