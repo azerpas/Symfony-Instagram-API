@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Service\DBRequest;
+use App\Entity\History;
 class AjaxController extends AbstractController
 {
 
@@ -136,7 +137,12 @@ class AjaxController extends AbstractController
                 $account->setSearchSettings($search_settings);
                 $em->persist($account);
                 $em->flush();
-                 //
+                $history = new History();
+                $history->setType('searchSet');
+                $history->setMessage('Added @'.$keyword.' as a keyword !');
+                $history->setFromAccount($account);
+                $em->persist($history);
+                $em->flush();
                 return new JsonResponse(['output'=>'Successfully added: '.$keyword],200);
             }
             if (strpos($keyword,"#")===0){ // if contains # then hashtag
@@ -149,7 +155,12 @@ class AjaxController extends AbstractController
                 $account->setSearchSettings($search_settings);
                 $em->persist($account);
                 $em->flush();
-                 //
+                $history = new History();
+                $history->setType('searchSet');
+                $history->setMessage('Added #'.$keyword.' as a keyword !');
+                $history->setFromAccount($account);
+                $em->persist($history);
+                $em->flush();
                 return new JsonResponse(['output'=>'Successfully added: '.$keyword],200);
             }
             return new JsonResponse(['output'=>'Could not read the keyword: '.$keyword],400);
