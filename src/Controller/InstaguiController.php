@@ -76,10 +76,10 @@ class InstaguiController extends AbstractController
     /**
      * @Route("/instagui/charts", name="inst_charts")
      */
-    public function chartsPage()
+    public function chartsPage(LoggerInterface $logger)
     {   $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         return $this->render('instagui/stat.html.twig', [
-            'controller_name' => 'InstaguiController','page'=> 'statistiques'
+            'controller_name' => 'InstaguiController','page'=> 'statistiques', 'followerCount'=>''
         ]);
     }
 
