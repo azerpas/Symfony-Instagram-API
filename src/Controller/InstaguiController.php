@@ -49,6 +49,7 @@ class InstaguiController extends AbstractController
             $process = new Process('php bin/console search:tag '.$this->getUser()->getActuelAccount()->getUsername().' '.$this->getUser()->getActuelAccount()->getPassword());
             $process->setWorkingDirectory(getcwd());
             $process->setWorkingDirectory("../");
+            $process->setTimeout(1800);
             $process->run(function ($type, $buffer) {
                 if (Process::ERR === $type) {
                     echo 'ERR > '.$buffer;
