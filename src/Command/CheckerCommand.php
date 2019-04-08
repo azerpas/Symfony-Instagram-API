@@ -4,6 +4,7 @@
 namespace App\Command;
 
 //use App\Service\DBRequest;
+use App\Entity\History;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use InstagramAPI\Response\Model\FriendshipStatus;
@@ -77,7 +78,8 @@ class CheckerCommand extends Command
             $unfollowCommand = $this->getApplication()->find('insta:unfollow'); 
             $counter = 0;
             $unfollowCounter = 0;
-            while ($unfollowCounter < 10) {
+            //$output->writeln(sizeof($peopleToInteract).' to interact with.');
+            while ($unfollowCounter < 10 && $counter<sizeof($peopleToInteract)) {
                 $person = $peopleToInteract[$counter];
                 if (($person->getIsFollowingBack())==true) {
                     if ((in_array($person->getUsername(), $selfFollowersArray))==false) {
@@ -85,7 +87,7 @@ class CheckerCommand extends Command
                             'command' => 'insta:unfollow',
                             'username' => $username,
                             'password' => $password,
-                            'userId' => $person->getInsaID(),
+                            'userId' => $person->getInstaID(),
                         ];
                         $unfollowInput = new ArrayInput($unfollowArgument);
                         $unfollowCommand->run($unfollowInput, $output);
@@ -117,7 +119,7 @@ class CheckerCommand extends Command
                                 'command' => 'insta:unfollow',
                                 'username' => $username,
                                 'password' => $password,
-                                'userId' => $person->getInsaID(),
+                                'userId' => $person->getInstaID(),
                             ];
                             $unfollowInput = new ArrayInput($unfollowArgument);
                             $unfollowCommand->run($unfollowInput, $output);
