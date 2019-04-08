@@ -179,11 +179,11 @@ class InstaguiController extends AbstractController
      */
     public function paramsPage(Request $request)
     {   //check for login user redirect if null
-
+        $param=json_decode($this->getUser()->getActuelAccount()->getSettings());
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         return $this->render('instagui/parameters.html.twig', [
-            'controller_name' => 'InstaguiController','page'=> 'paramètres'
+            'page'=> 'paramètres','param'=>  $param
         ]);
     }
 

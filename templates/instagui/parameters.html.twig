@@ -21,42 +21,42 @@
                        <p>Input settings to sort the accounts the bot will follow</p>
                        <div class="form-group row">
                            <label class="form-control-label col-3 vcenter">Followers </label>
-                           <input name="minfollow"  data-prefix="MIN" type="number" value="50" class="col-4">
-                           <input name="maxfollow" data-prefix="MAX" type="number" value="50" class="col-4">
+                           <input name="minfollow"  data-prefix="MIN" type="number" value={% if param.minfollow is defined %} {{  param.minfollow }} {% else %} "1" {% endif %}  class="col-4">
+                           <input name="maxfollow" data-prefix="MAX" type="number" value={% if param.maxfollow is defined %} {{  param.maxfollow }} {% else %} "500" {% endif %}  class="col-4">
                        </div>
                        <div class="form-group row">
                            <label class="form-control-label col-3">Following </label>
-                           <input name="minfollowing" data-prefix="MIN" type="number" value="50" class="col-4">
-                           <input name="maxfollowing" data-prefix="MAX" type="number" value="50" class="col-4">
+                           <input name="minfollowing" data-prefix="MIN" type="number" value={% if param.minfollowing is defined %} {{  param.minfollowing }} {% else %} "1" {% endif %}  class="col-4">
+                           <input name="maxfollowing" data-prefix="MAX" type="number" value={% if param.maxfollowing is defined %} {{  param.maxfollowing }} {% else %} "500" {% endif %} class="col-4">
                        </div>
                        <div class="form-group row">
                            <label class="form-control-label col-3">Posts </label>
-                           <input name="minpublication" data-prefix="MIN" type="number" value="50" class="col-4">
-                           <input name="maxpublication" data-prefix="MAX" type="number" value="50" class="col-4">
+                           <input name="minpublication" data-prefix="MIN" type="number" value={% if param.minpublication is defined %} {{  param.minpublication }} {% else %} "1" {% endif %} class="col-4">
+                           <input name="maxpublication" data-prefix="MAX" type="number" value={% if param.maxpublication is defined %} {{  param.maxpublication }} {% else %} "500" {% endif %} class="col-4">
                        </div>
                        <div class="form-group row">
                            <label class="form-control-label col-3">Profile picture </label>
                            <div class="i-checks col-3 ">
-                               <input id="radioCustom1" type="radio" value="1" name="b" class="form-control-custom radio-custom">
+                               <input id="radioCustom1" type="radio" {% if not (param.picture is defined) or (param.picture is defined and param.picture == '1' )  %} checked="" {% endif %} value="1" name="picture" class="form-control-custom radio-custom">
                                <label for="radioCustom1">WITH a profile pic</label>
                            </div>
                            <div class="i-checks col-3">
-                               <input id="radioCustom2" type="radio" checked="" value="-1" name="b" class="form-control-custom radio-custom">
+                               <input id="radioCustom2" type="radio" {% if param.picture is defined and param.picture == '-1' %} checked="" {% endif %} value="-1" name="picture" class="form-control-custom radio-custom">
                                <label for="radioCustom2">WITHOUT a profile pic</label>
                            </div>
                            <div class="i-checks col-3">
-                               <input id="radioCustom3" type="radio"  value="0" name="b" class="form-control-custom radio-custom">
+                               <input id="radioCustom3" type="radio" {% if param.picture is defined and param.picture == '0' %} checked="" {% endif %}  value="0" name="picture" class="form-control-custom radio-custom">
                                <label for="radioCustom3">What ever</label>
                            </div>
                        </div>
                        <div class="form-group row">
                            <label class="form-control-label col-3">Scraping private accounts?</label>
                            <div class="i-checks col-3 ">
-                               <input id="radioCustom11" type="radio" value="1" name="private" class="form-control-custom radio-custom">
+                               <input id="radioCustom11" type="radio" {% if not (param.private is defined) or (param.private is defined and param.private == 1 )  %} checked="" {% endif %}  value="1" name="private" class="form-control-custom radio-custom">
                                <label for="radioCustom11">Yes</label>
                            </div>
                            <div class="i-checks col-3">
-                               <input id="radioCustom22" type="radio" checked="" value="0" name="private" class="form-control-custom radio-custom">
+                               <input id="radioCustom22" type="radio" {% if param.private is defined and param.private == 0  %}  checked="" {% endif %}  value="0" name="private" class="form-control-custom radio-custom">
                                <label for="radioCustom22">No</label>
                            </div>
                        </div>
@@ -71,13 +71,10 @@
                        </label>
                        <p>How many follow per...</p>
                        <div class="form-group row">
-                           <input id="number" data-prefix="Hour" name="followH" type="number" value="50" class="col-6">
+                           <input id="number" data-prefix="Hour" name="followPerHour" type="number" value={% if param.followPerHour is defined %} {{ param.followPerHour }} {% else %} "20" {% endif %} class="col-6">
                        </div>
                        <div class="form-group row">
-                           <input id="number" data-prefix="Days" name="followD" type="number" value="50" class="col-6">
-                       </div>
-                       <div class="form-group row">
-                           <input id="number" data-prefix="Month"  name="followM" type="number" value="50" class="col-6">
+                           <input id="number" data-prefix="Days" name="followPerDay" type="number" value={% if param.followPerDay is defined %} {{ param.followPerDay }} {% else %} "100" {% endif %} class="col-6">
                        </div>
                             
                        <!-- follow config end  -->
@@ -89,21 +86,21 @@
                        </label>
                        <div class="form-group row">
                            <label class="form-control-label col-3 vcenter">Days before unfollowing</label>
-                           <input id="number" data-prefix="Days" type="number" name="unfollowTime" value="6" class="col-6">
+                           <input id="number" data-prefix="Days" type="number" name="TimeToUnfollow" value={% if param.TimeToUnfollow is defined %} {{ param.TimeToUnfollow }} {% else %} "10" {% endif %} class="col-6">
                        </div>
                        <div class="form-group row">
                            <label class="form-control-label col-3">Add unfollowing users to blacklist </label>
                            <div class="i-checks col-3 ">
-                               <input id="radio-oui" type="radio" value="1" name="blackList" class="form-control-custom radio-custom">
+                               <input id="radio-oui" type="radio" {% if not (param.blackList is defined) or (param.blackList is defined and param.blackList == 1 )  %} checked="" {% endif %}  value="1" name="blackList" class="form-control-custom radio-custom">
                                <label for="radio-oui">Yes</label>
                            </div>
                            <div class="i-checks col-3">
-                               <input id="radio-non" type="radio" checked="" value="0" name="blacklList" class="form-control-custom radio-custom">
+                               <input id="radio-non" type="radio" {% if param.blackList is defined and param.blackList == 0  %}  checked="" {% endif %}  value="0" name="blackList" class="form-control-custom radio-custom">
                                <label for="radio-non">No</label>
                            </div>
                        </div>
                        <!-- unfollow config end  -->
-                       <!-- follow config end  -->
+                       
                        <!--separator -->
                        <div class="w-100"><hr></div>
                        <!-- like config start  -->
@@ -113,19 +110,19 @@
                        <p>Which post the bot will like before following</p>
                        <div class="form-group row">
                            <div class="i-checks ">
-                               <input id="like-1" type="radio" value="1" name="like" class="form-control-custom radio-custom">
+                               <input id="like-1" type="radio" value="1" name="like" {% if not (param.like is defined) or (param.like is defined and param.like == 1 )  %} checked="" {% endif %}  class="form-control-custom radio-custom">
                                <label class="form-control-label" for="like-1">Most liked post</label>
                            </div>
                        </div>
                        <div class="form-group row">
                            <div class="i-checks">
-                               <input id="like-2" type="radio" value="2" name="like" class="form-control-custom radio-custom">
+                               <input id="like-2" type="radio" value="2" name="like" {% if param.like is defined and  param.like == 2  %}  checked="" {% endif %} class="form-control-custom radio-custom">
                                <label class="form-control-label " for="like-2">Most recent post</label>
                            </div>
                        </div>
                        <div class="form-group row">
                            <div class="i-checks  ">
-                               <input id="like-3" type="radio" value="3" name="like" class="form-control-custom radio-custom">
+                               <input id="like-3" type="radio" value="3" name="like" {% if param.like is defined and  param.like == 3  %}  checked="" {% endif %} class="form-control-custom radio-custom">
                                <label class="form-control-label " for="like-3">Tagged post</label>
                            </div>
                        </div>
@@ -163,7 +160,7 @@
                        </div>
                        <div class="form-group row">
                            <label class="form-label col-3">MESSAGE</label>
-                           <textarea rows="8" class="form-control col-6" name="message">Hello World!!!!!!!!</textarea>
+                           <textarea rows="8" class="form-control col-6" name="message">{% if param.message is defined %} {{ param.message }} {% else %} "type your message here ..." {% endif %}</textarea>
                        </div>
                        <!-- message send  end  -->
                    </form>

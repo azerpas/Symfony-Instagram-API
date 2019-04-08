@@ -55,7 +55,8 @@ class MainCommand extends ContainerAwareCommand
 
    
     protected function execute(InputInterface $input, OutputInterface $output){
-        //accounts list        
+        //accounts list 
+        $output->writeln("<info>#get accounts list</info>");       
         $accounts=$this->entityManager->getRepository('App\Entity\Account')->findAll();
        
        
