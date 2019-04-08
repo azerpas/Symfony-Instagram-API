@@ -114,19 +114,21 @@ class SearchByTagCommand extends ContainerAwareCommand
      */
     private function UserMatch($settings, $userInfo)
     {
-        if( ($userInfo->getUser()->getFollowerCount() < $settings->minfollow) ||
-            ($userInfo->getUser()->getFollowerCount() > $settings->maxfollow)||
-            ($userInfo->getUser()->getFollowingCount() < $settings->minfollowing)||
-            ($userInfo->getUser()->getFollowingCount() > $settings->maxfollowing)||
+        //return true;
+
+        if( ($userInfo->getUser()->getFollowerCount() > $settings->minfollow) ||
+            ($userInfo->getUser()->getFollowerCount() < $settings->maxfollow)||
+            ($userInfo->getUser()->getFollowingCount() > $settings->minfollowing)||
+            ($userInfo->getUser()->getFollowingCount() < $settings->maxfollowing)||
             ($userInfo->getUser()->getMediaCount() > $settings->minpublication)||
-            ($userInfo->getUser()->getMediaCount() > $settings->maxpublication)
+            ($userInfo->getUser()->getMediaCount() < $settings->maxpublication)
             // ($param->private == 0 && $userInfo->getUser()->getIsPrivate()  )||
             //  ($param->picture ==-1 &&  $userInfo->getUser()->hasAnonymousProfilePicture())
         ){
-            return false;
+            return true;
         }
         else{
-            return true;
+            return false;
         }
     }
 }
