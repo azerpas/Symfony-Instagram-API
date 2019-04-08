@@ -86,13 +86,19 @@ class CheckerCommand extends Command
                         ];
                         $unfollowInput = new ArrayInput($unfollowArgument);
                         $unfollowCommand->run($unfollowInput, $output);
+                        $historyUnfollow = new History();
+                        $historyUnfollow->setType('unfollow');
+                        $historyUnfollow->setMessage('Unfollowed @'. $person->getUsername().' because he unfollowed '.$account->getUsername());
+                        $historyUnfollow->setFromAccount($account);
+                        $this->em->persist($historyUnfollow);
+                        $this->em->flush();
                         //TO DO SETBLACKLIST
                         //$account->setBlacklist('@'.$person->getUsername());
                         $this->em->persist($account);
                         $this->em->flush();
                         $this->em->remove($person);
                         $this->em->flush();
-                        sleep(15);
+                        sleep(30);
                     }    
                 }
                 else {
@@ -103,16 +109,37 @@ class CheckerCommand extends Command
                             $this->flush();
                         }
                         else {
+                            $unfollowArgument = [
+                                'command' => 'insta:unfollow',
+                                'username' => $username,
+                                'password' => $password,
+                                'userId' => $person->getInsaID(),
+                            ];
+                            $unfollowInput = new ArrayInput($unfollowArgument);
+                            $unfollowCommand->run($unfollowInput, $output);
+                            $historyUnfollow = new History();
+                            $historyUnfollow->setType('unfollow');
+                            $historyUnfollow->setMessage('Unfollowed @'.$person->getUsername().' because he did not follow back '.$account->getUsername().' after 10 days.');
+                            $historyUnfollow->setFromAccount($account);
+                            $this->em->persist($historyUnfollow);
+                            $this->em->flush();
                             //TO DO SETBLACKLIST
                             //$account->setBlacklist('@'.$person->getUsername());
                             $this->em->persist($account);
                             $this->em->flush();
                             $this->em->remove($person);
                             $this->em->flush();
+                            sleep(30);
                         }
                     }
                 }
             }
+            $historyChecker = new History();
+            $historyChecker->setType('checker');
+            $historyChecker->setMessage('Checker updated database');
+            $historyChecker->setFromAccount($account);
+            $this->em->persist($historyChecker);
+            $this->em->flush();
         }
         catch (\Exception $e) {
             throw new \Exception('Something went wrong: ' . $e->getMessage());
