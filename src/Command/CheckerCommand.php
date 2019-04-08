@@ -70,12 +70,15 @@ class CheckerCommand extends Command
                 }
                 $maxId = $response->getNextMaxId();
                 if ($maxId) {
-                    echo "Sleeping for 5s...\n";
+                    //echo "Sleeping for 5s...\n";
                     sleep(5);
                 }
             } while ($maxId !== null);
             $unfollowCommand = $this->getApplication()->find('insta:unfollow'); 
-            foreach ($peopleToInteract as $person) {
+            $counter = 0;
+            $unfollowCounter = 0;
+            while ($unfollowCounter < 10) {
+                $person = $peopleToInteract[$counter];
                 if (($person->getIsFollowingBack())==true) {
                     if ((in_array($person->getUsername(), $selfFollowersArray))==false) {
                         $unfollowArgument = [
@@ -98,6 +101,7 @@ class CheckerCommand extends Command
                         $this->em->flush();
                         $this->em->remove($person);
                         $this->em->flush();
+                        $unfollowCounter++;
                         sleep(30);
                     }    
                 }
@@ -129,14 +133,16 @@ class CheckerCommand extends Command
                             $this->em->flush();
                             $this->em->remove($person);
                             $this->em->flush();
+                            $unfollowCounter++;
                             sleep(30);
                         }
                     }
                 }
+                $counter++;
             }
             $historyChecker = new History();
             $historyChecker->setType('checker');
-            $historyChecker->setMessage('Checker updated database');
+            $historyChecker->setMessage('Checker updated database with '.$counter.' People treated including '.$unfollowCounter.' unfollows.');
             $historyChecker->setFromAccount($account);
             $this->em->persist($historyChecker);
             $this->em->flush();
