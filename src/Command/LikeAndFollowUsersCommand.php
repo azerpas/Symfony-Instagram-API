@@ -109,6 +109,12 @@ class LikeAndFollowUsersCommand extends Command
                 sleep(30);
                 $counter++;
             }
+            $historyEnd = new History();
+            $historyEnd->setType('bot');
+            $historyEnd->setMessage('Bot ended following and liking, waiting till next valid hour...');
+            $historyEnd->setFromAccount($account);
+            $this->em->persist($historyEnd);
+            $this->em->flush();
         }
         catch (\Exception $e) {
             throw new \Exception('Something went wrong: ' . $e->getMessage());

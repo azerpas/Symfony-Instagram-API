@@ -11,6 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\ORM\EntityManagerInterface;  
 use Psr\Log\LoggerInterface;
 use App\Entity\Account;
+use App\Entity\History;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
@@ -102,6 +103,7 @@ class MainCommand extends ContainerAwareCommand
                 }  
             }  
         }
+        //TODO need to add something like: is the bot still running -> history
         $output->writeln("<info>#all processes are started </info>");    
         $output->writeln("<comment>waitting ...</comment>");    
         //wait
@@ -116,7 +118,7 @@ class MainCommand extends ContainerAwareCommand
                 sleep(1);
             }
         }
-        $output->writeln("<info>#successful execution...</info>");  
+        $output->writeln("<info>#successful execution...</info>");
     return true;
     }
 }
