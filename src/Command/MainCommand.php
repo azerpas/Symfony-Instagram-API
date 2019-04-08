@@ -55,51 +55,55 @@ class MainCommand extends ContainerAwareCommand
 
    
     protected function execute(InputInterface $input, OutputInterface $output){
+        //accounts list        
         $accounts=$this->entityManager->getRepository('App\Entity\Account')->findAll();
+       
+       
+        
+        //process array
+        $runningProcesses = [];
+
         foreach($accounts as $account){
             if($account->getStatus() && $this->isTime($account)){
                 $output->writeln("Account: ".$account->getUsername());
-                try{
-                    $command = 'php bin/console insta:instance '.$account->getUsername().' '.$account->getPassword();
-                    $process = new Process($command);
-                    $process->setTimeout(6000);
-                    $process->run(function ($type, $buffer) {
-                        if (Process::ERR === $type) {
-                            throw  new \Exception('Error while trying to login');
-                        }
-                    });
-                }catch (\Exception $e){
-                    $output->writeln("Account could not connect");
-                    continue; // if can't login than stop here
-                }
 
-                $commands=array();
-                array_push($commands,'php bin/console search:tag '.$account->getUsername().' '.$account->getPassword());
-                array_push($commands,'php bin/console app:likeAndFollowUsers '.$account->getUsername.' '.$account->getPassword()); 
-                $runningProcesses = [];
+        //command list
+        $commands=array();
+        array_push($commands,'php bin/console insta:instance '.$account->getUsername().' '.$account->getPassword());
+        array_push($commands,'php bin/console search:tag '.$account->getUsername().' '.$account->getPassword());
+        array_push($commands,'php bin/console app:likeAndFollowUsers '.$account->getUsername().' '.$account->getPassword()); 
                 foreach($commands as $command){
                     try{
                         $process = new Process($command);
-                        $process->start();
-                        $process->setTimeout(4000);
+                        $process->setTimeout(6000);
+                        $process->start(function ($type, $buffer) {
+                            if (Process::ERR === $type) {
+                                throw  new \Exception($type.': Error while trying to login :'.$buffer);
+                            }
+                        });
                         $runningProcesses[] = $process;
-                    }catch (\Exception $e) {
-                      $this->logger->error($e);
-                    }    
-                }
-                 //wait 
-                while (count($runningProcesses)) {
-                    foreach ($runningProcesses as $i => $runningProcess) {
-                        // specific process is finished, so we remove it
-                        if (! $runningProcess->isRunning()) {
-                            unset($runningProcesses[$i]);
-                        }
-                        // check every second
-                        sleep(1);
+                    }catch (\Exception $e){
+                        $output->writeln("Account could not connect");
+                        continue; // if can't login than stop here
+                    }   
+                }  
+            }  
+        }
+        $output->writeln("<info>#all processes are started </info>");    
+        $output->writeln("<comment>waitting ...</comment>");    
+            //wait 
+            while (count($runningProcesses)) {
+                foreach ($runningProcesses as $i => $runningProcess) {
+                    // specific process is finished, so we remove it
+                    if (! $runningProcess->isRunning()) {
+                        unset($runningProcesses[$i]);
                     }
+                    // check every second
+                    $output->write("<comment>.</comment>");  
+                    sleep(1);
                 }
             }
-        }
+        $output->writeln("<info>#successful execution...</info>");  
     return true;
     }
 }
