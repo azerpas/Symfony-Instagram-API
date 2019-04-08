@@ -129,6 +129,7 @@ class CheckerCommand extends Command
                             $this->em->flush();
                             $this->em->remove($person);
                             $this->em->flush();
+                            sleep(30);
                         }
                     }
                 }
