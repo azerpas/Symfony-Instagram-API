@@ -89,7 +89,7 @@ class MainCommand extends ContainerAwareCommand
                 foreach($commands as $command){
                     try{
                         $process = new Process($command);
-                        $process->setTimeout(6000);
+                        $process->setTimeout(1800); // 30 min
                         $process->start(function ($type, $buffer) {
                             if (Process::ERR === $type) {
                                 throw  new \Exception($type.': Error while trying to login :'.$buffer);
