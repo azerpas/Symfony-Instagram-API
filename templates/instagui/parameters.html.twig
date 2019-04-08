@@ -131,35 +131,23 @@
                        <div class="w-100"><hr></div>
                        <!-- message send  start  -->
                        <label class="form-control-label col-3 vcenter">
-                           <h3> MESSAGE </h3>
+                           <h3> Message settings </h3>
                        </label>
-                       <p>Message settings</p>
+                       
+                      
                        <div class="form-group row">
-                           <label class="form-control-label col-3 vcenter">Waiting time</label>
-                           <input id="number" data-prefix="Min" type="number" value="6" name="waitingTimeMin" class="col-3">
+                           <label class="form-control-label col-3">Waiting time before sending</label>
+                           <input id="number" data-prefix="Time" type="number" value={% if param.waitingTime is defined   %} {{ param.waitingTime }} {% else %} "10" {% endif %} value="6" name="waitingTime" class="col-3">
                            <div class="col-3">
-                               <select class="selectpicker" name="minType">
-                                   <option value="s">seconds</option>
-                                   <option value="m">minutes</option>
-                                   <option value="h">hours</option>
-                                   <option value="d">days</option>
+                               <select class="selectpicker" name="Type">
+                                   <option {% if not (param.Type is defined) or (param.Type is defined and  param.Type == 'm')  %} selected   {% endif %}  value="m">minutes</option>
+                                   <option {% if param.Type is defined and  param.Type == 'h'  %} selected   {% endif %} value="h">hours</option>
+                                   <option {% if param.Type is defined and  param.Type == 'd'  %} selected   {% endif %} value="d">days</option>
                                </select>
                            </div>
                        </div>
                        <div class="form-group row">
-                           <label class="form-control-label col-3"></label>
-                           <input id="number" data-prefix="Max" type="number" value="6" name="waitingTimeMax" class="col-3">
-                           <div class="col-3">
-                               <select class="selectpicker" name="maxType">
-                                   <option value="s">seconds</option>
-                                   <option value="m">minutes</option>
-                                   <option value="h">hours</option>
-                                   <option value="d">days</option>
-                               </select>
-                           </div>
-                       </div>
-                       <div class="form-group row">
-                           <label class="form-label col-3">MESSAGE</label>
+                           <label class="form-label col-3">Message</label>
                            <textarea rows="8" class="form-control col-6" name="message">{% if param.message is defined %} {{ param.message }} {% else %} "type your message here ..." {% endif %}</textarea>
                        </div>
                        <!-- message send  end  -->
