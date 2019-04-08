@@ -79,7 +79,7 @@ class LikeAndFollowUsersCommand extends Command
                 $historyLike = new History();
                 $historyLike->setType("like");
                 $historyLike->setFromAccount($account);
-                $historyLike->setMessage("Liked two medias of ".$person->getUsername());
+                $historyLike->setMessage("Liked two medias of @".$person->getUsername());
                 $this->em->persist($historyLike);
                 $this->em->flush();
 
@@ -97,7 +97,7 @@ class LikeAndFollowUsersCommand extends Command
                 $historyFollow = new History();
                 $historyFollow->setType("follow");
                 $historyFollow->setFromAccount($account);
-                $historyFollow->setMessage("Followed ". $person->getUsername());
+                $historyFollow->setMessage("Followed @". $person->getUsername());
                 $this->em->persist($historyFollow);
                 $this->em->flush();
 

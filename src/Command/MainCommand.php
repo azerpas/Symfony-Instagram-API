@@ -50,7 +50,13 @@ class MainCommand extends ContainerAwareCommand
         $slots = json_decode($account->getSlots());
         if($slots==null)return false;
         $time=new \DateTime('@'.strtotime('now'));
-        return $slots[$time->format('H')];
+        // SET TIMEZONE !!!
+        // CURRENTLY -2 HOUR
+        $time = $time->format('H');
+        if (strpos($time,"0")===0) { // if 0 before hour it will glitch
+            $time = str_replace("0", "", $time);
+        }
+        return $slots[$time];
     }
 
    
@@ -65,14 +71,20 @@ class MainCommand extends ContainerAwareCommand
         $runningProcesses = [];
 
         foreach($accounts as $account){
+            $output->writeln($account->getUsername().' '.$this->isTime($account).' '.$account->getStatus());
             if($account->getStatus() && $this->isTime($account)){
-                $output->writeln("Account: ".$account->getUsername());
+                $output->writeln("Account: ".$account->getUsername()." will be activated...");
 
-        //command list
-        $commands=array();
-        array_push($commands,'php bin/console insta:instance '.$account->getUsername().' '.$account->getPassword());
-        array_push($commands,'php bin/console search:tag '.$account->getUsername().' '.$account->getPassword());
-        array_push($commands,'php bin/console app:likeAndFollowUsers '.$account->getUsername().' '.$account->getPassword()); 
+                //command list
+                $commands=array();
+                array_push($commands,'php bin/console insta:instance '.$account->getUsername().' '.$account->getPassword());
+                // TODO : if current database people is > 40 then don't use
+                $numberOfPeople = count($this->entityManager->getRepository('App\Entity\People')->findAllByAccount($account));
+                if($numberOfPeople<40){
+                    $output->writeln("Currently more than 40 people in database, not searching...");
+                    array_push($commands,'php bin/console search:tag '.$account->getUsername().' '.$account->getPassword());
+                }
+                array_push($commands,'php bin/console app:likeAndFollowUsers '.$account->getUsername().' '.$account->getPassword());
                 foreach($commands as $command){
                     try{
                         $process = new Process($command);
@@ -92,18 +104,18 @@ class MainCommand extends ContainerAwareCommand
         }
         $output->writeln("<info>#all processes are started </info>");    
         $output->writeln("<comment>waitting ...</comment>");    
-            //wait 
-            while (count($runningProcesses)) {
-                foreach ($runningProcesses as $i => $runningProcess) {
-                    // specific process is finished, so we remove it
-                    if (! $runningProcess->isRunning()) {
-                        unset($runningProcesses[$i]);
-                    }
-                    // check every second
-                    $output->write("<comment>.</comment>");  
-                    sleep(1);
+        //wait
+        while (count($runningProcesses)) {
+            foreach ($runningProcesses as $i => $runningProcess) {
+                // specific process is finished, so we remove it
+                if (! $runningProcess->isRunning()) {
+                    unset($runningProcesses[$i]);
                 }
+                // check every second
+                $output->write("<comment>.</comment>");
+                sleep(1);
             }
+        }
         $output->writeln("<info>#successful execution...</info>");  
     return true;
     }
