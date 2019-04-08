@@ -20,7 +20,7 @@ class UnFollowCommand extends Command
     protected function configure()
     {
         $this 
-        //Add arguments
+        ->setDescription('follow account') 
         ->addArgument('username', InputArgument::REQUIRED, 'My username')
         ->addArgument('password', InputArgument::REQUIRED, 'My password')
         ->addArgument('userId', InputArgument::REQUIRED, 'The Id of the account to unfollow')

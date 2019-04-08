@@ -66,6 +66,24 @@ class PeopleRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    /**
+     * @param $account
+     * @return People [] 
+     */
+    public function findPeopleToContactByAccount($account)
+    {  
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.account = :acc')
+            ->andWhere('p.is_following_back = :followBack')
+            ->andWhere('p.contacted = :contacted')
+            ->setParameter('acc', $account)
+            ->setParameter('followBack', true)
+            ->setParameter('contacted', false)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
     
     /**
      * @param $account

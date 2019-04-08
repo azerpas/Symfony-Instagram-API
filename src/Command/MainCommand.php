@@ -37,7 +37,7 @@ class MainCommand extends ContainerAwareCommand
     {
         $this
             ->setName('insta:main')
-            ->setDescription('Main command ')    
+            ->setDescription('launch other commands in parallel')    
         ;
     }
 
@@ -86,6 +86,7 @@ class MainCommand extends ContainerAwareCommand
                     array_push($commands,'php bin/console search:tag '.$account->getUsername().' '.$account->getPassword());
                 }
                 array_push($commands,'php bin/console app:likeAndFollowUsers '.$account->getUsername().' '.$account->getPassword());
+                array_push($commands,'php bin/console insta:contact '.$account->getUsername().' '.$account->getPassword());
                 foreach($commands as $command){
                     try{
                         $process = new Process($command);
@@ -117,8 +118,9 @@ class MainCommand extends ContainerAwareCommand
                 $output->write("<comment>.</comment>");
                 sleep(1);
             }
-        }
-        $output->writeln("<info>#successful execution...</info>");
+            $output->writeln("");    
+        $output->writeln("<info>#successful execution...</info>");  
     return true;
     }
+}
 }

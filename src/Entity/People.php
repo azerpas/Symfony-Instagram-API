@@ -63,6 +63,11 @@ class People
      */
     private $histories;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $contacted;
+
     public function __construct()
     {
         $this->histories = new ArrayCollection();
@@ -196,6 +201,18 @@ class People
                 $history->setInteractWith(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getContacted(): ?bool
+    {
+        return $this->contacted;
+    }
+
+    public function setContacted(?bool $contacted): self
+    {
+        $this->contacted = $contacted;
 
         return $this;
     }
