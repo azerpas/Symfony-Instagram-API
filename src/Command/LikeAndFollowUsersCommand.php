@@ -63,7 +63,7 @@ class LikeAndFollowUsersCommand extends Command
             $likeUserMediasCommand = $this->getApplication()->find('app:likeUserMedias');
             $followCommand = $this->getApplication()->find('app:follow'); 
             $counter = 0;
-            while ($counter<10) {
+            while ($counter<10 && $counter<sizeof($peopleToInteract)) {
                 $person = $peopleToInteract[$counter];
                 //$output->writeln($person->getUsername().' '.$person->getInstaID());
                 $likeUserMediasArguments = [
