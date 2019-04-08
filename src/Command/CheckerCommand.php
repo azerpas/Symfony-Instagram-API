@@ -4,6 +4,7 @@
 namespace App\Command;
 
 //use App\Service\DBRequest;
+use App\Entity\History;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use InstagramAPI\Response\Model\FriendshipStatus;
@@ -70,29 +71,40 @@ class CheckerCommand extends Command
                 }
                 $maxId = $response->getNextMaxId();
                 if ($maxId) {
-                    echo "Sleeping for 5s...\n";
+                    //echo "Sleeping for 5s...\n";
                     sleep(5);
                 }
             } while ($maxId !== null);
             $unfollowCommand = $this->getApplication()->find('insta:unfollow'); 
-            foreach ($peopleToInteract as $person) {
+            $counter = 0;
+            $unfollowCounter = 0;
+            //$output->writeln(sizeof($peopleToInteract).' to interact with.');
+            while ($unfollowCounter < 10 && $counter<sizeof($peopleToInteract)) {
+                $person = $peopleToInteract[$counter];
                 if (($person->getIsFollowingBack())==true) {
                     if ((in_array($person->getUsername(), $selfFollowersArray))==false) {
                         $unfollowArgument = [
                             'command' => 'insta:unfollow',
                             'username' => $username,
                             'password' => $password,
-                            'userId' => $person->getInsaID(),
+                            'userId' => $person->getInstaID(),
                         ];
                         $unfollowInput = new ArrayInput($unfollowArgument);
                         $unfollowCommand->run($unfollowInput, $output);
+                        $historyUnfollow = new History();
+                        $historyUnfollow->setType('unfollow');
+                        $historyUnfollow->setMessage('Unfollowed @'. $person->getUsername().' because he unfollowed '.$account->getUsername());
+                        $historyUnfollow->setFromAccount($account);
+                        $this->em->persist($historyUnfollow);
+                        $this->em->flush();
                         //TO DO SETBLACKLIST
                         //$account->setBlacklist('@'.$person->getUsername());
                         $this->em->persist($account);
                         $this->em->flush();
                         $this->em->remove($person);
                         $this->em->flush();
-                        sleep(15);
+                        $unfollowCounter++;
+                        sleep(30);
                     }    
                 }
                 else {
@@ -103,16 +115,39 @@ class CheckerCommand extends Command
                             $this->flush();
                         }
                         else {
+                            $unfollowArgument = [
+                                'command' => 'insta:unfollow',
+                                'username' => $username,
+                                'password' => $password,
+                                'userId' => $person->getInstaID(),
+                            ];
+                            $unfollowInput = new ArrayInput($unfollowArgument);
+                            $unfollowCommand->run($unfollowInput, $output);
+                            $historyUnfollow = new History();
+                            $historyUnfollow->setType('unfollow');
+                            $historyUnfollow->setMessage('Unfollowed @'.$person->getUsername().' because he did not follow back '.$account->getUsername().' after 10 days.');
+                            $historyUnfollow->setFromAccount($account);
+                            $this->em->persist($historyUnfollow);
+                            $this->em->flush();
                             //TO DO SETBLACKLIST
                             //$account->setBlacklist('@'.$person->getUsername());
                             $this->em->persist($account);
                             $this->em->flush();
                             $this->em->remove($person);
                             $this->em->flush();
+                            $unfollowCounter++;
+                            sleep(30);
                         }
                     }
                 }
+                $counter++;
             }
+            $historyChecker = new History();
+            $historyChecker->setType('checker');
+            $historyChecker->setMessage('Checker updated database with '.$counter.' People treated including '.$unfollowCounter.' unfollows.');
+            $historyChecker->setFromAccount($account);
+            $this->em->persist($historyChecker);
+            $this->em->flush();
         }
         catch (\Exception $e) {
             throw new \Exception('Something went wrong: ' . $e->getMessage());

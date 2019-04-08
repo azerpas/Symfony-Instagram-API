@@ -79,7 +79,7 @@ class LikeAndFollowUsersCommand extends Command
                 $historyLike = new History();
                 $historyLike->setType("like");
                 $historyLike->setFromAccount($account);
-                $historyLike->setMessage("Liked two medias of ".$person->getUsername());
+                $historyLike->setMessage("Liked two medias of @".$person->getUsername());
                 $this->em->persist($historyLike);
                 $this->em->flush();
 
@@ -97,7 +97,7 @@ class LikeAndFollowUsersCommand extends Command
                 $historyFollow = new History();
                 $historyFollow->setType("follow");
                 $historyFollow->setFromAccount($account);
-                $historyFollow->setMessage("Followed ". $person->getUsername());
+                $historyFollow->setMessage("Followed @". $person->getUsername());
                 $this->em->persist($historyFollow);
                 $this->em->flush();
 
@@ -109,6 +109,12 @@ class LikeAndFollowUsersCommand extends Command
                 sleep(30);
                 $counter++;
             }
+            $historyEnd = new History();
+            $historyEnd->setType('bot');
+            $historyEnd->setMessage('Bot ended following and liking, waiting till next valid hour...');
+            $historyEnd->setFromAccount($account);
+            $this->em->persist($historyEnd);
+            $this->em->flush();
         }
         catch (\Exception $e) {
             throw new \Exception('Something went wrong: ' . $e->getMessage());

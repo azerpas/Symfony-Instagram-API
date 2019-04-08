@@ -28,6 +28,8 @@
                                     <i class="fas fa-heart"></i> Like
                                 {% elseif i.type == 'foundPeople' %}
                                     <i class="fas fa-users"></i> People found
+                                {% elseif i.type == 'bot' %}
+                                    <i class="fas fa-robot"></i> Bot
                                 {% endif %}
                             </th>
                             <td>{{ i.message }}</td>
