@@ -59,10 +59,12 @@ class LikeAndFollowUsersCommand extends Command
             $ig->login($username, $password);
             $account = $this->em->getRepository('App\Entity\Account')->findOneByUsername($username);
             //$output->writeln('Account to interact with : '.$account->getUsername());
-            $peopleToInteract = $this->em->getRepository('App\Entity\People')->findAllByAccount($account);
+            $peopleToInteract = $this->em->getRepository('App\Entity\People')->findPeopleToFollowTrueByAccount($account);
             $likeUserMediasCommand = $this->getApplication()->find('app:likeUserMedias');
             $followCommand = $this->getApplication()->find('app:follow'); 
-            foreach($peopleToInteract as $person) {
+            $counter = 0;
+            while ($counter<10) {
+                $person = $peopleToInteract[$counter];
                 //$output->writeln($person->getUsername().' '.$person->getInstaID());
                 $likeUserMediasArguments = [
                     'command' => 'app:likeUserMedias',
@@ -74,10 +76,12 @@ class LikeAndFollowUsersCommand extends Command
                 $likeUserMediasCommand->run($likeUserMediasInput, $output);
 
                 // TODO : need to add CATCH
-                $history = new History();
-                $history->setType("like");
-                $history->setFromAccount($account);
-                $history->setMessage("Liked two medias of ".$person->getUsername());
+                $historyLike = new History();
+                $historyLike->setType("like");
+                $historyLike->setFromAccount($account);
+                $historyLike->setMessage("Liked two medias of ".$person->getUsername());
+                $this->em->persist($historyLike);
+                $this->em->flush();
 
                 $followCommandArguments = [
                     'command' => 'app:follow',
@@ -90,11 +94,11 @@ class LikeAndFollowUsersCommand extends Command
                 $followCommand->run($followInput, $output);
 
                 // TODO : need to add CATCH
-                $history = new History();
-                $history->setType("follow");
-                $history->setFromAccount($account);
-                $history->setMessage("Followed ". $person->getUsername());
-                $this->em->persist($history);
+                $historyFollow = new History();
+                $historyFollow->setType("follow");
+                $historyFollow->setFromAccount($account);
+                $historyFollow->setMessage("Followed ". $person->getUsername());
+                $this->em->persist($historyFollow);
                 $this->em->flush();
 
                 $this->em->getRepository('App\Entity\People')->findOneByInstaId($person->getInstaID(),$account)->setToFollow(false);
@@ -103,6 +107,7 @@ class LikeAndFollowUsersCommand extends Command
                 $this->em->flush();
                 //$output->writeln($person->getUsername().' followed correctly and updated in People table');
                 sleep(30);
+                $counter++;
             }
         }
         catch (\Exception $e) {
