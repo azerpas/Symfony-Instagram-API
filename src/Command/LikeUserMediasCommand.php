@@ -72,7 +72,7 @@ class LikeUserMediasCommand extends Command
                     $i++;
                 }
             }
-            while($likesNumber<2) {
+            while($likesNumber<2 && $likesNumber<sizeof($mediaIds)) {
                 $mediaId=$mediaIds[($randomNumbers[$likesNumber]-1)];
                 $likeArgument = [
                     'command' => 'app:like',
