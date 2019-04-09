@@ -81,8 +81,7 @@ class LikeAndFollowUsersCommand extends Command
                 $historyLike->setFromAccount($account);
                 $historyLike->setMessage("Liked two medias of @".$person->getUsername());
                 $this->em->persist($historyLike);
-                $this->em->flush();
-
+                
                 $followCommandArguments = [
                     'command' => 'app:follow',
                     'username' => $username,
@@ -99,12 +98,10 @@ class LikeAndFollowUsersCommand extends Command
                 $historyFollow->setFromAccount($account);
                 $historyFollow->setMessage("Followed @". $person->getUsername());
                 $this->em->persist($historyFollow);
-                $this->em->flush();
-
+                
                 $this->em->getRepository('App\Entity\People')->findOneByInstaId($person->getInstaID(),$account)->setToFollow(false);
                 $this->em->getRepository('App\Entity\People')->findOneByInstaId($person->getInstaID(),$account)->setUpdated(new \DateTime('@'.strtotime('now')));
                 $this->em->persist($person);  
-                $this->em->flush();
                 //$output->writeln($person->getUsername().' followed correctly and updated in People table');
                 sleep(30);
                 $counter++;

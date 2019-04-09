@@ -96,13 +96,10 @@ class CheckerCommand extends Command
                         $historyUnfollow->setMessage('Unfollowed @'. $person->getUsername().' because he unfollowed '.$account->getUsername());
                         $historyUnfollow->setFromAccount($account);
                         $this->em->persist($historyUnfollow);
-                        $this->em->flush();
                         //TO DO SETBLACKLIST
                         //$account->setBlacklist('@'.$person->getUsername());
                         $this->em->persist($account);
-                        $this->em->flush();
                         $this->em->remove($person);
-                        $this->em->flush();
                         $unfollowCounter++;
                         sleep(30);
                     }    
@@ -112,7 +109,6 @@ class CheckerCommand extends Command
                         if (in_array($person->getUsername(), $selfFollowersArray)) {
                             $person->setIsFollowingBack(true);
                             $this->em->persist($person);
-                            $this->flush();
                         }
                         else {
                             $unfollowArgument = [
@@ -128,13 +124,10 @@ class CheckerCommand extends Command
                             $historyUnfollow->setMessage('Unfollowed @'.$person->getUsername().' because he did not follow back '.$account->getUsername().' after 10 days.');
                             $historyUnfollow->setFromAccount($account);
                             $this->em->persist($historyUnfollow);
-                            $this->em->flush();
                             //TO DO SETBLACKLIST
                             //$account->setBlacklist('@'.$person->getUsername());
                             $this->em->persist($account);
-                            $this->em->flush();
                             $this->em->remove($person);
-                            $this->em->flush();
                             $unfollowCounter++;
                             sleep(30);
                         }
