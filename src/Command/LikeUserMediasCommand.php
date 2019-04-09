@@ -64,7 +64,7 @@ class LikeUserMediasCommand extends Command
             $likesNumber=0;
             $likeCommand = $this->getApplication()->find('app:like');
             $randomNumbers = [];
-            for($i=0;$i<2;) {
+            for($i=0;$i<2 && $i<sizeof($mediaIds);) {
                 $randomNumber=rand(1,sizeof($mediaIds));
                 //$output->writeln($randomNumber);
                 if (in_array($randomNumber,$randomNumbers)==false) {
