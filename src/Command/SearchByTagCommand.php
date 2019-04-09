@@ -14,6 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use InstagramAPI\Request\Hashtag;
 use InstagramAPI\Signatures;
 use App\Service\DBRequest;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 class SearchByTagCommand extends ContainerAwareCommand
 {
@@ -27,10 +28,16 @@ class SearchByTagCommand extends ContainerAwareCommand
      */
     private $logger;
 
-    public function __construct(DBrequest $bdRequest, LoggerInterface $logger)
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager, DBrequest $bdRequest, LoggerInterface $logger)
     {
         $this->logger = $logger;
         $this->db = $bdRequest;
+        $this->entityManager=$entityManager;
         parent::__construct();
 
     }
@@ -84,10 +91,19 @@ class SearchByTagCommand extends ContainerAwareCommand
                 foreach ($feed->getItems() as $item) {
                     $instaId = $item->getUser()->getPk();
                     $username = $item->getUser()->getUsername();
-                    // in comment cause it make the process go over-timeout
-                    sleep(rand(0.1,0.9));
+                    $output->writeln("Scraping from @".$username);
+
+                    $exist=$this->entityManager->getRepository('App\Entity\People')->findOneByUsername($username,$account);
+                    if($exist!=null){
+                        $output->writeln("Already in database");
+                        continue;
+                    }
+
+                    $output->writeln("Adding @".$username. ", sleeping first...");
+                    sleep(rand(2,5));
                     $userInfo = $ig->people->getInfoByName($username);
                     // check if users settings (min follow etc...), match with current account
+                    $output->writeln("Checking before adding...");
                     if ($this->UserMatch($settings, $userInfo))
                         array_push($users, array("id" => $instaId, "username" => $username));
 

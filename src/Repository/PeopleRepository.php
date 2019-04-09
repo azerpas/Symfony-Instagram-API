@@ -104,7 +104,7 @@ class PeopleRepository extends ServiceEntityRepository
     public function findOneByUsername($username,$account): ?People
     {   
         return $this->createQueryBuilder('p')
-            ->andWhere('p.username = :uesr') 
+            ->andWhere('p.username = :user')
             ->andWhere('p.account = :acc')
             ->setParameter('user', $username) 
             ->setParameter('acc', $account)

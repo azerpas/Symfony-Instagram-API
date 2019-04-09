@@ -10,6 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use InstagramAPI\Request\Hashtag;
 use InstagramAPI\Signatures;
 use App\Service\DBRequest;
+use Doctrine\ORM\EntityManagerInterface;
 
 class SearchByPseudoCommand extends ContainerAwareCommand
 {
@@ -20,9 +21,15 @@ class SearchByPseudoCommand extends ContainerAwareCommand
      */
     private $db;
 
-    public function __construct(DBrequest $bdRequest)
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager,DBrequest $bdRequest)
     {
         $this->db = $bdRequest;
+        $this->entityManager=$entityManager;
         parent::__construct();
 
     }
@@ -61,18 +68,31 @@ class SearchByPseudoCommand extends ContainerAwareCommand
         }
         $peoples = [];
         foreach ($users as $user){
+            $output->writeln("Scraping from @".$user);
             $output->writeln("Getting user ID");
             $userId = $ig->people->getUserIdForName($user);
             $followersList = $ig->people->getFollowers($userId, \InstagramAPI\Signatures::generateUUID());
             $output->writeln("Successfully fetched user followers");
             foreach ($followersList->getUsers() as $follower) {
+                $output->writeln("Adding @".$follower->getUsername(). ", sleeping first...");
+
+                // TODO check if already in DATABASE
+                $exist=$this->entityManager->getRepository('App\Entity\People')->findOneByUsername($follower->getUsername(),$account);
+                if($exist!=null){
+                    $output->writeln("Already in database");
+                    continue;
+                }
+
                 sleep(rand(2,5));
                 $userInfo = $ig->people->getInfoByName($follower->getUsername());
-                $output->writeln("Checking before follow");
-                if ($this->UserMatch($settings, $userInfo)){
-                    $output->writeln("Following...");
+                $output->writeln("Checking before adding...");
+
+
+                if ($this->UserMatch($settings, $userInfo,$output)){
+                    $output->writeln("Pushing...");
                     array_push($peoples,array("id"=>$follower->getPk(),"username"=> $follower->getUsername()));
                 }
+                $output->writeln("");
             }
              
         }
@@ -86,24 +106,21 @@ class SearchByPseudoCommand extends ContainerAwareCommand
      * @param userInfo
      * @return boolean
      */
-    private function UserMatch($settings, $userInfo)
+    private function UserMatch($settings, $userInfo, OutputInterface $output)
     {
-        //return true;
-
-        if( ($userInfo->getUser()->getFollowerCount() > $settings->minfollow) ||
-            ($userInfo->getUser()->getFollowerCount() < $settings->maxfollow)||
-            ($userInfo->getUser()->getFollowingCount() > $settings->minfollowing)||
-            ($userInfo->getUser()->getFollowingCount() < $settings->maxfollowing)||
-            ($userInfo->getUser()->getMediaCount() > $settings->minpublication)||
-            ($userInfo->getUser()->getMediaCount() < $settings->maxpublication)
-            // ($param->private == 0 && $userInfo->getUser()->getIsPrivate()  )||
-            //  ($param->picture ==-1 &&  $userInfo->getUser()->hasAnonymousProfilePicture())
-        ){
-            return true;
-        }
-        else{
+        if(($userInfo->getUser()->getFollowerCount() > $settings->minfollow) && ($userInfo->getUser()->getFollowerCount() < $settings->maxfollow)){
+            $output->writeln("Followers test passed");
+            if (($userInfo->getUser()->getFollowingCount() > $settings->minfollowing) && ($userInfo->getUser()->getFollowingCount() < $settings->maxfollowing)){
+                $output->writeln("Following test passed");
+                if(($userInfo->getUser()->getMediaCount() > $settings->minpublication) && ($userInfo->getUser()->getMediaCount() < $settings->maxpublication)){
+                    $output->writeln("Media test passed");
+                    return true;
+                }
+                return false;
+            }
             return false;
         }
+        return false;
     }
 
 }

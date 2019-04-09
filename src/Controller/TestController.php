@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Account;
+use App\Entity\People;
 use App\Repository\AccountRepository;
 use App\Entity\IgAccount;
 use App\Entity\Task;
@@ -97,5 +98,17 @@ class TestController extends AbstractController
         $service->assignInstagramAccount($this->getUser(),$account,'testAccount','testPassword');
         $logger->info('went well');
         return new Response('test');
+    }
+
+    /**
+     * @Route("/findPeople")
+     */
+    public function findPeopleDB(LoggerInterface $logger){
+        $logger->info('Starting insert to DB');
+        $account = $this->getDoctrine()
+            ->getRepository(People::class)
+            ->findOneByUsername('driftersmd',$this->getUser()->getActuelAccount());
+        $logger->info($account->getInstaId());
+        return new Response($account->getInstaId());
     }
 }
