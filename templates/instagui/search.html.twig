@@ -46,7 +46,7 @@
                             {% if hashtags %}
                                 {% for i in hashtags %}
                                     <li id="sHash" class="list-group-item"> {# Need to add .active #}
-                                        {{ i }} <button class="btn btn-outline-secondary" style="float: right;font-size: 5px;" type="button"><i class="fas fa-minus"></i></button>{# Need to add delete button and modify button #}
+                                        {{ i }} <button onclick="deleteSettings(this)" class="btn btn-outline-secondary" style="float: right;font-size: 5px;" type="button"><i class="fas fa-minus"></i></button>{# Need to add delete button and modify button #}
                                     </li>
                                 {% endfor %}
                             {% else %}

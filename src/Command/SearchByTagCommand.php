@@ -87,15 +87,19 @@ class SearchByTagCommand extends ContainerAwareCommand
             $rankToken = Signatures::generateUUID();
             do {
                 $feed = $ig->hashtag->getFeed($tag, $rankToken, $maxId);
-
+                $output->writeln("Scraping from #".$tag);
+                $nbOfItems = sizeof($feed->getItems());
+                $count = 1;
+                $valid = 0;
                 foreach ($feed->getItems() as $item) {
                     $instaId = $item->getUser()->getPk();
                     $username = $item->getUser()->getUsername();
-                    $output->writeln("Scraping from @".$username);
+
+                    $output->writeln($count."/".$nbOfItems."| Adding @".$item->getUser()->getUsername(). ", sleeping first...");
 
                     $exist=$this->entityManager->getRepository('App\Entity\People')->findOneByUsername($username,$account);
                     if($exist!=null){
-                        $output->writeln("Already in database");
+                        $output->writeln($username.": Already in database");
                         continue;
                     }
 
@@ -104,11 +108,22 @@ class SearchByTagCommand extends ContainerAwareCommand
                     $userInfo = $ig->people->getInfoByName($username);
                     // check if users settings (min follow etc...), match with current account
                     $output->writeln("Checking before adding...");
-                    if ($this->UserMatch($settings, $userInfo))
+                    if ($this->UserMatch($settings, $userInfo,$output)) {
+                        $output->writeln("Pushing to array...");
+                        $valid++;
                         array_push($users, array("id" => $instaId, "username" => $username));
-
+                    }
+                    $count++;
+                    $output->writeln("");
+                    if($valid >= 80){
+                        $output->writeln("Enough users found");
+                        break;
+                    }
                 }
-
+                if($valid >= 80){
+                    $output->writeln("Enough users found");
+                    break;
+                }
                 $maxId = $feed->getNextMaxId();
                 sleep(1);
                 $cpt++;
@@ -128,23 +143,20 @@ class SearchByTagCommand extends ContainerAwareCommand
      * @param userInfo
      * @return boolean
      */
-    private function UserMatch($settings, $userInfo)
+    private function UserMatch($settings, $userInfo, OutputInterface $output)
     {
-        //return true;
-
-        if( ($userInfo->getUser()->getFollowerCount() > $settings->minfollow) ||
-            ($userInfo->getUser()->getFollowerCount() < $settings->maxfollow)||
-            ($userInfo->getUser()->getFollowingCount() > $settings->minfollowing)||
-            ($userInfo->getUser()->getFollowingCount() < $settings->maxfollowing)||
-            ($userInfo->getUser()->getMediaCount() > $settings->minpublication)||
-            ($userInfo->getUser()->getMediaCount() < $settings->maxpublication)
-            // ($param->private == 0 && $userInfo->getUser()->getIsPrivate()  )||
-            //  ($param->picture ==-1 &&  $userInfo->getUser()->hasAnonymousProfilePicture())
-        ){
-            return true;
-        }
-        else{
+        if(($userInfo->getUser()->getFollowerCount() > $settings->minfollow) && ($userInfo->getUser()->getFollowerCount() < $settings->maxfollow)){
+            $output->writeln("Followers test passed");
+            if (($userInfo->getUser()->getFollowingCount() > $settings->minfollowing) && ($userInfo->getUser()->getFollowingCount() < $settings->maxfollowing)){
+                $output->writeln("Following test passed");
+                if(($userInfo->getUser()->getMediaCount() > $settings->minpublication) && ($userInfo->getUser()->getMediaCount() < $settings->maxpublication)){
+                    $output->writeln("Media test passed");
+                    return true;
+                }
+                return false;
+            }
             return false;
         }
+        return false;
     }
 }
