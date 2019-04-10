@@ -141,6 +141,7 @@ class AjaxController extends AbstractController
                 $history->setType('searchSet');
                 $history->setMessage('Added @'.$keyword.' as a keyword !');
                 $history->setFromAccount($account);
+                $history->setDate(new \DateTime());
                 $em->persist($history);
                 $em->flush();
                 return new JsonResponse(['output'=>'Successfully added: '.$keyword],200);
@@ -159,6 +160,7 @@ class AjaxController extends AbstractController
                 $history->setType('searchSet');
                 $history->setMessage('Added #'.$keyword.' as a keyword !');
                 $history->setFromAccount($account);
+                $history->setDate(new \DateTime());
                 $em->persist($history);
                 $em->flush();
                 return new JsonResponse(['output'=>'Successfully added: '.$keyword],200);

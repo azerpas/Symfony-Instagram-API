@@ -80,6 +80,7 @@ class LikeAndFollowUsersCommand extends Command
                 $historyLike->setType("like");
                 $historyLike->setFromAccount($account);
                 $historyLike->setMessage("Liked two medias of @".$person->getUsername());
+                $historyLike->setDate(new \DateTime());
                 $this->em->persist($historyLike);
                 
                 $followCommandArguments = [
@@ -97,6 +98,7 @@ class LikeAndFollowUsersCommand extends Command
                 $historyFollow->setType("follow");
                 $historyFollow->setFromAccount($account);
                 $historyFollow->setMessage("Followed @". $person->getUsername());
+                $historyFollow->setDate(new \DateTime());
                 $this->em->persist($historyFollow);
                 
                 $this->em->getRepository('App\Entity\People')->findOneByInstaId($person->getInstaID(),$account)->setToFollow(false);
@@ -110,6 +112,7 @@ class LikeAndFollowUsersCommand extends Command
             $historyEnd->setType('bot');
             $historyEnd->setMessage('Bot ended following and liking, waiting till next valid hour...');
             $historyEnd->setFromAccount($account);
+            $historyEnd->setDate(new \DateTime());
             $this->em->persist($historyEnd);
             $this->em->flush();
         }

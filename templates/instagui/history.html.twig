@@ -14,10 +14,11 @@
                         <tr>
                             <th scope="col">Type</th>
                             <th scope="col">Message</th>
+                            <th scope="col">Date</th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% for i in history %}
+                    {% for i in history|sort|reverse %}
                         <tr>
                             <th scope="row">
                                 {% if i.type == 'searchSet' %}
@@ -33,6 +34,13 @@
                                 {% endif %}
                             </th>
                             <td>{{ i.message }}</td>
+                            <td>
+                                {% if i.date %}
+                                    {{ i.date|date('H:i:s d-m-Y') }} UTC
+                                {% else %}
+                                    No date available
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>
