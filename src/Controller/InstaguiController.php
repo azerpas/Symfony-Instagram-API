@@ -89,6 +89,7 @@ class InstaguiController extends AbstractController
      */
     public function historyPage(){
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        //TODO get history likedMedias
         return $this->render('instagui/history.html.twig',[
             'controller_name' => 'InstaguiController','page'=> 'history','history'=>$this->getUser()->getActuelAccount()->getHistories()
         ]);

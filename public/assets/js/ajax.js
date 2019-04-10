@@ -92,6 +92,76 @@ function searchSettings(element) {
     });
 }
 
+function deleteSettings(element){
+    console.log(element.parentElement.innerText);
+    val = element.parentElement.innerText.trim(); // we fetch the value of sibling input
+    if (val === ""){ // if this value is empty -> return
+        console.log("Please input value");
+        // add notify
+        return;
+    }
+    switch (element.parentElement.id) { // thanks to the ID, we're checking which input is concerned
+        // then for each case we're adding their respected char (@ # or -), it will be then used in ./src/Controller/AjaxController.php
+        case "sPseudo":
+            keyword = "@" + val;
+            break;
+        case "sHash":
+            keyword = "#" + val;
+            break;
+        case "sBlack":
+            keyword = "-" + val;
+            break;
+        default:
+            console.log("Error while processing keyword");
+            // add notify
+            break;
+    }
+    console.log(keyword);
+    $.ajax({
+        type:'DELETE',
+        data:{'keyword':keyword},
+        url:'/ajax/search_settings',
+        complete:function(data,status){
+            if(data.status !== 200){
+                console.log(data);
+                console.log('Not response 200');
+                return;
+            }
+            //console.log('COMPLETE:')
+            console.log(data.responseJSON.output);
+            console.log(data.status);
+            $.notify({
+                    icon:'fa fa-check-circle',
+                    title: "<strong>Success :</strong> ",
+                    message:data.responseJSON.output // data below
+                },
+                {
+                    type:'success',
+                    delay: 5000,
+                    timer: 1000,
+                    offset: 50
+                });
+            window.location.reload();
+        },
+        error:function(jqXHR, textStatus) {
+            //console.log('ERROR');
+            //console.log(jqXHR.responseJSON);
+            //console.log(jqXHR.responseJSON.status);
+            $.notify({
+                    icon:'fa fa-exclamation-circle',
+                    title: "<strong>"+textStatus+" :</strong> ",
+                    message:jqXHR.responseJSON.output
+                },
+                {
+                    type:'danger',
+                    delay: 5000,
+                    timer: 1000,
+                    offset: 50
+                });
+        }
+    });
+}
+
 // set bot config
 function config() {
    

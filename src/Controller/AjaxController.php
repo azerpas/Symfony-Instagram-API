@@ -120,7 +120,7 @@ class AjaxController extends AbstractController
     }
 
     /**
-     * @Route("/ajax/search_settings", name="search_settings", methods={"POST","GET"})
+     * @Route("/ajax/search_settings", name="search_settings", methods={"POST","GET","DELETE"})
      */
     public function searchSettings(Request $req, DBRequest $DBRequest){
         $search_settings = unserialize($this->getUser()->getActuelAccount()->getSearchSettings());
@@ -150,7 +150,7 @@ class AjaxController extends AbstractController
                 $keyword = str_replace("#","",$keyword);
                 array_push($search_settings->hashtags,$keyword);
                 $search_settings = serialize($search_settings);
-                $DBRequest->setSearchSettings($this->getUser(),$search_settings);
+                //$DBRequest->setSearchSettings($this->getUser(),$search_settings);
                 // REPLACING DBRequest::setSearchSettings
                 $account = $this->getUser()->getActuelAccount();
                 $account->setSearchSettings($search_settings);
@@ -170,6 +170,34 @@ class AjaxController extends AbstractController
         elseif($req->isMethod("GET")){
             return new JsonResponse(['method'=>'GET','output'=> serialize($search_settings)],200);
         }
+        elseif($req->isMethod("DELETE")){
+            $keyword = $req->request->get('keyword');
+            if (strpos($keyword,"@")===0) { // if contains @ then pseudo
+                $keyword = str_replace("@","",$keyword);
+                $key = array_search($keyword,$search_settings->pseudos);
+                if ($key == null){
+                    return new JsonResponse(['method'=>'Could not find keyword '.$keyword],400);
+                }
+                //array_slice($search_settings->pseudos,$key,1);
+                unset($search_settings->pseudos[$key]);
+                $search_settings->pseudos = array_values($search_settings->pseudos);
+                $search_settings = serialize($search_settings);
+                $account = $this->getUser()->getActuelAccount();
+                $account->setSearchSettings($search_settings);
+                $em->persist($account);
+                $em->flush();
+                $history = new History();
+                $history->setType('searchSet');
+                $history->setMessage('Deleted @'.$keyword.' as a keyword !');
+                $history->setFromAccount($account);
+                $history->setDate(new \DateTime());
+                $em->persist($history);
+                $em->flush();
+                return new JsonResponse(['output'=>'Successfully deleted: '.$keyword,'search_settings'=>$search_settings,'key'=>$key],200);
+            }
+            if (strpos($keyword,"#")===0) { // if contains # then hashtag
+            }
+            }
         return new JsonResponse(['method'=>'No declared method','output'=> serialize($search_settings)],400);
     }
 

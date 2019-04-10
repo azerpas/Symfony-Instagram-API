@@ -22,8 +22,8 @@
                         <ul style="height: 75%;overflow:auto;" class="list-group">
                         {% if pseudos %}
                             {% for i in pseudos %}
-                                <li class="list-group-item"> {# Need to add .active #}
-                                    {{ i }} <button class="btn btn-outline-secondary" style="float: right;font-size: 5px;" type="button"><i class="fas fa-minus"></i>{# Need to add delete button and modify button #}
+                                <li id="sPseudo" class="list-group-item"> {# Need to add .active #}
+                                    {{ i }} <button onclick="deleteSettings(this)" class="btn btn-outline-secondary" style="float: right;font-size: 5px;" type="button"><i class="fas fa-minus"></i></button>{# Need to add delete button and modify button #}
                                 </li>
                             {% endfor %}
                         {% else %}
@@ -45,7 +45,7 @@
                         <ul style="height: 75%;overflow:auto;" class="list-group">
                             {% if hashtags %}
                                 {% for i in hashtags %}
-                                    <li class="list-group-item"> {# Need to add .active #}
+                                    <li id="sHash" class="list-group-item"> {# Need to add .active #}
                                         {{ i }} <button class="btn btn-outline-secondary" style="float: right;font-size: 5px;" type="button"><i class="fas fa-minus"></i></button>{# Need to add delete button and modify button #}
                                     </li>
                                 {% endfor %}
@@ -68,7 +68,7 @@
                         <ul style="height: 120px;overflow:auto;" class="list-group">
                             {% if blacklist %}
                                 {% for i in blacklist %}
-                                    <li class="list-group-item"> {# Need to add .active #}
+                                    <li id="sBlack" class="list-group-item"> {# Need to add .active #}
                                         {{ i }} <button class="btn btn-outline-secondary" style="float: right;font-size: 5px;" type="button"><i class="fas fa-minus"></i>{# Need to add delete button and modify button #}
                                     </li>
                                 {% endfor %}
