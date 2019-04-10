@@ -60,28 +60,73 @@ class LikeAndFollowUsersCommand extends Command
             $account = $this->em->getRepository('App\Entity\Account')->findOneByUsername($username);
             //$output->writeln('Account to interact with : '.$account->getUsername());
             $peopleToInteract = $this->em->getRepository('App\Entity\People')->findPeopleToFollowTrueByAccount($account);
-            $likeUserMediasCommand = $this->getApplication()->find('app:likeUserMedias');
+            $likeCommand = $this->getApplication()->find('app:like');
             $followCommand = $this->getApplication()->find('app:follow'); 
             $counter = 0;
             while ($counter<10 && $counter<sizeof($peopleToInteract)) {
                 $person = $peopleToInteract[$counter];
-                //$output->writeln($person->getUsername().' '.$person->getInstaID());
-                $likeUserMediasArguments = [
-                    'command' => 'app:likeUserMedias',
-                    'username' => $username,
-                    'password' => $password,
-                    'userId' => $person->getInstaID(),
-                ];
-                $likeUserMediasInput = new ArrayInput($likeUserMediasArguments);
-                $likeUserMediasCommand->run($likeUserMediasInput, $output);
-
-                // TODO : need to add CATCH
-                $historyLike = new History();
-                $historyLike->setType("like");
-                $historyLike->setFromAccount($account);
-                $historyLike->setMessage("Liked two medias of @".$person->getUsername());
-                $historyLike->setDate(new \DateTime());
-                $this->em->persist($historyLike);
+                //$output->writeln($person->getUsername().' '.$person->getInstaId());
+                $mediaIds = [];
+                $mediaUrls = [];
+                $infos=$ig->timeline->getUserFeed($person->getInstaId());
+                $mustEndWith = '_';
+                $mustEndWith .= $person->getInstaId();
+                $tok = strtok($infos, ",");
+                while ($tok !== false) {
+                    if ($this->startsWith($tok,'"id":')) {
+                        $tok_temp = str_replace('"','',$tok);
+                        $tok_temp = str_replace('id:','',$tok_temp);
+                        if ($this->endsWith($tok_temp,$mustEndWith)) {
+                            array_push($mediaIds,$tok_temp);
+                        }
+                    }
+                    else if($this->startsWith($tok,'"code":')) {
+                        $tok_temp = str_replace('"','',$tok);
+                        $tok_temp = str_replace('code:','',$tok_temp);
+                        $mediaUrl='https://www.instagram.com/p/'.$tok_temp;
+                        array_push($mediaUrls,$mediaUrl);
+                    }
+                    $tok = strtok(",");
+                }
+                //$output->writeln(sizeof($mediaIds).' medias and '.sizeof($mediaUrls).' urls');
+                $randomNumbers = [];
+                for($i=0;$i<2;) {
+                    $randomNumber=rand(1,sizeof($mediaIds));
+                    //$output->writeln($randomNumber);
+                    if (in_array($randomNumber,$randomNumbers)==false) {
+                        array_push($randomNumbers,$randomNumber);
+                        $i++;
+                    }
+                }
+                $likesNumber = 0;
+                while ($likesNumber<2 && $likesNumber<sizeof($mediaIds)) {
+                    $likeCommandArguments = [
+                        'command' => 'app:like',
+                        'username' => $username,
+                        'password' => $password,
+                        'mediaId' => $mediaIds[$randomNumbers[$likesNumber]-1],    
+                    ];
+                    $likeInput = new ArrayInput($likeCommandArguments);
+                    $likeCommand->run($likeInput, $output);
+                    $historyLike = new History();
+                    $historyLike->setType("like");
+                    $historyLike->setFromAccount($account);
+                    $historyLike->setMessage('Liked a media (number '.($randomNumbers[$likesNumber]).') of @'. $person->getUsername());
+                    $historyLike->setDate(new \DateTime());
+                    $this->em->persist($historyLike);
+                    //$output->writeln('Liked a media (number '.($randomNumbers[$likesNumber]).') of @'. $person->getUsername());
+                    sleep(5);
+                    $likesNumber++;
+                }
+                /*if ($likesNumber==2) {
+                    //$person->setLikedMedia();
+                }
+                else if ($likesNumber==1) {
+                    //$person->setLikedMedia();
+                }
+                else {
+                    //$person->setLikedMedia();
+                }*/
                 
                 $followCommandArguments = [
                     'command' => 'app:follow',
@@ -92,7 +137,8 @@ class LikeAndFollowUsersCommand extends Command
                 $followInput = new ArrayInput($followCommandArguments);
                 sleep(rand(3,6));
                 $followCommand->run($followInput, $output);
-
+                //$output->writeln('Followed '.$person->getUsername());
+                
                 // TODO : need to add CATCH
                 $historyFollow = new History();
                 $historyFollow->setType("follow");
@@ -101,10 +147,9 @@ class LikeAndFollowUsersCommand extends Command
                 $historyFollow->setDate(new \DateTime());
                 $this->em->persist($historyFollow);
                 
-                $this->em->getRepository('App\Entity\People')->findOneByInstaId($person->getInstaID(),$account)->setToFollow(false);
-                $this->em->getRepository('App\Entity\People')->findOneByInstaId($person->getInstaID(),$account)->setUpdated(new \DateTime('@'.strtotime('now')));
+                $person->setToFollow(false);
+                $person->setUpdated(new \DateTime());
                 $this->em->persist($person);  
-                //$output->writeln($person->getUsername().' followed correctly and updated in People table');
                 sleep(30);
                 $counter++;
             }
@@ -119,5 +164,25 @@ class LikeAndFollowUsersCommand extends Command
         catch (\Exception $e) {
             throw new \Exception('Something went wrong: ' . $e->getMessage());
         }        
-    }    
+    }   
+    
+    // Function to check string starting 
+    // with given substring 
+    private function startsWith ($string, $startString) 
+    { 
+        $len = strlen($startString); 
+        return (substr($string, 0, $len) === $startString); 
+    } 
+  
+    // Function to check the string is ends  
+    // with given substring or not 
+    private function endsWith($string, $endString) 
+    { 
+        $len = strlen($endString); 
+        if ($len == 0) { 
+            return true; 
+        } 
+        return (substr($string, -$len) === $endString); 
+    }
+
 }
