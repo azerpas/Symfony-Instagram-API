@@ -73,8 +73,11 @@ class SearchByPseudoCommand extends ContainerAwareCommand
             $userId = $ig->people->getUserIdForName($user);
             $followersList = $ig->people->getFollowers($userId, \InstagramAPI\Signatures::generateUUID());
             $output->writeln("Successfully fetched user followers");
+            $nbOfFollowers = sizeof($followersList->getUsers());
+            $count = 1;
+            $valid = 0;
             foreach ($followersList->getUsers() as $follower) {
-                $output->writeln("Adding @".$follower->getUsername(). ", sleeping first...");
+                $output->writeln($count."/".$nbOfFollowers."| Adding @".$follower->getUsername(). ", sleeping first...");
 
                 // TODO check if already in DATABASE
                 $exist=$this->entityManager->getRepository('App\Entity\People')->findOneByUsername($follower->getUsername(),$account);
@@ -90,9 +93,15 @@ class SearchByPseudoCommand extends ContainerAwareCommand
 
                 if ($this->UserMatch($settings, $userInfo,$output)){
                     $output->writeln("Pushing...");
+                    $valid++;
                     array_push($peoples,array("id"=>$follower->getPk(),"username"=> $follower->getUsername()));
                 }
                 $output->writeln("");
+                $count++;
+                if($valid >= 80){
+                    $output->writeln("Enough users found");
+                    break;
+                }
             }
              
         }
