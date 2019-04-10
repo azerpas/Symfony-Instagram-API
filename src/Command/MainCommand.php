@@ -82,7 +82,7 @@ class MainCommand extends ContainerAwareCommand
                 // TODO : if current database people is > 40 then don't use
                 $numberOfPeople = count($this->entityManager->getRepository('App\Entity\People')->findAllByAccount($account));
                 if($numberOfPeople<40){
-                    $output->writeln("Currently more than 40 people in database, not searching...");
+                    $output->writeln("Currently less than 40 people in database, searching...");
                     array_push($commands,'php bin/console search:tag '.$account->getUsername().' '.$account->getPassword());
                 }
                 array_push($commands,'php bin/console app:likeAndFollowUsers '.$account->getUsername().' '.$account->getPassword());
