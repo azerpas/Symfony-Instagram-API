@@ -36,6 +36,11 @@ class History
      */
     private $fromAccount;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $date;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -85,6 +90,18 @@ class History
     public function setFromAccount(?account $fromAccount): self
     {
         $this->fromAccount = $fromAccount;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(?\DateTimeInterface $date): self
+    {
+        $this->date = $date;
 
         return $this;
     }

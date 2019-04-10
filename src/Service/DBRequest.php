@@ -110,6 +110,7 @@ class DBRequest{
         $history->setType("foundPeople");
         $history->setMessage("Found ".count($people). " people to Interact with !");
         $history->setFromAccount($account);
+        $history->setDate(new \DateTime());
         $this->em->persist($history);
         $this->em->flush();
     }

@@ -95,6 +95,7 @@ class CheckerCommand extends Command
                         $historyUnfollow->setType('unfollow');
                         $historyUnfollow->setMessage('Unfollowed @'. $person->getUsername().' because he unfollowed '.$account->getUsername());
                         $historyUnfollow->setFromAccount($account);
+                        $historyUnfollow->setDate(new \DateTime());
                         $this->em->persist($historyUnfollow);
                         //TO DO SETBLACKLIST
                         //$account->setBlacklist('@'.$person->getUsername());
@@ -123,6 +124,7 @@ class CheckerCommand extends Command
                             $historyUnfollow->setType('unfollow');
                             $historyUnfollow->setMessage('Unfollowed @'.$person->getUsername().' because he did not follow back '.$account->getUsername().' after 10 days.');
                             $historyUnfollow->setFromAccount($account);
+                            $historyUnfollow->setDate(new \DateTime());
                             $this->em->persist($historyUnfollow);
                             //TO DO SETBLACKLIST
                             //$account->setBlacklist('@'.$person->getUsername());
@@ -139,6 +141,7 @@ class CheckerCommand extends Command
             $historyChecker->setType('checker');
             $historyChecker->setMessage('Checker updated database with '.$counter.' People treated including '.$unfollowCounter.' unfollows.');
             $historyChecker->setFromAccount($account);
+            $historyChecker->setDate(new \DateTime());
             $this->em->persist($historyChecker);
             $this->em->flush();
         }
