@@ -23,6 +23,17 @@
   
    });
 
+function  appendLi(list,text,type){
+    var ul = document.getElementById(list);
+    var li = document.createElement("li");
+    li.appendChild(document.createTextNode(text));
+    li.innerHTML=text+"<i class='fas fa-minus-circle text-danger' style='float: right;' onclick='deleteSettings(this)'></i>";
+    
+    li.setAttribute("id",type);
+    li.setAttribute("class","list-group-item");
+    ul.appendChild(li);
+}   
+
 function searchSettings(element) {
     console.log(element.parentElement.previousElementSibling.value);
     val = element.parentElement.previousElementSibling.value.trim(); // we fetch the value of sibling input
@@ -72,6 +83,7 @@ function searchSettings(element) {
                     timer: 1000,
                     offset: 50
                 });
+                appendLi(element.id+"UL",val,element.id);
         },
         error:function(jqXHR, textStatus) {
             //console.log('ERROR');
