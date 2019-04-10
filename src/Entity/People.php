@@ -68,6 +68,11 @@ class People
      */
     private $contacted;
 
+    /**
+     * @ORM\Column(type="json_array", nullable=true)
+     */
+    private $likedMedias;
+
     public function __construct()
     {
         $this->histories = new ArrayCollection();
@@ -213,6 +218,18 @@ class People
     public function setContacted(?bool $contacted): self
     {
         $this->contacted = $contacted;
+
+        return $this;
+    }
+
+    public function getLikedMedias()
+    {
+        return $this->likedMedias;
+    }
+
+    public function setLikedMedias($likedMedias): self
+    {
+        $this->likedMedias = $likedMedias;
 
         return $this;
     }
