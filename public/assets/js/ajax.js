@@ -117,6 +117,7 @@ function deleteSettings(element){
             break;
     }
     console.log(keyword);
+    console.log();
     $.ajax({
         type:'DELETE',
         data:{'keyword':keyword},
@@ -141,7 +142,8 @@ function deleteSettings(element){
                     timer: 1000,
                     offset: 50
                 });
-            window.location.reload();
+                element.parentElement.parentElement.removeChild(element.parentElement); 
+           
         },
         error:function(jqXHR, textStatus) {
             //console.log('ERROR');
