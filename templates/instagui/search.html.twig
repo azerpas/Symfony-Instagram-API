@@ -19,15 +19,15 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        <ul style="height: 75%;overflow:auto;" class="list-group">
+                        <ul style="height: 75%;overflow:auto;" id="sPseudoUL" class="list-group">
                         {% if pseudos %}
                             {% for i in pseudos %}
                                 <li id="sPseudo" class="list-group-item"> {# Need to add .active #}
-                                    {{ i }} <button onclick="deleteSettings(this)" class="btn btn-outline-secondary" style="float: right;font-size: 5px;" type="button"><i class="fas fa-minus"></i></button>{# Need to add delete button and modify button #}
+                                    {{ i }} <i class="fas fa-minus-circle text-danger" style="float: right;" onclick="deleteSettings(this)"></i>
                                 </li>
                             {% endfor %}
                         {% else %}
-                            No pseudos, please add some
+                             add some pseudos ...
                         {% endif %}
                         </ul>
                     </div>
@@ -42,15 +42,15 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        <ul style="height: 75%;overflow:auto;" class="list-group">
+                        <ul style="height: 75%;overflow:auto;" id="sHashUL" class="list-group">
                             {% if hashtags %}
                                 {% for i in hashtags %}
                                     <li id="sHash" class="list-group-item"> {# Need to add .active #}
-                                        {{ i }} <button onclick="deleteSettings(this)" class="btn btn-outline-secondary" style="float: right;font-size: 5px;" type="button"><i class="fas fa-minus"></i></button>{# Need to add delete button and modify button #}
+                                        {{ i }} <i class="fas fa-minus-circle text-danger" style="float: right;" onclick="deleteSettings(this)"></i>{# Need to add delete button and modify button #}
                                     </li>
                                 {% endfor %}
                             {% else %}
-                                No hashtags, please add some
+                                add some hashtags  ...
                             {% endif %}
                         </ul>
                     </div>
@@ -65,15 +65,15 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        <ul style="height: 120px;overflow:auto;" class="list-group">
+                        <ul style="height: 120px;overflow:auto;" id="sBlackUL" class="list-group">
                             {% if blacklist %}
                                 {% for i in blacklist %}
                                     <li id="sBlack" class="list-group-item"> {# Need to add .active #}
-                                        {{ i }} <button class="btn btn-outline-secondary" style="float: right;font-size: 5px;" type="button"><i class="fas fa-minus"></i>{# Need to add delete button and modify button #}
+                                        {{ i }} <i class="fas fa-minus-circle text-danger" style="float: right;" onclick="deleteSettings(this)"></i>{# Need to add delete button and modify button #}
                                     </li>
                                 {% endfor %}
                             {% else %}
-                                No blacklist, please add some terms
+                                 add some blacklist terms ...
                             {% endif %}
                         </ul>
                     </div>
