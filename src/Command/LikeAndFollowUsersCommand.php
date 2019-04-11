@@ -58,14 +58,12 @@ class LikeAndFollowUsersCommand extends Command
         try {
             $ig->login($username, $password);
             $account = $this->em->getRepository('App\Entity\Account')->findOneByUsername($username);
-            //$output->writeln('Account to interact with : '.$account->getUsername());
             $peopleToInteract = $this->em->getRepository('App\Entity\People')->findPeopleToFollowTrueByAccount($account);
             $likeCommand = $this->getApplication()->find('app:like');
             $followCommand = $this->getApplication()->find('app:follow'); 
             $counter = 0;
             while ($counter<10 && $counter<sizeof($peopleToInteract)) {
                 $person = $peopleToInteract[$counter];
-                //$output->writeln($person->getUsername().' '.$person->getInstaId());
                 $mediaIds = [];
                 $mediaUrls = [];
                 $infos=$ig->timeline->getUserFeed($person->getInstaId());
@@ -88,7 +86,6 @@ class LikeAndFollowUsersCommand extends Command
                     }
                     $tok = strtok(",");
                 }
-                //$output->writeln(sizeof($mediaIds).' medias and '.sizeof($mediaUrls).' urls');
                 $randomNumbers = [];
                 for($i=0;$i<2;) {
                     $randomNumber=rand(1,sizeof($mediaIds));
@@ -106,7 +103,7 @@ class LikeAndFollowUsersCommand extends Command
                         'mediaId' => $mediaIds[$randomNumbers[$likesNumber]-1],    
                     ];
                     $likeInput = new ArrayInput($likeCommandArguments);
-                    //$likeCommand->run($likeInput, $output);
+                    $likeCommand->run($likeInput, $output);
                     $historyLike = new History();
                     $historyLike->setType("like");
                     $historyLike->setMessage('Liked a media (number '.($randomNumbers[$likesNumber]).') of @'. $person->getUsername());
@@ -114,20 +111,10 @@ class LikeAndFollowUsersCommand extends Command
                     $historyLike->setFromAccount($account);
                     $historyLike->setDate(new \DateTime());
                     $this->em->persist($historyLike);
-                    //$output->writeln('Liked a media (number '.($randomNumbers[$likesNumber]).') of @'. $person->getUsername());
                     sleep(5);
                     $likesNumber++;
                 }
-                /*if ($likesNumber==2) {
-                    //$person->setLikedMedia();
-                }
-                else if ($likesNumber==1) {
-                    //$person->setLikedMedia();
-                }
-                else {
-                    //$person->setLikedMedia();
-                }*/
-                
+
                 $followCommandArguments = [
                     'command' => 'app:follow',
                     'username' => $username,
@@ -136,8 +123,7 @@ class LikeAndFollowUsersCommand extends Command
                 ];
                 $followInput = new ArrayInput($followCommandArguments);
                 sleep(rand(3,6));
-                //$followCommand->run($followInput, $output);
-                //$output->writeln('Followed '.$person->getUsername());
+                $followCommand->run($followInput, $output);
                 
                 // TODO : need to add CATCH
                 $historyFollow = new History();
@@ -150,6 +136,14 @@ class LikeAndFollowUsersCommand extends Command
                 
                 $person->setToFollow(false);
                 $person->setUpdated(new \DateTime());
+                if ($likesNumber==2) {
+                    $mediasArray = array (($mediaIds[$randomNumbers[0]-1])=>($mediaUrls[$randomNumbers[0]-1]), ($mediaIds[$randomNumbers[1]-1])=>($mediaUrls[$randomNumbers[1]-1]));
+                    $person->setLikedMedias(json_encode($mediasArray));
+                }
+                else if ($likesNumber==1) {
+                    $mediasArray = array (($mediaIds[$randomNumbers[0]-1])=>($mediaUrls[$randomNumbers[0]-1]));
+                    $person->setLikedMedias(json_encode($mediasArray));
+                }
                 $this->em->persist($person); 
                 $this->em->flush(); 
                 sleep(30);
