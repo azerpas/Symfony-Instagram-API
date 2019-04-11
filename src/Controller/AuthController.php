@@ -19,7 +19,7 @@ class AuthController extends Controller{
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder){
         $user = new User();
         $form = $this->createForm(UserType::class,$user)
-            ->add('save', SubmitType::class, ['label' => 'Create Account','attr' => ['class' => 'btn btn-lg btn-primary']]);
+            ->add('save', SubmitType::class, ['label' => 'Create Account','attr' => ['class' => 'btn btn-lg btn-dark m-3']]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $passwordEncoder->encodePassword($user, $user->getPassword());
