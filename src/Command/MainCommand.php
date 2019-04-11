@@ -8,10 +8,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Doctrine\ORM\EntityManagerInterface;  
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use App\Entity\Account;
-use App\Entity\History;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
@@ -22,7 +21,7 @@ class MainCommand extends ContainerAwareCommand
      * @var EntityManagerInterface
      */
     private $entityManager;
-     /**
+    /**
      * @var LoggerInterface;
      */
     private $logger;
@@ -37,7 +36,7 @@ class MainCommand extends ContainerAwareCommand
     {
         $this
             ->setName('insta:main')
-            ->setDescription('launch other commands in parallel')    
+            ->setDescription('Main command ')
         ;
     }
 
@@ -60,14 +59,14 @@ class MainCommand extends ContainerAwareCommand
         return $slots[$time];
     }
 
-   
+
     protected function execute(InputInterface $input, OutputInterface $output){
-        //accounts list 
-        $output->writeln("<info>#get accounts list</info>");       
+        //accounts list
+        $output->writeln("<info>#get accounts list</info>");
         $accounts=$this->entityManager->getRepository('App\Entity\Account')->findAll();
-       
-       
-        
+
+
+
         //process array
         $runningProcesses = [];
 
@@ -82,15 +81,14 @@ class MainCommand extends ContainerAwareCommand
                 // TODO : if current database people is > 40 then don't use
                 $numberOfPeople = count($this->entityManager->getRepository('App\Entity\People')->findAllByAccount($account));
                 if($numberOfPeople<40){
-                    $output->writeln("Currently less than 40 people in database, searching...");
+                    $output->writeln("Currently more than 40 people in database, not searching...");
                     array_push($commands,'php bin/console search:tag '.$account->getUsername().' '.$account->getPassword());
                 }
                 array_push($commands,'php bin/console app:likeAndFollowUsers '.$account->getUsername().' '.$account->getPassword());
-                array_push($commands,'php bin/console insta:contact '.$account->getUsername().' '.$account->getPassword());
                 foreach($commands as $command){
                     try{
                         $process = new Process($command);
-                        $process->setTimeout(1800); // 30 min
+                        $process->setTimeout(6000);
                         $process->start(function ($type, $buffer) {
                             if (Process::ERR === $type) {
                                 throw  new \Exception($type.': Error while trying to login :'.$buffer);
@@ -100,13 +98,12 @@ class MainCommand extends ContainerAwareCommand
                     }catch (\Exception $e){
                         $output->writeln("Account could not connect");
                         continue; // if can't login than stop here
-                    }   
-                }  
-            }  
+                    }
+                }
+            }
         }
-        //TODO need to add something like: is the bot still running -> history
-        $output->writeln("<info>#all processes are started </info>");    
-        $output->writeln("<comment>waitting ...</comment>");    
+        $output->writeln("<info>#all processes are started </info>");
+        $output->writeln("<comment>waitting ...</comment>");
         //wait
         while (count($runningProcesses)) {
             foreach ($runningProcesses as $i => $runningProcess) {
@@ -118,9 +115,8 @@ class MainCommand extends ContainerAwareCommand
                 $output->write("<comment>.</comment>");
                 sleep(1);
             }
-            $output->writeln("");    
-        $output->writeln("<info>#successful execution...</info>");  
-    return true;
+        }
+        $output->writeln("<info>#successful execution...</info>");
+        return true;
     }
-}
 }
