@@ -9,6 +9,12 @@
     <div class="container">
         <section class="section-padding">
             <div class="row">
+                {% if pseudos == 0 or hashtags == 0 %}
+                    <div class="alert alert-danger m-2" role="alert">
+                        No Instagram account found ! Please add one first by clicking below
+                    </div>
+                    <a class="m-2 justify-content-center" href="profile"><button class="btn btn-success">Click here</button></a>
+                {% else %}
                 {# THREE cards where created #}
                 <div class="card col-sm">
                     <div class="card-header">
@@ -81,6 +87,7 @@
                         <button class="btn btn-outline-danger">Delete all</button>
                     </div>
                 </div>
+                {% endif %}
             </div>
         </section>
     </div>

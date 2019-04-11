@@ -7,13 +7,28 @@
 {% endblock %}
 {% block Section %}
       <div class="container">
+            {% if not account %}
+            <div class="alert alert-danger m-2" role="alert">
+                  No Instagram account found ! Please add one first by clicking below
+            </div>
+            <a class="m-2 justify-content-center" href="profile"><button class="btn btn-success">Click here</button></a>
+            {% endif %}
             <section class="section-padding">
-                  <h1>1.0</h1>
-                  <h2>What's new? 🚀</h2>
-                  <ul>
-                        <li>Setting up parameters from Parameters page</li>
-
-                  </ul>
+                  <div class="card col-6">
+                        <div class="card-header">
+                              <h3>Updates</h3>
+                        </div>
+                        <div class="card-body">
+                              <h1>1.0</h1>
+                              <h2>What's new? 🚀</h2>
+                              <ul>
+                                    <li>Launching main command from front</li>
+                                    <li>Set up your launch schedule</li>
+                                    <li>Searched user now match your <a href="parameters">settings</a></li>
+                                    <li>Get your <a href="history">logbook</a></li>
+                              </ul>
+                        </div>
+                  </div>
             </section>
             <!-- Counts Section -->
             <section class="dashboard-counts section-padding">

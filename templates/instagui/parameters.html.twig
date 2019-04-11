@@ -13,6 +13,7 @@
                    <h3> GENERAL PARAMETERS </h3>
                </div>
                <div class="card-body">
+                   {% if param %}
                    <form name="configForm">
                        <!-- search  config start  -->
                        <label class="form-control-label col-3 vcenter">
@@ -155,6 +156,12 @@
                    <div class="form-group">
                        <button class="btn btn-primary float-right" type="button" onclick="config()">SAVE</button>
                    </div>
+                   {% else %}
+                   <div class="alert alert-danger" role="alert">
+                       No Instagram account found ! Please add one first by clicking below
+                   </div>
+                       <a href="profile"><button class="btn btn-success">Click here</button></a>
+                   {% endif %}
                </div>
            </div>
       </section>     
