@@ -30,8 +30,9 @@ class InstaguiController extends AbstractController
      */
     public function homePage()
     {   $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $account = $this->getUser()->getActuelAccount() ? 1 : null;
         return $this->render('instagui/home.html.twig', [
-            'controller_name' => 'InstaguiController','page'=> 'home'
+            'controller_name' => 'InstaguiController','page'=> 'home','account'=>$account
         ]);
     }
 
@@ -41,7 +42,7 @@ class InstaguiController extends AbstractController
     public function botsPage(Request $request)
     {   $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $form = $this->createFormBuilder()
-            ->add('Try search command', SubmitType::class, ['label' => 'Try search command','attr'=> [ 'class' => ' btn btn-primary mt-2' ]])
+            ->add('Try search command', SubmitType::class, ['label' => 'Try search command','attr'=> [ 'class' => ' btn btn-primary mt-2', ($this->getUser()->getActuelAccount() ? '' :'disabled')=>'' ]])
             ->getForm();
         $form->handleRequest($request);
         //$hashtags = unserialize($this->getUser()->getActuelAccount()->getSearchSettings())->hashtags;
@@ -68,7 +69,12 @@ class InstaguiController extends AbstractController
      */
     public function searchPage()
     {   $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $search_settings = unserialize($this->getUser()->getActuelAccount()->getSearchSettings());
+        if ($this->getUser()->getActuelAccount()){
+            $search_settings = unserialize($this->getUser()->getActuelAccount()->getSearchSettings());
+        }
+        else{
+            return $this->render('instagui/search.html.twig', ['controller_name' => 'InstaguiController','page'=> 'Search', 'hashtags'=>0, 'pseudos'=>0, 'blacklist'=>'']);
+        }
         return $this->render('instagui/search.html.twig', [
             'controller_name' => 'InstaguiController','page'=> 'Search', 'hashtags'=>$search_settings->hashtags, 'pseudos'=>$search_settings->pseudos, 'blacklist'=>''
         ]);
@@ -91,7 +97,7 @@ class InstaguiController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         //TODO get history likedMedias
         return $this->render('instagui/history.html.twig',[
-            'controller_name' => 'InstaguiController','page'=> 'history','history'=>$this->getUser()->getActuelAccount()->getHistories()
+            'controller_name' => 'InstaguiController','page'=> 'history','history'=> $this->getUser()->getActuelAccount() ? $this->getUser()->getActuelAccount()->getHistories() : null
         ]);
     }
 
@@ -107,7 +113,7 @@ class InstaguiController extends AbstractController
             ->add('username', TextType::class, ['label_attr' => array('class' => 'form-label'),  'attr' => [ 'class' => 'form-control' ] ])
             ->add('password', PasswordType::class, ['label_attr' => array('class' => 'form-label'),   'attr' => [ 'class' => 'form-control' ] ])
             ->add('connect', ButtonType::class, ['label'=> 'Test connection', 'attr' => ['onclick' => 'runTestIgAcc()','class' => 'btn btn-info mt-2 ']])
-            ->add('save', SubmitType::class, ['label' => 'Create Task','attr'=> [ 'class' => ' btn btn-primary mt-2' ]])
+            ->add('save', SubmitType::class, ['label' => 'Add Instagram account','attr'=> [ 'class' => ' btn btn-primary mt-2' ]])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -123,23 +129,22 @@ class InstaguiController extends AbstractController
                 // if NOT, then we create the account and submit it to the BD
 
 
-                /* REPLACING DBrequest::createInstagramAccount
+                // REPLACING DBrequest::createInstagramAccount
                 $account->setUsername($account->getUsername());
                 $account->setPassword($account->getPassword());
                 $account->setSlots(json_encode(array_fill(0, 24, false)));
-                $account->setUser(0,$user); // here
-                $searchSettings = new stdClass();
+                $account->setSettings("{\"minfollow\":\"25\",\"maxfollow\":\"3991\",\"minfollowing\":\"25\",\"maxfollowing\":\"1992\",\"minpublication\":\"10\",\"maxpublication\":\"192\",\"picture\":\"0\",\"private\":\"1\",\"followPerHour\":\"30\",\"followPerDay\":\"116\",\"TimeToUnfollow\":\"0\",\"blackList\":\"0\",\"like\":\"2\",\"waitingTime\":\"17\",\"Type\":\"h\",\"message\":\"       type your text here ...       \"}");
+                $searchSettings = new \stdClass();
                 $searchSettings->pseudos = [];
                 $searchSettings->hashtags = [];
                 $searchSettings->blacklist = [];
                 $account->setSearchSettings(serialize($searchSettings));
                 $key = $account->getUsers()->count();
-                $account->setUser($key,$user);
+                $account->setUser($key,$usrr);
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($account);
                 $em->flush();
-                 */
-                $DBRequest->createInstagramAccount($usrr,$account);
+                // */
             }
             else{
                 // else the result become the account instance
@@ -149,14 +154,15 @@ class InstaguiController extends AbstractController
 
             // Insert into database the Instagram Account into usrr "accounts" column using DBRequest service.
 
-            /* REPLACING DBrequest::assignInstagramAccount
-            // $key = $usrr->getAccounts()->count();
-            // $user->setAccount($key,$account);
-            // $entityManager = $this->getDoctrine()->getManager();
-            // $entityManager->persist($user);
-            // $entityManager->flush();
-            */
-            $DBRequest->assignInstagramAccount($usrr,$account,$account->getUsername(),$account->getPassword(),$logger);
+            // REPLACING DBrequest::assignInstagramAccount
+            $key = $usrr->getAccounts()->count();
+            $usrr->setAccount($key,$account);
+            $entityManager = $this->getDoctrine()->getManager();
+            $accounts=$usrr->getAccounts();
+            $usrr->setActuelAccount($accounts->get(0));
+            $entityManager->persist($usrr);
+            $entityManager->flush();
+            //*/
 
             return $this->redirectToRoute('inst_profil');
         }
@@ -181,7 +187,12 @@ class InstaguiController extends AbstractController
      */
     public function paramsPage(Request $request)
     {   //check for login user redirect if null
-        $param=json_decode($this->getUser()->getActuelAccount()->getSettings());
+        if($this->getUser()->getActuelAccount() == null){
+            $param = null;
+        }
+        else{
+            $param=json_decode($this->getUser()->getActuelAccount()->getSettings());
+        }
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         return $this->render('instagui/parameters.html.twig', [
