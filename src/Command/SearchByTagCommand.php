@@ -105,9 +105,15 @@ class SearchByTagCommand extends ContainerAwareCommand
 
                     $output->writeln("Adding @".$username. ", sleeping first...");
                     sleep(rand(2,5));
-                    $userInfo = $ig->people->getInfoByName($username);
-                    // check if users settings (min follow etc...), match with current account
-                    $output->writeln("Checking before adding...");
+                    try{
+                        $userInfo = $ig->people->getInfoByName($username);
+                        // check if users settings (min follow etc...), match with current account
+                        $output->writeln("Checking before adding...");
+                    }catch (\Exception $e){
+                        $output->writeln($e->getMessage());
+                        continue;
+                    }
+
                     if ($this->UserMatch($settings, $userInfo,$output)) {
                         $output->writeln("Pushing to array...");
                         $valid++;

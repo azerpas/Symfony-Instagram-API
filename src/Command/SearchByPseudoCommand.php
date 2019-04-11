@@ -87,8 +87,13 @@ class SearchByPseudoCommand extends ContainerAwareCommand
                 }
 
                 sleep(rand(2,5));
-                $userInfo = $ig->people->getInfoByName($follower->getUsername());
-                $output->writeln("Checking before adding...");
+                try{
+                    $userInfo = $ig->people->getInfoByName($follower->getUsername());
+                    $output->writeln("Checking before adding...");
+                }catch (\Exception $e){
+                    $output->writeln($e->getMessage());
+                    continue;
+                }
 
 
                 if ($this->UserMatch($settings, $userInfo,$output)){
