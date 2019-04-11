@@ -10,9 +10,11 @@ use App\Entity\User;
 use App\Service\DBRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Process\Process;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -42,24 +44,42 @@ class InstaguiController extends AbstractController
     public function botsPage(Request $request)
     {   $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $form = $this->createFormBuilder()
-            ->add('Try search command', SubmitType::class, ['label' => 'Try search command','attr'=> [ 'class' => ' btn btn-primary mt-2', ($this->getUser()->getActuelAccount() ? '' :'disabled')=>'' ]])
+            ->add('command', ChoiceType::class, [
+                'choices'  => [
+                    'Search by tag' => 'search:tag',
+                    'Search by pseudo' => 'search:pseudo',
+                    'Main Command' => 'insta:main',
+                ], 'label' => 'Select your command', 'attr' => ['class'=>'m-2']
+            ])
+            ->add('Try command', SubmitType::class, ['label' => 'Try command','attr'=> [ 'class' => ' btn btn-primary mt-2', ($this->getUser()->getActuelAccount() ? '' :'disabled')=>'' ]])
             ->getForm();
         $form->handleRequest($request);
         //$hashtags = unserialize($this->getUser()->getActuelAccount()->getSearchSettings())->hashtags;
         if ($form->isSubmitted() && $form->isValid()) {
-            $process = new Process('php bin/console search:tag '.$this->getUser()->getActuelAccount()->getUsername().' '.$this->getUser()->getActuelAccount()->getPassword());
-            $process->setWorkingDirectory(getcwd());
-            $process->setWorkingDirectory("../");
-            $process->setTimeout(1800);
-            $process->run(function ($type, $buffer) {
-                if (Process::ERR === $type) {
-                    echo 'ERR > '.$buffer;
-                    return new Response("Canno't connect to Instagram, please check your params");
-                } else {
-                    echo 'OUT > '.$buffer.'<br>';
-                }
+            $response = new StreamedResponse(); // Streamed Response allow live output
+            $response->setCallback(function () use($form) {
+                echo '-----------------------------------------------------------------------';
+                echo '<br/><a href="history" target="_blank">Click here to open your logs</a><br/>';
+                echo '-----------------------------------------------------------------------';
+                ob_flush();
+                flush();
+                $process = new Process('php bin/console ' . $form->get('command')->getData() . ' ' . $this->getUser()->getActuelAccount()->getUsername() . ' ' . $this->getUser()->getActuelAccount()->getPassword());
+                $process->setWorkingDirectory(getcwd());
+                $process->setWorkingDirectory("../");
+                $process->setTimeout(1800);
+                $process->run(function ($type, $buffer) {
+                    if (Process::ERR === $type) {
+                        echo 'ERR > ' . $buffer;
+                        return new Response("Canno't connect to Instagram, please check your params");
+                    } else {
+                        echo 'OUT > ' . $buffer . '<br>';
+                        ob_flush();
+                        flush();
+                    }
+                });
             });
-            return new Response("Successfully launched process");
+            return $response->send();
+            //return new Response("Successfully launched process ".$form->get('command')->getData());
         }
         return $this->render('instagui/bots.html.twig', ['controller_name' => 'InstaguiController','form'=>$form->createView(),'page'=> 'bots']);
     }

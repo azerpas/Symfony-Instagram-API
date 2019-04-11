@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Process\Process;
 
 class AutoController extends AbstractController
 {
@@ -31,6 +32,29 @@ class AutoController extends AbstractController
     {
         $response = new StreamedResponse();
         $response->setCallback(function () {
+            $process = new Process('php bin/console test:main');
+            $process->setWorkingDirectory(getcwd());
+            $process->setWorkingDirectory("../");
+            $process->setTimeout(1800);
+            $process->run(function ($type, $buffer) {
+                if (Process::ERR === $type) {
+                    echo 'ERR > '.$buffer;
+                    return new Response("Canno't connect to Instagram, please check your params");
+                } else {
+                    echo 'OUT > '.$buffer.'<br>';
+                    ob_flush();
+                    flush();
+                }
+            });
+            ob_flush();
+            flush();
+            sleep(10);
+            var_dump('Hello World');
+            ob_flush();
+            flush();
+        });
+        /*
+        $response->setCallback(function () {
             var_dump('Hello World');
             ob_flush();
             flush();
@@ -39,6 +63,7 @@ class AutoController extends AbstractController
             ob_flush();
             flush();
         });
+        */
 
         return $response->send();
     }
