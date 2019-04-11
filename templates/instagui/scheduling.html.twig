@@ -10,14 +10,14 @@
     <section class="dashboard-counts section-padding">
         <div class="card  ">
             <div class="card-header row">
-                <h4 class="col-10">Créneaux</h4>
+                <h4 class="col-10">Schedule</h4>
                 <div class="col-2">
                     <input type="checkbox" id="run" name="toggle-event" class="justify-content-end" data-onstyle="success" {{ status?"checked" }} data-toggle="toggle" onchange="run_bot(this)">
                 </div>
             </div>
             <div class="card-body">
                 {% if slots == null %}
-                    <div class="h4">aucun compte n'est assigné </div>
+                    <div class="h4">No account</div>
                 {% else %}
                     {# TABLE 0 to 11H59#}
                     <div class="table-responsive">
@@ -79,7 +79,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" >Activer / Désactiver </h5>
+                        <h5 class="modal-title" >Activate / De-activate </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
@@ -89,8 +89,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" id="desactiver" onclick="desactiver(id)" class="btn btn-danger">Désactiver</button>
-                        <button type="button" id="activer" onclick="activer(id)" class="btn btn-primary">Activer</button>
+                        <button type="button" id="desactiver" onclick="desactiver(id)" class="btn btn-danger">De-activate</button>
+                        <button type="button" id="activer" onclick="activer(id)" class="btn btn-primary">Activate</button>
                     </div>
                 </div>
             </div>
