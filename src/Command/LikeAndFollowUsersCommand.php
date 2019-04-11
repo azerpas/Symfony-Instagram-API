@@ -92,7 +92,6 @@ class LikeAndFollowUsersCommand extends Command
                 $randomNumbers = [];
                 for($i=0;$i<2;) {
                     $randomNumber=rand(1,sizeof($mediaIds));
-                    //$output->writeln($randomNumber);
                     if (in_array($randomNumber,$randomNumbers)==false) {
                         array_push($randomNumbers,$randomNumber);
                         $i++;
@@ -107,11 +106,12 @@ class LikeAndFollowUsersCommand extends Command
                         'mediaId' => $mediaIds[$randomNumbers[$likesNumber]-1],    
                     ];
                     $likeInput = new ArrayInput($likeCommandArguments);
-                    $likeCommand->run($likeInput, $output);
+                    //$likeCommand->run($likeInput, $output);
                     $historyLike = new History();
                     $historyLike->setType("like");
-                    $historyLike->setFromAccount($account);
                     $historyLike->setMessage('Liked a media (number '.($randomNumbers[$likesNumber]).') of @'. $person->getUsername());
+                    $historyLike->setInteractWith($person);
+                    $historyLike->setFromAccount($account);
                     $historyLike->setDate(new \DateTime());
                     $this->em->persist($historyLike);
                     //$output->writeln('Liked a media (number '.($randomNumbers[$likesNumber]).') of @'. $person->getUsername());
@@ -136,20 +136,22 @@ class LikeAndFollowUsersCommand extends Command
                 ];
                 $followInput = new ArrayInput($followCommandArguments);
                 sleep(rand(3,6));
-                $followCommand->run($followInput, $output);
+                //$followCommand->run($followInput, $output);
                 //$output->writeln('Followed '.$person->getUsername());
                 
                 // TODO : need to add CATCH
                 $historyFollow = new History();
                 $historyFollow->setType("follow");
-                $historyFollow->setFromAccount($account);
                 $historyFollow->setMessage("Followed @". $person->getUsername());
+                $historyFollow->setInteractWith($person);
+                $historyFollow->setFromAccount($account);
                 $historyFollow->setDate(new \DateTime());
                 $this->em->persist($historyFollow);
                 
                 $person->setToFollow(false);
                 $person->setUpdated(new \DateTime());
-                $this->em->persist($person);  
+                $this->em->persist($person); 
+                $this->em->flush(); 
                 sleep(30);
                 $counter++;
             }
