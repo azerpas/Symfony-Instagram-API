@@ -52,7 +52,13 @@
                 <div class="col-7">
                 <img src="{{asset('assets/img/instagram.jpg')}}" alt="person" class="img-fluid rounded-circle">
                     {#{{ app.user.actuelAccount.username }}#}
-                    <h2 class="h5">{% if app.user.actuelAccount %} {{app.user.actuelAccount.username}} {% else %} No accounts {% endif %}</h2>
+                    <h2 class="h5">
+                        {% if app.user.actuelAccount %}
+                            {{app.user.actuelAccount.username}}
+                        {% else %}
+                            <a href="profile" style="font-size: 0.6em;">No accounts<br/> click here to add one</a>
+                        {% endif %}
+                    </h2>
                 </div>
                 <div class="col-2">
                 <a href="nextAccount"> <i class="fas fa-arrow-right"></i></a>
