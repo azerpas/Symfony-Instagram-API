@@ -66,7 +66,19 @@ class LikeAndFollowUsersCommand extends Command
                 $person = $peopleToInteract[$counter];
                 $mediaIds = [];
                 $mediaUrls = [];
-                $infos=$ig->timeline->getUserFeed($person->getInstaId());
+                try{
+                    $infos=$ig->timeline->getUserFeed($person->getInstaId());
+                }catch (\Exception $e){
+                    $historyError = new History();
+                    $historyError->setType("error");
+                    $historyError->setMessage('We got an error while trying to get infos from: '. $person->getUsername().'. Getting to next user');
+                    $historyError->setInteractWith($person);
+                    $historyError->setFromAccount($account);
+                    $historyError->setDate(new \DateTime());
+                    $this->em->persist($historyError);
+                    $this->em->flush();
+                    continue;
+                }
                 $mustEndWith = '_';
                 $mustEndWith .= $person->getInstaId();
                 $tok = strtok($infos, ",");
