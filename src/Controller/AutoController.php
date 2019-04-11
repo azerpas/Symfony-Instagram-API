@@ -21,7 +21,45 @@ class AutoController extends AbstractController
      * @Route("/2bf6da4d-c367-40b4-93fe-dbb2194b7b94",methods={"GET"})
      */
     public function mainCommand(){
-        return new Response("TTT");
+        $response = new StreamedResponse(); // Streamed Response allow live output
+        $response->setCallback(function (){
+            echo '-----------------------------------------------------------------------';
+            echo '<br/><a href="history" target="_blank">Click here to open your logs</a><br/>';
+            echo '-----------------------------------------------------------------------';
+            ob_flush();
+            flush();
+            $process = new Process('php bin/console insta:main');
+            $process->setWorkingDirectory(getcwd());
+            $process->setWorkingDirectory("../");
+            $process->setTimeout(1800);
+            $process->run(function ($type, $buffer) {
+                if (Process::ERR === $type) {
+                    echo 'ERR > ' . $buffer;
+                    return new Response("Canno't connect to Instagram, please contact admin");
+                } else {
+                    echo 'OUT > ' . $buffer . '<br>';
+                    ob_flush();
+                    flush();
+                }
+            });
+        });
+        return $response->send();
+    }
+    /**
+     * @Route("/2a")
+     * @return StreamedResponse
+     */
+    public function test(){
+        $response = new StreamedResponse(); // Streamed Response allow live output
+        $response->setCallback(function (){
+            for ($i=0;$i<10;$i++){
+                echo '{"output":"loading"}';
+                ob_flush();
+                flush();
+                sleep(2);
+            }
+        });
+        return $response->send();
     }
 
     /**

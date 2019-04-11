@@ -63,7 +63,12 @@ class InstaguiController extends AbstractController
                 echo '-----------------------------------------------------------------------';
                 ob_flush();
                 flush();
-                $process = new Process('php bin/console ' . $form->get('command')->getData() . ' ' . $this->getUser()->getActuelAccount()->getUsername() . ' ' . $this->getUser()->getActuelAccount()->getPassword());
+                if($form->get('command')->getData() == 'insta:main'){
+                    $process = new Process('php bin/console ' . $form->get('command')->getData());
+                }
+                else{
+                    $process = new Process('php bin/console ' . $form->get('command')->getData() . ' ' . $this->getUser()->getActuelAccount()->getUsername() . ' ' . $this->getUser()->getActuelAccount()->getPassword());
+                }
                 $process->setWorkingDirectory(getcwd());
                 $process->setWorkingDirectory("../");
                 $process->setTimeout(1800);
