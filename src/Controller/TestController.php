@@ -23,6 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class TestController extends AbstractController
 {
@@ -110,5 +111,36 @@ class TestController extends AbstractController
             ->findOneByUsername('driftersmd',$this->getUser()->getActuelAccount());
         $logger->info($account->getInstaId());
         return new Response($account->getInstaId());
+    }
+
+    /**
+     * @Route("/1a")
+     */
+    public function getUserInfos(LoggerInterface $logger){
+        $response = new StreamedResponse(); // Streamed Response allow live output
+        $followers = '';
+        $response->setCallback(function () use($followers){
+            echo '-----------------------------------------------------------------------';
+            echo '<br/><a href="history" target="_blank">Click here to open your logs</a><br/>';
+            echo '-----------------------------------------------------------------------';
+            ob_flush();
+            flush();
+            $process = new Process('php bin/console app:user ' . $this->getUser()->getActuelAccount()->getUsername() . ' ' . $this->getUser()->getActuelAccount()->getPassword(). ' --all');
+            //$process->setWorkingDirectory(getcwd());
+            $process->setWorkingDirectory("../");
+            $process->setTimeout(1800);
+            $process->run(function ($type, $buffer) use($followers) {
+                if (Process::ERR === $type) {
+                    echo 'ERR > ' . $buffer;
+                    return new Response("Canno't connect to Instagram, please contact admin");
+                } else {
+                    echo 'OUT > ' . $buffer . '<br>';
+                    ob_flush();
+                    flush();
+                }
+            });
+        });
+        $followers = $response->send();
+        return new Response('test :::: '.$followers);
     }
 }
