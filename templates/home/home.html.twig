@@ -8,7 +8,7 @@
         <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/img/icons/favicon-16x16.png')}}">
         <link rel="manifest" href="{{ asset('assets/img/icons/site.webmanifest')}}">
         <link rel="mask-icon" href="{{ asset('assets/img/icons/safari-pinned-tab.svg')}}" color="#5bbad5">
-        <link  href="{{ asset('assets/vendor/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
         <meta name="msapplication-TileColor" content="#603cba">
         <meta name="theme-color" content="#ffffff">
         <link rel="stylesheet" href="https://getbootstrap.com/docs/4.3/examples/cover/cover.css"/>
@@ -22,19 +22,20 @@
             .nav-masthead .nav-link{
                 color:white;
             }
+            {% block Style %}{% endblock %}
         </style>
     </head>
     {% block body %}
-    <body class="text-center">
-        <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <body style="box-shadow: none" class="text-center">
+        <div class="cover-container d-flex w-100 p-3 mx-auto flex-column">
             {% block Navigation %}
             <header class="masthead mb-auto">
                 <div class="inner">
                     <h3 class="masthead-brand">Instagui</h3>
                     <nav class="nav nav-masthead justify-content-center">
                         <a class="nav-link {{ app.request.get('_route') == 'home' ? 'active' }}" href="/">Home</a>
-                        <a class="nav-link" href="features">Features</a>
-                        <a class="nav-link" href="/contact">Contact</a>
+                        <a class="nav-link {{ app.request.get('_route') == 'features' ? 'active' }}" href="features">Features</a>
+                        <a class="nav-link {{ app.request.get('_route') == 'contact' ? 'active' }}" href="/contact">Contact</a>
                         <a class="nav-link {{ app.request.get('_route') == 'register' ? 'active' }}" href="/register">Register</a>
                         <a class="nav-link {{ app.request.get('_route') == 'app_login' ? 'active' }}" href="/login">Log in</a>
                     </nav>
@@ -54,6 +55,8 @@
             <footer class="mastfoot mt-auto">
                 <div class="btn-group">
                     <!-- btn: contact - vetixy - terms - etc -->
+                    <h6 class="text-dark mx-2">Vetixy 2019</h6>
+                    <a style="color: black" href="mailto:TODO"> <i class="fas fa-envelope"></i> </a>
                 </div>
             </footer>
         </div>

@@ -1,14 +1,35 @@
 {% extends 'home/home.html.twig' %}
+{% block Style %}
+    body{
+        height:auto !important;
+    }
+    main{
+        margin-top: 30px !important;
+    }
+{% endblock %}
 {% block content %}
-   <div class="container">
-       <div class="main-command">
+    <main role="main" class="inner cover">
+       <div class="main-command align-middle">
            <h3>Use Instagram with ease</h3>
            <p>Our advanced commands allow any Instagram user to automate their actions</p>
            <img style="max-width: 100%;height: auto;width: 80%;margin-top: -60px" src="{{ asset('assets/img/features/carbon.svg') }}">
        </div>
-       <div class="settings">
-           <h3>Fully customizable</h3>
-           <i class="fas fa-cogs"></i>
-       </div>
-   </div>
+        <div class="row">
+            <div class="settings col-6">
+                <h3>Fully customizable</h3>
+                <i style="font-size: 10em;" class="fas fa-sliders-h"></i>
+                <p>Choose who the bot will follow / like with our precise settings</p>
+            </div>
+            <div class="rapidity col-6">
+                <h3>Quickest</h3>
+                <i style="font-size: 10em;" class="fas fa-bolt"></i>
+                <p>Our bot is request based, it means it doesn't load any UI. It use Instagram own private API to make every request as efficient as the real app.</p>
+            </div>
+            <div class="col-12">
+                <h3>Plan your tasks</h3>
+                <i style="font-size: 10em;" class="far fa-clock"></i>
+                <p>Set-up when your bot should start</p>
+            </div>
+        </div>
+    </main>
 {% endblock %}

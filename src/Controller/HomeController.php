@@ -19,4 +19,10 @@ class HomeController extends AbstractController{
     public function featuresPage(){
         return $this->render('home/features.html.twig');
     }
+    /**
+     * @Route("/contact", name="contact", methods={"GET"})
+     */
+    public function contactPage(){
+        return $this->render('home/contact.html.twig');
+    }
 }
