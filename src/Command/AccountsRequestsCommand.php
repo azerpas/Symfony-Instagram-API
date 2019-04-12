@@ -49,10 +49,12 @@ class AccountsRequestsCommand extends Command
     {
         $this->ig->login($input->getArgument('username'),$input->getArgument('password'));
         if($input->getOption('followers')){
+            $output->writeln(json_decode($this->ig->people->getSelfInfo())->user->follower_count);
             return json_decode($this->ig->people->getSelfInfo())->user->follower_count;
         }
         if($input->getOption('all')){
-            return json_encode($this->ig->people->getSelfInfo());
+            $output->writeln(serialize(json_decode($this->ig->people->getSelfInfo())->user));
+            return;//json_encode($this->ig->people->getSelfInfo());
         }
 
     }

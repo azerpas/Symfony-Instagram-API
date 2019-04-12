@@ -24,6 +24,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class InstaguiController extends AbstractController
 {
@@ -108,11 +109,36 @@ class InstaguiController extends AbstractController
     /**
      * @Route("/instagui/charts", name="inst_charts")
      */
-    public function chartsPage(LoggerInterface $logger)
-    {   $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        return $this->render('instagui/stat.html.twig', [
-            'controller_name' => 'InstaguiController','page'=> 'statistiques', 'followerCount'=>''
-        ]);
+    public function chartsPage(LoggerInterface $logger, KernelInterface $kernel)
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        if($this->getUser()->getActuelAccount()){
+            $process = new Process('php bin/console app:user ' . $this->getUser()->getActuelAccount()->getUsername() . ' ' . $this->getUser()->getActuelAccount()->getPassword(). ' --all');
+            $process->setWorkingDirectory(getcwd());
+            $process->setWorkingDirectory("../");
+            $process->setTimeout(1800);
+            $followers = '1';
+            $process->run(function ($type, $buffer) use($followers) {
+                if (Process::ERR === $type) {
+                    echo 'ERR > ' . $buffer;
+                    //return new Response("Canno't connect to Instagram, please check your params");
+                } else {
+                    //echo 'OUT > ' . $buffer . '<br>';
+                    var_dump($buffer);
+                    //return new Response($buffer);
+                }
+            });
+            //return new Response($process->getIncrementalOutput());
+            $user = unserialize($process->getIncrementalOutput());
+            return $this->render('instagui/stat.html.twig', [
+                'controller_name' => 'InstaguiController','page'=> 'statistiques', 'user'=>$user
+            ]);
+        }
+        else{
+            return $this->render('instagui/stat.html.twig', [
+                'controller_name' => 'InstaguiController','page'=> 'statistiques', 'user'=>null
+            ]);
+        }
     }
 
     /**
