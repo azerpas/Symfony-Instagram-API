@@ -67,7 +67,7 @@ class LikeAndFollowUsersCommand extends Command
                 $mediaIds = [];
                 $mediaUrls = [];
                 try{
-                    $infos=$ig->timeline->getUserFeed($person->getInstaId());
+                    $feed = json_decode($ig->timeline->getUserFeed($person->getInstaId()));
                 }catch (\Exception $e){
                     $output->writeln($e->getMessage());
                     $historyError = new History();
@@ -82,24 +82,27 @@ class LikeAndFollowUsersCommand extends Command
                     $counter++;
                     continue;
                 }
-                $mustEndWith = '_';
-                $mustEndWith .= $person->getInstaId();
-                $tok = strtok($infos, ",");
-                while ($tok !== false) {
-                    if ($this->startsWith($tok,'"id":')) {
-                        $tok_temp = str_replace('"','',$tok);
-                        $tok_temp = str_replace('id:','',$tok_temp);
-                        if ($this->endsWith($tok_temp,$mustEndWith)) {
-                            array_push($mediaIds,$tok_temp);
-                        }
-                    }
-                    else if($this->startsWith($tok,'"code":')) {
-                        $tok_temp = str_replace('"','',$tok);
-                        $tok_temp = str_replace('code:','',$tok_temp);
-                        $mediaUrl='https://www.instagram.com/p/'.$tok_temp;
+                for($i=0;$i<sizeof($feed->items);$i++) {
+                    $mediaId = $feed->items[$i]->id;
+                    array_push($mediaIds,$mediaId);
+                    if(($feed->items[$i]->media_type)=='1') {
+                        $mediaUrl = $feed->items[$i]->image_versions2->candidates[0]->url;
                         array_push($mediaUrls,$mediaUrl);
                     }
-                    $tok = strtok(",");
+                    else if(($feed->items[$i]->media_type)=='2') {
+                        $mediaUrl = $feed->items[$i]->video_versions[0]->url;
+                        array_push($mediaUrls,$mediaUrl);
+                    }
+                    else if(($feed->items[$i]->media_type)=='8') {
+                        if(($feed->items[$i]->carousel_media[0]->media_type)=='1') {
+                            $mediaUrl = $feed->items[$i]->carousel_media[0]->image_versions2->candidates[0]->url;
+                            array_push($mediaUrls,$mediaUrl);
+                        }
+                        else if(($feed->items[$i]->carousel_media[0]->media_type)=='2') {
+                            $mediaUrl = $feed->items[$i]->carousel_media[0]->video_versions[0]->url;
+                            array_push($mediaUrls,$mediaUrl);
+                        }
+                    }
                 }
                 $randomNumbers = [];
                 for($i=0;$i<2;) {
