@@ -91,13 +91,86 @@ class LikeAndFollowUsersCommand extends Command
                         $tok_temp = str_replace('id:','',$tok_temp);
                         if ($this->endsWith($tok_temp,$mustEndWith)) {
                             array_push($mediaIds,$tok_temp);
+                            $foundMedia = 0;
+                            while ($tok !==false && $foundMedia==0) {
+                                //if this is a publication which contains only one picture
+                                if ($this->startsWith($tok,'"media_type":1')) {
+                                    while ($tok !==false && $foundMedia==0) {
+                                        if ($this->startsWith($tok,'"code":')) {
+                                            $tok_temp = str_replace('"','',$tok);
+                                            $tok_temp = str_replace('code:','',$tok_temp);
+                                            $mediaUrl = 'https://www.instagram.com/p/'.$tok_temp.'/media/?size=l';
+                                            array_push($mediaUrls,$mediaUrl);
+                                            $foundMedia++;
+                                        }
+                                        $tok = strtok(",");
+                                    }
+                                }
+                                //else if this is a publication which contains only one video
+                                else if (($this->startsWith($tok,'"media_type":2')) && $foundMedia==0) {
+                                    while ($tok !==false && $foundMedia==0) {
+                                        if ($this->startsWith($tok,'"video_versions":')) {
+                                            $foundVideo=0;
+                                            while ($tok !==false && $foundVideo==0) {
+                                                if ($this->startsWith($tok,'"url":')) {
+                                                    $tok_temp = str_replace('"','',$tok);
+                                                    $tok_temp = str_replace('url:','',$tok_temp);
+                                                    $mediaUrl = stripslashes($tok_temp);
+                                                    array_push($mediaUrls,$mediaUrl);
+                                                    $foundVideo++;
+                                                    $foundMedia++;
+                                                }
+                                                $tok = strtok(","); 
+                                            }
+                                        }
+                                        $tok = strtok(",");
+                                    }
+                                }
+                                //else if this is a publication which contains more than one picture(s) or video(s)
+                                else if (($this->startsWith($tok,'"media_type":8')) && $foundMedia==0) {
+                                    while ($tok!==false && $foundMedia==0) {
+                                        //save the "code" in case if the first media is a picture in the publication 
+                                        $codeSave = '';
+                                        if ($this->startsWith($tok,'"code":"')) {
+                                            $tok_temp = str_replace('"','',$tok);
+                                            $tok_temp = str_replace('code:','',$tok_temp);
+                                            $codeSave = $tok_temp;
+                                            while ($tok !==false && $foundMedia==0) {
+                                                //if the first media in the publication is a picture
+                                                if ($this->startsWith($tok,'"media_type":1')) {
+                                                    $mediaUrl = 'https://www.instagram.com/p/'.$codeSave.'/media/?size=l';
+                                                    array_push($mediaUrls,$mediaUrl);
+                                                    $foundMedia++;
+                                                }
+                                                //else if the first media in the publication is a video
+                                                else if (($this->startsWith($tok,'"media_type":2')) && $foundMedia==0) {
+                                                    while ($tok !==false && $foundMedia==0) {
+                                                        if ($this->startsWith($tok,'"video_versions":')) {
+                                                            $foundVideo=0;
+                                                            while ($tok !==false && $foundVideo==0) {
+                                                                if ($this->startsWith($tok,'"url":')) {
+                                                                    $tok_temp = str_replace('"','',$tok);
+                                                                    $tok_temp = str_replace('url:','',$tok_temp);
+                                                                    $mediaUrl = stripslashes($tok_temp);
+                                                                    array_push($mediaUrls,$mediaUrl);
+                                                                    $foundVideo++;
+                                                                    $foundMedia++;
+                                                                }
+                                                                $tok = strtok(","); 
+                                                            }
+                                                        }
+                                                        $tok = strtok(",");
+                                                    }
+                                                }
+                                                $tok = strtok(",");
+                                            }
+                                        }
+                                        $tok = strtok(",");
+                                    }
+                                }
+                                $tok = strtok(",");
+                            }
                         }
-                    }
-                    else if($this->startsWith($tok,'"code":')) {
-                        $tok_temp = str_replace('"','',$tok);
-                        $tok_temp = str_replace('code:','',$tok_temp);
-                        $mediaUrl='https://www.instagram.com/p/'.$tok_temp;
-                        array_push($mediaUrls,$mediaUrl);
                     }
                     $tok = strtok(",");
                 }
