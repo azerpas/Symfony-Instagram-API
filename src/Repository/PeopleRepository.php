@@ -50,6 +50,21 @@ class PeopleRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    /**
+     * @param $account
+     * @return People []
+     */
+    public function findAllUsernameByAccount($account)
+    {  
+        return $this->createQueryBuilder('p')
+            ->select('p.username')
+            ->andWhere('p.account = :acc')
+            ->setParameter('acc', $account)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
     
     /**
      * @param $account

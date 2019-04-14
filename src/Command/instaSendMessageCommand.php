@@ -65,7 +65,7 @@ class instaSendMessageCommand extends ContainerAwareCommand
         else if($config->Type=="d")$timeUnit=3600*24;
         foreach( $peopleToInteract as $person)
         { if( ( $dateToday->getTimestamp()-$person->getUpdated()->getTimestamp() )  >= $config->waitingTime*$timeUnit ) 
-           // $ig->direct->sendText([ 'users' => [$person->getInstaId()]], $config->message);       
+           $ig->direct->sendText([ 'users' => [$person->getInstaId()]], $config->message);       
            $person->setContacted(true);
            $this->em->persist($person);
            $this->em->flush();

@@ -391,7 +391,7 @@ function desactiver(tmpid) {
        url:'/ajax/set_slot',
 
        success:function(data){
-           document.getElementById(tmpid).className = "btn btn-basic";
+           document.getElementById(tmpid).className = "btn btn-danger";
            $.notify(
                {
                    icon:'fa fa-check-circle',

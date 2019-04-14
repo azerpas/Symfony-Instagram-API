@@ -274,7 +274,16 @@ class InstaguiController extends AbstractController
      */
     public function nextAccount (DBRequest $db,LoggerInterface $logger){
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY'); 
-        $db->getNextAccount($this->getUser());
+        $em = $this->getDoctrine()->getManager();
+        $user=$this->getUser();
+        $actuelAccount=$user->getActuelAccount();
+        $accounts=$user->getAccounts();
+        $index=$accounts->indexOf($actuelAccount);
+        if($index==$accounts->count()-1)$index=0;
+        else $index++;
+        $user->setActuelAccount($accounts->get($index)); 
+        $em->persist($user);
+        $em->flush();
         return $this->redirectToRoute('inst_home');
     }
      /**
@@ -282,7 +291,16 @@ class InstaguiController extends AbstractController
      */
     public function previousAccount (DBRequest $db,LoggerInterface $logger){
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY'); 
-        $db->getPreviousAccount($this->getUser());
+        $em = $this->getDoctrine()->getManager();
+        $user=$this->getUser();
+        $actuelAccount=$user->getActuelAccount();
+        $accounts=$user->getAccounts();
+        $index=$accounts->indexOf($actuelAccount);
+        if($index==0)$index=$accounts->count();
+        $index=$index-1;
+        $user->setActuelAccount($accounts->get($index)); 
+        $em->persist($user);
+        $em->flush();
         return $this->redirectToRoute('inst_home');
     }
 }

@@ -50,7 +50,8 @@ class SearchByPseudoCommand extends ContainerAwareCommand
         //////////////////////
         $username = $input->getArgument('username');
         $password = $input->getArgument('password');
-        $account = $this->db->findAccountByUsername($username);
+        $account = $this->entityManager->getRepository('App\Entity\Account')->findOneByUsername($username);
+       
 
         //get account params
         $settings = json_decode($account->getSettings());

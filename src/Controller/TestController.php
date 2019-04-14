@@ -28,17 +28,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class TestController extends AbstractController
 {
 
-    /**
-     * @Route("/instagui/scheduling", name="inst_scheduling")
-     */
-    public function schedulingPage(DBRequest $DBRequest, LoggerInterface $logger)
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $slots = $DBRequest->getSlots($this->getUser(), $logger);
-        $status = $DBRequest->getStatus($this->getUser());
-        return $this->render('instagui/scheduling.html.twig', ['page' => 'scheduling', 'slots' => $slots, 'status' => $status]);
-    }
-
     public function sign(Request $request)
     {
         $task = new Task();
