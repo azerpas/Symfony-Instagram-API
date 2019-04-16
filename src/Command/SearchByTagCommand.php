@@ -62,7 +62,8 @@ class SearchByTagCommand extends ContainerAwareCommand
         //getAccount
         $username = $input->getArgument('username');
         $password = $input->getArgument('password');
-        $account = $this->db->findAccountByUsername($username);
+        $account = $this->entityManager->getRepository('App\Entity\Account')->findOneByUsername($username);
+       
 
 
         //get account params

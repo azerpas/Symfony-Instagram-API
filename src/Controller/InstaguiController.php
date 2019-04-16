@@ -272,7 +272,7 @@ class InstaguiController extends AbstractController
     /**
      * @Route("/instagui/nextAccount",name="nextAccount")
      */
-    public function nextAccount (DBRequest $db,LoggerInterface $logger){
+    public function nextAccount (LoggerInterface $logger){
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY'); 
         $em = $this->getDoctrine()->getManager();
         $user=$this->getUser();
@@ -289,7 +289,7 @@ class InstaguiController extends AbstractController
      /**
      * @Route("/instagui/previousAccount",name="previousAccount")
      */
-    public function previousAccount (DBRequest $db,LoggerInterface $logger){
+    public function previousAccount (LoggerInterface $logger){
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY'); 
         $em = $this->getDoctrine()->getManager();
         $user=$this->getUser();
