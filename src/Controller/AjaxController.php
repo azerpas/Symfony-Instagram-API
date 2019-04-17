@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use Fbns\Client\Json;
+use function PHPSTORM_META\type;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,6 +13,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Service\DBRequest;
 use App\Entity\History;
+use App\Entity\Account;
 class AjaxController extends AbstractController
 {
 
@@ -222,7 +225,25 @@ class AjaxController extends AbstractController
         return new JsonResponse(['method'=>'No declared method','output'=> serialize($search_settings)],400);
     }
 
-
+    /**
+     * @Route("/ajax/acc", name="ajax_acc")
+     */
+    public function ajaxAccount(Request $req, LoggerInterface $logger){
+        if($req->isMethod("DELETE")){
+            $pseudo = $req->request->get('pseudo');
+            $result = $this->getDoctrine()
+                ->getRepository(Account::class)
+                ->selectAccount($pseudo);
+            if(!$result){
+                return new JsonResponse(['output'=>'No results'],400);
+            }
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($result);
+            $em->flush();
+            return new JsonResponse(['output'=>'Successfully deleted: '.$pseudo],200);
+        }
+        return new JsonResponse(['output'=>'Method not allowed'],400);
+    }
    
 
 }
