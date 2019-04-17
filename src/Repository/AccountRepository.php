@@ -72,7 +72,8 @@ class AccountRepository extends ServiceEntityRepository
      * @return mixed
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function selectAccount($username){
+    public function selectAccount($username): ? Account
+    {
         //check if account exist
         return $this->createQueryBuilder('a')
             ->andWhere('a.username = ?1')

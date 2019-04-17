@@ -65,7 +65,7 @@
                               {% if accounts %}
                                   {% for i in accounts %}
                                   <li class="list-group-item"> {# Need to add .active #}
-                                      {{ i.username }} {# Need to add delete button and modify button #}
+                                      {{ i.username }} {# Need to add delete button and modify button #}  <i class="fas fa-minus-circle text-danger" style="float: right;" onclick="deleteAccount(this)"></i>
                                   </li>
                                   {% endfor %}
                               {% else %}

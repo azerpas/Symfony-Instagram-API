@@ -104,9 +104,62 @@ function searchSettings(element) {
     });
 }
 
-function deleteSettings(element){
+function deleteAccount(element){
     console.log(element.parentElement.innerText);
     val = element.parentElement.innerText.trim(); // we fetch the value of sibling input
+    if (val === ""){ // if this value is empty -> return
+        console.log("Please input value");
+        // add notify
+        return;
+    }
+    console.log(typeof (val));
+    $.ajax({
+        type:'DELETE',
+        data:{'pseudo':val+''},
+        url:'/ajax/acc',
+        complete:function(data,status){
+            if(data.status !== 200){
+                console.log(data);
+                console.log('Not response 200');
+                return;
+            }
+            //console.log('COMPLETE:')
+            console.log(data.responseJSON.output);
+            console.log(data.status);
+            $.notify({
+                    icon:'fa fa-check-circle',
+                    title: "<strong>Success :</strong> ",
+                    message:data.responseJSON.output // data below
+                },
+                {
+                    type:'success',
+                    delay: 5000,
+                    timer: 1000,
+                    offset: 50
+                });
+            element.parentElement.parentElement.removeChild(element.parentElement);
+
+        },
+        error:function(jqXHR, textStatus) {
+            console.log(jqXHR);
+            $.notify({
+                    icon:'fa fa-exclamation-circle',
+                    title: "<strong>"+textStatus+" :</strong> ",
+                    message:jqXHR.responseJSON.output
+                },
+                {
+                    type:'danger',
+                    delay: 5000,
+                    timer: 1000,
+                    offset: 50
+                });
+        }
+    });
+}
+
+function deleteSettings(element){
+    console.log(element.parentElement.innerText);
+    let val = element.parentElement.innerText.trim(); // we fetch the value of sibling input
     if (val === ""){ // if this value is empty -> return
         console.log("Please input value");
         // add notify
@@ -465,3 +518,4 @@ editProfile = () => {
         },
     });
 }
+
