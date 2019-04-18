@@ -523,15 +523,11 @@ testProxy = (element) => {
     console.log(element.parentElement.children[1].value);
     let proxy = element.parentElement.children[1].value;
     let val = proxy.trim(); // we fetch the value of sibling input
-    if (val === ""){ // if this value is empty -> return
-        console.log("Please input value");
-        // add notify
-        return;
-    }
+    console.log(element.id);
     $.ajax({
         type:'POST',
         data:{'proxy':val+''},
-        url:'/instagui/testProxy',
+        url: element.id === "add" ? '/ajax/proxy' : '/instagui/testProxy',
         complete:function(data,status){
             if(data.status !== 200){
                 console.log(data);

@@ -272,7 +272,7 @@ class Account
         return $this->proxy;
     }
 
-    public function setProxy(?string $proxy): self
+    public function setProxy(?string $proxy)
     {
         $this->proxy = $proxy;
 
