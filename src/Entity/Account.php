@@ -73,6 +73,11 @@ class Account
      */
     private $histories;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $proxy;
+
     public function __construct() {
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
         $this->people = new ArrayCollection();
@@ -258,6 +263,18 @@ class Account
                 $history->setFromAccount(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getProxy(): ?string
+    {
+        return $this->proxy;
+    }
+
+    public function setProxy(?string $proxy): self
+    {
+        $this->proxy = $proxy;
 
         return $this;
     }
