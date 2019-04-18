@@ -138,7 +138,7 @@
         "version": "1.24.0"
     },
     "nikic/php-parser": {
-        "version": "v4.1.0"
+        "version": "v4.2.1"
     },
     "ocramius/package-versions": {
         "version": "1.4.0"

@@ -219,7 +219,7 @@ class AjaxController extends AbstractController
     /**
      * @Route("/ajax/acc", name="ajax_acc")
      */
-    public function ajaxAccount(Request $req, LoggerInterface $logger){
+    public function ajaxAccount(Request $req){
         if($req->isMethod("DELETE")){
             $pseudo = $req->request->get('pseudo');
             $result = $this->getDoctrine()
@@ -235,6 +235,31 @@ class AjaxController extends AbstractController
         }
         return new JsonResponse(['output'=>'Method not allowed'],400);
     }
-   
+
+    /**
+     * @Route("/ajax/proxy",name="ajax_proxy")
+     */
+    public function ajaxProxy(Request $req){
+        if($req->isMethod("POST")){
+            $proxy = $req->request->get('proxy');
+            /*
+            if(trim($proxy) == ""){ // TODO && not : (proxy format)
+                return new JsonResponse(['output'=>'Proxy field empty'],400);
+            }*/
+            $account = $this->getUser()->getActuelAccount();
+            if(trim($proxy) == ""){
+                $account->setProxy(null);
+                $rep = 'Successfully re-init';
+            }
+            else{
+                $account->setProxy($proxy);
+                $rep = 'Successfully added proxy: ';
+            }
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($account);
+            $em->flush();
+            return new JsonResponse(['output'=>$rep.$proxy],200);
+        }
+    }
 
 }

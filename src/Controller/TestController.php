@@ -78,6 +78,28 @@ class TestController extends AbstractController
     }
 
     /**
+     * @Route("/instagui/testProxy", name="test_ig_proxy", methods={"POST"},condition="request.isXmlHttpRequest()")
+     */
+    public function testProxy(Request $req){
+        $account = $this->getUser()->getActuelAccount();
+        $proxy = $req->request->get('proxy');
+        try {
+            $process = new Process('php bin/console insta:instance ' . $account->getUsername() . ' ' . $account->getPassword(). ' --proxy='.$proxy);
+            $process->setWorkingDirectory(getcwd());
+            $process->setWorkingDirectory("../");
+            $process->start();
+            $process->wait();
+            if ($process->isSuccessful()) {
+                return new JsonResponse(["output" => "Successfully connected to " . $account->getUsername()], 200);
+            } else {
+                return new JsonResponse(["output" => "Please check password/username or proxy"], 400);
+            }
+        } catch (\Exception $e) {
+            return new JsonResponse(["output" => "Error processing"], 403);
+        }
+    }
+
+    /**
      * @Route("/findAccount")
      */
     public function testAccountTableDB(DBRequest $service,LoggerInterface $logger){

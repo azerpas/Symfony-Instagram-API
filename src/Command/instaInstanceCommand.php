@@ -22,7 +22,8 @@ class instaInstanceCommand extends Command
             ->setDescription('get instagram instance')
             ->addArgument('username', InputArgument::REQUIRED, 'Instagram Username')
             ->addArgument('password', InputArgument::REQUIRED, 'Instagram Password')
-            ->addOption('only', null, InputOption::VALUE_REQUIRED);
+            ->addOption('only', null, InputOption::VALUE_REQUIRED)
+            ->addOption('proxy',null,InputOption::VALUE_OPTIONAL);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -31,6 +32,18 @@ class instaInstanceCommand extends Command
         $only = $input->getOption('only');
         $debug          = false;
         $truncatedDebug = false;
+        if($input->getOption('proxy')){
+            try{
+                $ig = new \InstagramAPI\Instagram($debug, $truncatedDebug);
+                $proxy = "http://".trim($input->getOption('proxy'));
+                $output->writeln($proxy);
+                $ig->setProxy($proxy);
+                $ig->login($input->getArgument('username'), $input->getArgument('password'));
+                $output->writeln("logged");
+            }catch (\Exception $e){
+                throw new \Exception('Getting Instagram Instance with proxy went wrong: ' . $e->getMessage());
+            }
+        }
         try{
             $ig = new \InstagramAPI\Instagram($debug, $truncatedDebug);
             $ig->login($input->getArgument('username'), $input->getArgument('password'));
