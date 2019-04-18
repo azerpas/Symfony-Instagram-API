@@ -247,11 +247,18 @@ class AjaxController extends AbstractController
                 return new JsonResponse(['output'=>'Proxy field empty'],400);
             }*/
             $account = $this->getUser()->getActuelAccount();
-            $account->setProxy($proxy);
+            if(trim($proxy) == ""){
+                $account->setProxy(null);
+                $rep = 'Successfully re-init';
+            }
+            else{
+                $account->setProxy($proxy);
+                $rep = 'Successfully added proxy: ';
+            }
             $em = $this->getDoctrine()->getManager();
             $em->persist($account);
             $em->flush();
-            return new JsonResponse(['output'=>'Successfully added proxy: '.$proxy],200);
+            return new JsonResponse(['output'=>$rep.$proxy],200);
         }
     }
 
