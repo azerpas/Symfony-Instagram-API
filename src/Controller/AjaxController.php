@@ -51,17 +51,23 @@ class AjaxController extends AbstractController
     * @Route("/ajax/edit_profile", name="edit_profile", methods={"POST"},condition="request.isXmlHttpRequest()")
     */
 
-    public function editProfile(Request $req,DBRequest $bd,UserPasswordEncoderInterface $passwordEncoder){
+    public function editProfile(Request $req,UserPasswordEncoderInterface $passwordEncoder){
      
         if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
             return new JsonResponse(['error' => 'auth required'], 401);
          }
+        $em = $this->getDoctrine()->getManager();
         if($req->request->get('pwdConfirm')!== $req->request->get('pwd')) 
-            return new JsonResponse(['error'=> ""],200);
+            return new JsonResponse(['error'=> "password and confirm password should be same"],401);
         if(strlen($req->request->get('pwd'))!=0)    
-         $password = $passwordEncoder->encodePassword($this->getUser(),$req->request->get('pwd'));
-        $value=$bd->editProfile($this->getUser(),$password,$req->request->get('email'));  
+        {$password = $passwordEncoder->encodePassword($this->getUser(),$req->request->get('pwd'));  
+            $this->getUser()->setPassword($password);
+        }
+        if(strlen($req->request->get('email'))!=0)$this->getUser()->setEmail($req->request->get('email'));
+        if(strlen($password)!=0)
         
+        $em->persist($this->getUser());
+        $em->flush();
         return new JsonResponse(['Success'=> "profile"],200);
 
 
@@ -71,24 +77,20 @@ class AjaxController extends AbstractController
     * @Route("/ajax/config_bot", name="set_config", methods={"POST"},condition="request.isXmlHttpRequest()")
     */
 
-    public function setBotParameters(Request $req,LoggerInterface $logger,DBRequest $service){
-
+    public function setBotParameters(Request $req){
+ 
         if ($this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
             return new JsonResponse(['error' => 'auth required'], 401);
         }
-        $logger->info($this->getUser()->getUsername());
-        $value=$service->setParams($this->getUser(),$req->request->all()); 
-        return new JsonResponse(['output'=> $value]);
-        /* REPLACING DBRequest::setParams
-        $account = $this->getUser()->getActuelAccount();
+        $em = $this->getDoctrine()->getManager();
+        $account=$this->getUser()->getActuelAccount();
         if($account==null){
-            return new JsonResponse(['output'=>'no Instagram account asigned for this account'], 419);
+             return new JsonResponse(array('message' => 'no Instagram account asigned for this account '), 419);
         }
         $account->setSettings(json_encode($req->request->all()));
-        $this->em->persist($account);
-        $this->em->flush();
-        return new JsonResponse(['output'=> 'success'],200);;
-         */
+        $em->persist($account);
+        $em->flush();
+        return  new JsonResponse(array('message' => 'success'), 200);
 
 
     }
@@ -97,14 +99,7 @@ class AjaxController extends AbstractController
     * @Route("/ajax/set_bot_status", name="set_bot_status", methods={"POST"},condition="request.isXmlHttpRequest()")
     */
   
-    public function setBotStatus(Request $req,DBRequest $db){
-        /*
-        $response=$db->setStatus($this->getUser(),$req->request->get('status'));
-
-        if($response)
-        return new JsonResponse(['output'=> "success"],200);
-        else   return new JsonResponse(['output'=> "error"]);
-        */
+    public function setBotStatus(Request $req){
         $em = $this->getDoctrine()->getManager();
         $account = $this->getUser()->getActuelAccount();
         if($account==null) {
@@ -125,7 +120,7 @@ class AjaxController extends AbstractController
     /**
      * @Route("/ajax/search_settings", name="search_settings", methods={"POST","GET","DELETE"})
      */
-    public function searchSettings(Request $req, DBRequest $DBRequest){
+    public function searchSettings(Request $req){
         $search_settings = unserialize($this->getUser()->getActuelAccount()->getSearchSettings());
         $em = $this->getDoctrine()->getManager();
         if($req->isMethod("POST")){
@@ -134,8 +129,6 @@ class AjaxController extends AbstractController
                 $keyword = str_replace("@","",$keyword); // replacing @ with nothing
                 array_push($search_settings->pseudos,$keyword); // pushing current keyword into Account pseudos settings
                 $search_settings = serialize($search_settings);
-                //$DBRequest->setSearchSettings($this->getUser(),$search_settings);
-                // REPLACING DBRequest::setSearchSettings
                 $account = $this->getUser()->getActuelAccount();
                 $account->setSearchSettings($search_settings);
                 $em->persist($account);
@@ -153,8 +146,6 @@ class AjaxController extends AbstractController
                 $keyword = str_replace("#","",$keyword);
                 array_push($search_settings->hashtags,$keyword);
                 $search_settings = serialize($search_settings);
-                //$DBRequest->setSearchSettings($this->getUser(),$search_settings);
-                // REPLACING DBRequest::setSearchSettings
                 $account = $this->getUser()->getActuelAccount();
                 $account->setSearchSettings($search_settings);
                 $em->persist($account);
