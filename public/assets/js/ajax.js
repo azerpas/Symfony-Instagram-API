@@ -519,3 +519,53 @@ editProfile = () => {
     });
 }
 
+testProxy = (element) => {
+    console.log(element.parentElement.children[1].value);
+    let proxy = element.parentElement.children[1].value;
+    let val = proxy.trim(); // we fetch the value of sibling input
+    if (val === ""){ // if this value is empty -> return
+        console.log("Please input value");
+        // add notify
+        return;
+    }
+    $.ajax({
+        type:'POST',
+        data:{'proxy':val+''},
+        url:'/instagui/testProxy',
+        complete:function(data,status){
+            if(data.status !== 200){
+                console.log(data);
+                console.log('Not response 200');
+                return;
+            }
+            console.log(data.responseJSON.output);
+            console.log(data.status);
+            $.notify({
+                    icon:'fa fa-check-circle',
+                    title: "<strong>Success :</strong> ",
+                    message:data.responseJSON.output // data below
+                },
+                {
+                    type:'success',
+                    delay: 5000,
+                    timer: 1000,
+                    offset: 50
+                });
+        },
+        error:function(jqXHR, textStatus) {
+            console.log(jqXHR);
+            $.notify({
+                    icon:'fa fa-exclamation-circle',
+                    title: "<strong>"+textStatus+" :</strong> ",
+                    message:jqXHR.responseJSON.output
+                },
+                {
+                    type:'danger',
+                    delay: 5000,
+                    timer: 1000,
+                    offset: 50
+                });
+        }
+    });
+}
+
