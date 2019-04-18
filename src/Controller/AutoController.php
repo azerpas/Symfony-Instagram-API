@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -18,11 +19,21 @@ use Symfony\Component\Process\Process;
 class AutoController extends AbstractController
 {
     /**
-     * @Route("/2bf6da4d-c367-40b4-93fe-dbb2194b7b94",methods={"GET"})
+     * @Route("/2bf6da4d-c367-40b4-93fe-dbb2194b7b94",name="mainAuto",methods={"GET"})
      */
-    public function mainCommand(){
+    public function mainCommand()
+    {
+        try{
+            $request = Request::createFromGlobals();
+            $key = $request->headers->get('apikey');
+            if(trim($key) != "aaaa"){
+                return new JsonResponse(['output'=>'Not allowed'],404);
+            }
+        }catch (\Exception $e){
+            return new JsonResponse(['output'=>'Not allowed'],400);
+        }
         $response = new StreamedResponse(); // Streamed Response allow live output
-        $response->setCallback(function (){
+        $response->setCallback(function () {
             echo '-----------------------------------------------------------------------';
             echo '<br/><a href="history" target="_blank">Click here to open your logs</a><br/>';
             echo '-----------------------------------------------------------------------';
@@ -38,6 +49,7 @@ class AutoController extends AbstractController
                     return new Response("Canno't connect to Instagram, please contact admin");
                 } else {
                     echo 'OUT > ' . $buffer . '<br>';
+                    // these two next lines will stream in real time the output of the process
                     ob_flush();
                     flush();
                 }
@@ -45,6 +57,8 @@ class AutoController extends AbstractController
         });
         return $response->send();
     }
+
+
     /**
      * @Route("/2a")
      * @return StreamedResponse
