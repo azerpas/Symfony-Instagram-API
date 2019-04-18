@@ -99,7 +99,7 @@
                               <label for="proxy">
                                 Please enter a proxy
                               </label>
-                              <input type="" class="form-control" id="proxy" placeholder="enter a proxy"/>
+                              <input type="" class="form-control" id="proxy" placeholder="enter a proxy" {% if proxy %}value="{{ proxy }}"{% endif %}/>
                               <small class="form-text text-muted" id="">user:pass@iporhost:port or iporhost:port</small>
                               <small class="form-text text-muted text-info">Instagram might suspect your IP if not same country, please log in from browser first with your proxy ip</small>
                               <button class="btn btn-primary float-right ml-2" onclick="addProxy(this)">Save</button>
