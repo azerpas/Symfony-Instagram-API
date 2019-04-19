@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use App\Service\DBRequest;
 use App\Entity\History;
 class AjaxController extends AbstractController
 {

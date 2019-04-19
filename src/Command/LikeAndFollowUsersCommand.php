@@ -14,7 +14,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\ArrayInput;
 use Psr\Log\LoggerInterface;
 use App\Entity\History;
-//use App\Service\DBRequest;
 
 class LikeAndFollowUsersCommand extends Command
 {

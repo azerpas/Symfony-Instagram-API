@@ -73,11 +73,21 @@ class People
      */
     private $likedMedias;
 
-    public function __construct()
+  
+    
+    public function __construct($username,$userId,$account)
     {
         $this->histories = new ArrayCollection();
+        $this->username=$username;
+        $this->instaId= $userId;
+        $this->to_follow= true;
+        $this->follow_date= new \DateTime('@'.strtotime('now'));
+        $this->is_following_back= false;
+        $this->nb_followers= 0;
+        $this->account =$account;
+        $this->contacted =false ;
+        $this->updated =new \DateTime('@'.strtotime('now'));
     }
-
     public function getId(): ?int
     {
         return $this->id;

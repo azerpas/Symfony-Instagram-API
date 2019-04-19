@@ -13,16 +13,17 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use InstagramAPI\Request\Hashtag;
 use InstagramAPI\Signatures;
-use App\Service\DBRequest;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Account;
+use App\Entity\User;
+use App\Entity\People;
+use App\Entity\History;
 use Psr\Log\LoggerInterface;
+
 class SearchByTagCommand extends ContainerAwareCommand
 {
     protected static $defaultName = 'search:tag';
-    /**
-     * @var DBRequest
-     */
-    private $db;
+
     /**
      * @var LoggerInterface
      */
@@ -33,10 +34,9 @@ class SearchByTagCommand extends ContainerAwareCommand
      */
     private $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager, DBrequest $bdRequest, LoggerInterface $logger)
+    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger)
     {
         $this->logger = $logger;
-        $this->db = $bdRequest;
         $this->entityManager=$entityManager;
         parent::__construct();
 
@@ -122,12 +122,12 @@ class SearchByTagCommand extends ContainerAwareCommand
                     }
                     $count++;
                     $output->writeln("");
-                    if($valid >= 80){
+                    if($valid >= 10){
                         $output->writeln("Enough users found");
                         break;
                     }
                 }
-                if($valid >= 80){
+                if($valid >= 10){
                     $output->writeln("Enough users found");
                     break;
                 }
@@ -136,7 +136,25 @@ class SearchByTagCommand extends ContainerAwareCommand
                 $cpt++;
             } while ($maxId !== null && 1 > $cpt);
 
-            $this->db->addPeople($account, $users);
+
+            foreach ($users as $user) {
+                $exist=$this->entityManager->getRepository('App\Entity\People')->findOneByInstaId($user["id"],$account->getId());
+                if($exist==null) {
+                    $person=new People($user["username"],$user["id"],$account);
+                    echo json_encode($person);
+                    $this->entityManager->persist($person);  
+                    $account->addPerson($person); 
+                    $this->entityManager->persist($account);  
+                    $this->entityManager->flush();
+                }
+            }
+            $history = new History();
+            $history->setType("foundPeople");
+            $history->setMessage("Found ".count($users). " people to Interact with !");
+            $history->setFromAccount($account);
+            $history->setDate(new \DateTime());
+            $this->entityManager->persist($history);
+            $this->entityManager->flush();
 
         }
 
