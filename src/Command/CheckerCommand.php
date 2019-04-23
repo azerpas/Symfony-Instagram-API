@@ -3,7 +3,7 @@
 // src/Command/CheckerCommand.php
 namespace App\Command;
 
-//use App\Service\DBRequest;
+
 use App\Entity\History;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;

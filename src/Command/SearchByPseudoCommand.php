@@ -9,26 +9,25 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use InstagramAPI\Request\Hashtag;
 use InstagramAPI\Signatures;
-use App\Service\DBRequest;
+use App\Entity\Account;
+use App\Entity\User;
+use App\Entity\People;
+use App\Entity\History;
 use Doctrine\ORM\EntityManagerInterface;
 
 class SearchByPseudoCommand extends ContainerAwareCommand
 {
     protected static $defaultName = 'search:pseudo';
 
-    /**
-     * @var DBRequest
-     */
-    private $db;
-
+    
     /**
      * @var EntityManagerInterface
      */
     private $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager,DBrequest $bdRequest)
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->db = $bdRequest;
+       
         $this->entityManager=$entityManager;
         parent::__construct();
 
@@ -111,7 +110,25 @@ class SearchByPseudoCommand extends ContainerAwareCommand
             }
              
         }
-        $this->db->addPeople($account, $peoples);
+        
+        foreach ($peoples as $user) {
+            $exist=$this->entityManager->getRepository('App\Entity\People')->findOneByInstaId($user["id"],$account->getId());
+            if($exist==null) {
+                $person=new People($user["username"],$user["id"],$account);
+                echo json_encode($person);
+                $this->entityManager->persist($person);  
+                $account->addPerson($person); 
+                $this->entityManager->persist($account);  
+                $this->entityManager->flush();
+            }
+        }
+        $history = new History();
+        $history->setType("foundPeople");
+        $history->setMessage("Found ".count($peoples). " people to Interact with !");
+        $history->setFromAccount($account);
+        $history->setDate(new \DateTime());
+        $this->entityManager->persist($history);
+        $this->entityManager->flush();
          
     }
 

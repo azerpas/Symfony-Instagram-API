@@ -7,7 +7,6 @@ use App\Repository\AccountRepository;
 use App\Entity\IgAccount;
 use App\Entity\Task;
 use App\Entity\User;
-use App\Service\DBRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -155,7 +154,7 @@ class InstaguiController extends AbstractController
     /**
      * @Route("/instagui/profile", name="inst_profil")
      */
-    public function profilPage(Request $request,LoggerInterface $logger,DBRequest $DBRequest)
+    public function profilPage(Request $request,LoggerInterface $logger)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $usrr = $this->getUser();
@@ -180,7 +179,7 @@ class InstaguiController extends AbstractController
                 // if NOT, then we create the account and submit it to the BD
 
 
-                // REPLACING DBrequest::createInstagramAccount
+                
                 $account->setUsername($account->getUsername());
                 $account->setPassword($account->getPassword());
                 $account->setSlots(json_encode(array_fill(0, 24, false)));
@@ -203,9 +202,7 @@ class InstaguiController extends AbstractController
             }
 
 
-            // Insert into database the Instagram Account into usrr "accounts" column using DBRequest service.
-
-            // REPLACING DBrequest::assignInstagramAccount
+           
             $key = $usrr->getAccounts()->count();
             $usrr->setAccount($key,$account);
             $entityManager = $this->getDoctrine()->getManager();
@@ -255,7 +252,7 @@ class InstaguiController extends AbstractController
     /**
      * @Route("/instagui/scheduling", name="inst_scheduling")
      */
-    public function schedulingPage(DBRequest $DBRequest,LoggerInterface $logger)
+    public function schedulingPage(LoggerInterface $logger)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $slots=json_decode($this->getUser()->getActuelAccount()->getSlots());
