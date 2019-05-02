@@ -217,9 +217,10 @@ class AjaxController extends AbstractController
     }
 
     /**
-     * @Route("/ajax/blacklist", name="blacklist", methods={"GET","POST"})
+     * @Route("/ajax/blacklist", name="blacklist", methods={"GET","POST","DELETE"})
      * @param Request $req
      * @return JsonResponse
+     * @throws
      */
     public function blacklist(Request $req){
         $blacklist = $this->getUser()->getActuelAccount()->getBlacklist();
@@ -245,6 +246,27 @@ class AjaxController extends AbstractController
             $em->persist($history);
             $em->flush();
             return new JsonResponse(['output'=>'Successfully added: !'.$keyword],200);
+        }
+        if($req->isMethod("DELETE")){
+            $keyword = $req->request->get("keyword");
+            $account = $this->getUser()->getActuelAccount();
+            $key = array_search($keyword,$blacklist);
+            if ($key === null){
+                return new JsonResponse(['method'=>'Could not find keyword '.$keyword],400);
+            }
+            unset($blacklist[$key]);
+            $blacklist = array_values($blacklist);
+            $account->setBlacklist($blacklist);
+            $em->persist($account);
+            $em->flush();
+            $history = new History();
+            $history->setType('blackSet');
+            $history->setMessage('Deleted !'.$keyword.' as a blacklist item !');
+            $history->setFromAccount($account);
+            $history->setDate(new \DateTime());
+            $em->persist($history);
+            $em->flush();
+            return new JsonResponse(['output'=>'Successfully deleted: !'.$keyword],200);
         }
     }
 

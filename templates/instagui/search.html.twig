@@ -77,7 +77,7 @@
                             {% if blacklist %}
                                 {% for i in blacklist %}
                                     <li id="sBlack" class="list-group-item"> {# TODO Need to add .active #}
-                                        {{ i }} <i class="fas fa-minus-circle text-danger" style="float: right;" onclick="deleteSettings(this)"></i>{# Need to add delete button and modify button #}
+                                        {{ i }} <i class="fas fa-minus-circle text-danger" style="float: right;" onclick="blacklist(this)"></i>{# Need to add delete button and modify button #}
                                     </li>
                                 {% endfor %}
                             {% else %}

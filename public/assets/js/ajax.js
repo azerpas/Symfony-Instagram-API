@@ -27,7 +27,8 @@ function  appendLi(list,text,type){
     var ul = document.getElementById(list);
     var li = document.createElement("li");
     li.appendChild(document.createTextNode(text));
-    li.innerHTML=text+"<i class='fas fa-minus-circle text-danger' style='float: right;' onclick='deleteSettings(this)'></i>";
+    let isBlack = type === 'sBlack' ? "blacklist(this)" : "deleteSettings(this)"
+    li.innerHTML=text+"<i class='fas fa-minus-circle text-danger' style='float: right;' onclick='"+isBlack+"'></i>";
     
     li.setAttribute("id",type);
     li.setAttribute("class","list-group-item");
@@ -566,11 +567,14 @@ testProxy = (element) => {
 }
 
 blacklist = (element) => {
+    let reqType = $(element).is("i") && $(element).hasClass("text-danger") ? "DELETE" : "POST";
     console.log(element.parentElement.parentElement.children[1].value);
-    let keyword = element.parentElement.parentElement.children[1].value;
-    let val = keyword.trim()
+    //let keyword = element.parentElement.parentElement.children[1].value;
+    let keyword = $(element).is("i") && $(element).hasClass("text-danger") ? element.parentElement.innerText : element.parentElement.parentElement.children[1].value;
+    console.log(keyword);
+    let val = keyword.trim();
     $.ajax({
-        type:'POST',
+        type:reqType,
         data:{'keyword':keyword},
         url:'/ajax/blacklist',
         complete:function(data,status){
@@ -593,7 +597,12 @@ blacklist = (element) => {
                     timer: 1000,
                     offset: 50
                 });
+            if(reqType === "DELETE"){
+                element.parentElement.remove();
+                return;
+            }
             appendLi(element.id+"UL",val,element.id);
+            return;
         },
         error:function(jqXHR, textStatus) {
             //console.log('ERROR');
