@@ -217,6 +217,38 @@ class AjaxController extends AbstractController
     }
 
     /**
+     * @Route("/ajax/blacklist", name="blacklist", methods={"GET","POST"})
+     * @param Request $req
+     * @return JsonResponse
+     */
+    public function blacklist(Request $req){
+        $blacklist = $this->getUser()->getActuelAccount()->getBlacklist();
+        $em = $this->getDoctrine()->getManager();
+        if($req->isMethod("GET")){
+            return new JsonResponse(['output'=>implode($blacklist)]);
+        }
+        if($req->isMethod("POST")){
+            $keyword = $req->request->get("keyword");
+            $account = $this->getUser()->getActuelAccount();
+            if($blacklist == null){
+                $blacklist = [];
+            }
+            array_push($blacklist,$keyword);
+            $account->setBlacklist($blacklist);
+            $em->persist($account);
+            $em->flush();
+            $history = new History();
+            $history->setType('blackSet');
+            $history->setMessage('Added !'.$keyword.' as a blacklist item !');
+            $history->setFromAccount($account);
+            $history->setDate(new \DateTime());
+            $em->persist($history);
+            $em->flush();
+            return new JsonResponse(['output'=>'Successfully added: !'.$keyword],200);
+        }
+    }
+
+    /**
      * @Route("/ajax/acc", name="ajax_acc")
      */
     public function ajaxAccount(Request $req){

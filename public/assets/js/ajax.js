@@ -565,3 +565,52 @@ testProxy = (element) => {
     });
 }
 
+blacklist = (element) => {
+    console.log(element.parentElement.parentElement.children[1].value);
+    let keyword = element.parentElement.parentElement.children[1].value;
+    let val = keyword.trim()
+    $.ajax({
+        type:'POST',
+        data:{'keyword':keyword},
+        url:'/ajax/blacklist',
+        complete:function(data,status){
+            if(data.status !== 200){
+                console.log(data);
+                console.log('Not response 200');
+                return;
+            }
+            //console.log('COMPLETE:')
+            console.log(data.responseJSON.output);
+            console.log(data.status);
+            $.notify({
+                    icon:'fa fa-check-circle',
+                    title: "<strong>Success :</strong> ",
+                    message:data.responseJSON.output // data below
+                },
+                {
+                    type:'success',
+                    delay: 5000,
+                    timer: 1000,
+                    offset: 50
+                });
+            appendLi(element.id+"UL",val,element.id);
+        },
+        error:function(jqXHR, textStatus) {
+            //console.log('ERROR');
+            //console.log(jqXHR.responseJSON);
+            //console.log(jqXHR.responseJSON.status);
+            $.notify({
+                    icon:'fa fa-exclamation-circle',
+                    title: "<strong>"+textStatus+" :</strong> ",
+                    message:jqXHR.responseJSON.output
+                },
+                {
+                    type:'danger',
+                    delay: 5000,
+                    timer: 1000,
+                    offset: 50
+                });
+        }
+    });
+}
+

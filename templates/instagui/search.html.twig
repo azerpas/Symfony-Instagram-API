@@ -52,7 +52,7 @@
                         <ul style="height: 75%;overflow:auto;" id="sHashUL" class="list-group">
                             {% if hashtags %}
                                 {% for i in hashtags %}
-                                    <li id="sHash" class="list-group-item"> {# Need to add .active #}
+                                    <li id="sHash" class="list-group-item"> {# TODO Need to add .active #}
                                         {{ i }} <i class="fas fa-minus-circle text-danger" style="float: right;" onclick="deleteSettings(this)"></i>{# Need to add delete button and modify button #}
                                     </li>
                                 {% endfor %}
@@ -76,7 +76,7 @@
                         <ul style="height: 120px;overflow:auto;" id="sBlackUL" class="list-group">
                             {% if blacklist %}
                                 {% for i in blacklist %}
-                                    <li id="sBlack" class="list-group-item"> {# Need to add .active #}
+                                    <li id="sBlack" class="list-group-item"> {# TODO Need to add .active #}
                                         {{ i }} <i class="fas fa-minus-circle text-danger" style="float: right;" onclick="deleteSettings(this)"></i>{# Need to add delete button and modify button #}
                                     </li>
                                 {% endfor %}
@@ -121,7 +121,7 @@
                         <span class="input-group-text" id="basic-addon1"><i class="fas fa-exclamation-circle"></i></span>
                         <input type="text" class="form-control" placeholder="Blacklist keyword" aria-label="Blacklist keyword" aria-describedby="basic-addon2">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" id="sBlack" onclick="searchSettings(this)"><i class="fas fa-plus"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" id="sBlack" onclick="blacklist(this)"><i class="fas fa-plus"></i></button>
                             <button class="btn btn-outline-secondary" type="button"><i class="fas fa-minus"></i></button>
                         </div>
                     </div>
