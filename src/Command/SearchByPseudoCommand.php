@@ -68,7 +68,16 @@ class SearchByPseudoCommand extends ContainerAwareCommand
             throw new \Exception('Something went wrong: ' . $e->getMessage());
         }
         $peoples = [];
+        $output->writeln("Current blacklist: ".implode($blacklist));
         foreach ($users as $user){
+            $output->writeln("Checking if username does not contains blacklisted word...");
+
+            foreach ($blacklist as $keyword){
+                if(strstr($user,$keyword)){
+                    $output->writeln("Blacklisted word: ".$blacklist." for ".$user.". Going to next one.");
+                    continue;
+                }
+            }
             $output->writeln("Scraping from @".$user);
             $output->writeln("Getting user ID");
             $userId = $ig->people->getUserIdForName($user);
