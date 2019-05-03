@@ -81,6 +81,7 @@ class SearchByTagCommand extends ContainerAwareCommand
             throw new \Exception('Something went wrong: ' . $e->getMessage());
         }
 
+        $output->writeln("Current blacklist: ".implode($blacklist));
         foreach ($tags as $tag) {
             $maxId = null;
             $users = [];
@@ -93,6 +94,14 @@ class SearchByTagCommand extends ContainerAwareCommand
                 $count = 1;
                 $valid = 0;
                 foreach ($feed->getItems() as $item) {
+                    $output->writeln("Checking if description does not contains blacklisted word...");
+                    foreach ($blacklist as $keyword){
+                        if(strstr($item->caption->text,$keyword)){
+                            $output->writeln("Blacklisted word: ".$blacklist." for ".$item->caption->text.". Going to next one.");
+                            continue;
+                        }
+                    }
+
                     $instaId = $item->getUser()->getPk();
                     $username = $item->getUser()->getUsername();
 

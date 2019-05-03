@@ -27,7 +27,8 @@ function  appendLi(list,text,type){
     var ul = document.getElementById(list);
     var li = document.createElement("li");
     li.appendChild(document.createTextNode(text));
-    li.innerHTML=text+"<i class='fas fa-minus-circle text-danger' style='float: right;' onclick='deleteSettings(this)'></i>";
+    let isBlack = type === 'sBlack' ? "blacklist(this)" : "deleteSettings(this)"
+    li.innerHTML=text+"<i class='fas fa-minus-circle text-danger' style='float: right;' onclick='"+isBlack+"'></i>";
     
     li.setAttribute("id",type);
     li.setAttribute("class","list-group-item");
@@ -550,6 +551,63 @@ testProxy = (element) => {
         },
         error:function(jqXHR, textStatus) {
             console.log(jqXHR);
+            $.notify({
+                    icon:'fa fa-exclamation-circle',
+                    title: "<strong>"+textStatus+" :</strong> ",
+                    message:jqXHR.responseJSON.output
+                },
+                {
+                    type:'danger',
+                    delay: 5000,
+                    timer: 1000,
+                    offset: 50
+                });
+        }
+    });
+}
+
+blacklist = (element) => {
+    let reqType = $(element).is("i") && $(element).hasClass("text-danger") ? "DELETE" : "POST";
+    console.log(element.parentElement.parentElement.children[1].value);
+    //let keyword = element.parentElement.parentElement.children[1].value;
+    let keyword = $(element).is("i") && $(element).hasClass("text-danger") ? element.parentElement.innerText : element.parentElement.parentElement.children[1].value;
+    console.log(keyword);
+    let val = keyword.trim();
+    $.ajax({
+        type:reqType,
+        data:{'keyword':keyword},
+        url:'/ajax/blacklist',
+        complete:function(data,status){
+            if(data.status !== 200){
+                console.log(data);
+                console.log('Not response 200');
+                return;
+            }
+            //console.log('COMPLETE:')
+            console.log(data.responseJSON.output);
+            console.log(data.status);
+            $.notify({
+                    icon:'fa fa-check-circle',
+                    title: "<strong>Success :</strong> ",
+                    message:data.responseJSON.output // data below
+                },
+                {
+                    type:'success',
+                    delay: 5000,
+                    timer: 1000,
+                    offset: 50
+                });
+            if(reqType === "DELETE"){
+                element.parentElement.remove();
+                return;
+            }
+            appendLi(element.id+"UL",val,element.id);
+            return;
+        },
+        error:function(jqXHR, textStatus) {
+            //console.log('ERROR');
+            //console.log(jqXHR.responseJSON);
+            //console.log(jqXHR.responseJSON.status);
             $.notify({
                     icon:'fa fa-exclamation-circle',
                     title: "<strong>"+textStatus+" :</strong> ",

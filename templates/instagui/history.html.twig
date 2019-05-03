@@ -34,6 +34,8 @@
                                     <i class="fas fa-robot"></i> Bot
                                 {% elseif i.type == 'error' %}
                                     <i class="fas fa-exclamation-triangle"></i> Error
+                                {% elseif i.type == 'blackSet' %}
+                                    <i class="fas fa-stream"></i> Blacklist
                                 {% endif %}
                             </th>
                             <td>{{ i.message }}</td>

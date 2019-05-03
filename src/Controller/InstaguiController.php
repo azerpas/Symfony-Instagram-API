@@ -96,12 +96,13 @@ class InstaguiController extends AbstractController
     {   $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         if ($this->getUser()->getActuelAccount()){
             $search_settings = unserialize($this->getUser()->getActuelAccount()->getSearchSettings());
+            $blacklist = $this->getUser()->getActuelAccount()->getBlacklist();
         }
         else{
             return $this->render('instagui/search.html.twig', ['controller_name' => 'InstaguiController','page'=> 'Search', 'hashtags'=>0, 'pseudos'=>0, 'blacklist'=>'']);
         }
         return $this->render('instagui/search.html.twig', [
-            'controller_name' => 'InstaguiController','page'=> 'Search', 'hashtags'=>$search_settings->hashtags, 'pseudos'=>$search_settings->pseudos, 'blacklist'=>''
+            'controller_name' => 'InstaguiController','page'=> 'Search', 'hashtags'=>$search_settings->hashtags, 'pseudos'=>$search_settings->pseudos, 'blacklist'=>$blacklist
         ]);
     }
 
@@ -228,7 +229,7 @@ class InstaguiController extends AbstractController
         //$logger->info($usrr->getActuelAccount()->getProxy());
         // -------------- /TEST/ -------------- //
         return $this->render('instagui/profile.html.twig', [
-           'page'=> 'Profile', 'form'=>$form->createView(), 'user'=>$this->getUser(), 'accounts'=>$accs, 'proxy'=> ($usrr->getActuelAccount()->getProxy() ? $usrr->getActuelAccount()->getProxy() : null)
+           'page'=> 'Profile', 'form'=>$form->createView(), 'user'=>$this->getUser(), 'accounts'=>$accs, 'proxy'=> ($usrr->getActuelAccount() ? $usrr->getActuelAccount()->getProxy() : null)
         ]);
     }
     /**
