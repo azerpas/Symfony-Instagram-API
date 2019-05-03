@@ -8,7 +8,6 @@ use App\Repository\AccountRepository;
 use App\Entity\IgAccount;
 use App\Entity\Task;
 use App\Entity\User;
-use App\Service\DBRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Routing\Annotation\Route;
@@ -97,19 +96,6 @@ class TestController extends AbstractController
         } catch (\Exception $e) {
             return new JsonResponse(["output" => "Error processing"], 403);
         }
-    }
-
-    /**
-     * @Route("/findAccount")
-     */
-    public function testAccountTableDB(DBRequest $service,LoggerInterface $logger){
-        $logger->info('Starting insert to DB');
-        $account = $this->getDoctrine()
-            ->getRepository(Account::class)
-            ->selectAccount($this->getUser(),'testAccount','testPassword');
-        $service->assignInstagramAccount($this->getUser(),$account,'testAccount','testPassword');
-        $logger->info('went well');
-        return new Response('test');
     }
 
     /**
