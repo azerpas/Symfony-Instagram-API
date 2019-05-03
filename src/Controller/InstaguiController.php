@@ -232,7 +232,7 @@ class InstaguiController extends AbstractController
         //$logger->info($usrr->getActuelAccount()->getProxy());
         // -------------- /TEST/ -------------- //
         return $this->render('instagui/profile.html.twig', [
-           'page'=> 'Profile', 'form'=>$form->createView(), 'user'=>$this->getUser(), 'accounts'=>$accs, 'proxy'=> ($usrr->getActuelAccount()->getProxy() ? $usrr->getActuelAccount()->getProxy() : null)
+           'page'=> 'Profile', 'form'=>$form->createView(), 'user'=>$this->getUser(), 'accounts'=>$accs, 'proxy'=> ($usrr->getActuelAccount() ? $usrr->getActuelAccount()->getProxy() : null)
         ]);
     }
     /**
