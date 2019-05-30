@@ -13,6 +13,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\History;
 use App\Entity\Account;
+use App\Entity\People;
 class AjaxController extends AbstractController
 {
 
@@ -312,6 +313,29 @@ class AjaxController extends AbstractController
             $em->persist($account);
             $em->flush();
             return new JsonResponse(['output'=>$rep.$proxy],200);
+        }
+    }
+
+    /**
+     * @param Request $req
+     * @Route("/ajax/people",name="ajax_people")
+     * @return JsonResponse
+     */
+    public function People(Request $req){
+        if($req->isMethod("DELETE")){
+            $account = $this->getUser()->getActuelAccount();
+            $em = $this->getDoctrine()->getManager();
+            $result = $this->getDoctrine()
+                ->getRepository(People::class)
+                ->findOneByUsername($req->request->get('keyword'),$account);
+            if($result){
+                $em->remove($result);
+                $em->flush();
+                return new JsonResponse(['output'=>'Successfully removed '.$req->request->get('pseudo')],200);
+            }
+            else{
+                return new JsonResponse(['output'=>'Account not found'],400);
+            }
         }
     }
 

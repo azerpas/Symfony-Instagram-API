@@ -312,7 +312,13 @@ class InstaguiController extends AbstractController
      * @Route("/instagui/lists",name="inst_lists")
      */
     public function lists(LoggerInterface $log){
-
-        return new Response("test");
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        if($this->getUser()->getActuelAccount()){
+            return $this->render('instagui/lists.html.twig',[
+                'controller_name' => 'InstaguiController','page'=> 'lists','peoples'=> $this->getDoctrine()->getManager()->getRepository('App\Entity\People')->findPeopleToFollowTrueByAccount($this->getUser()->getActuelAccount())
+            ]);
+        }else{
+            return $this->render('instagui/lists.html.twig',['controller_name' => 'InstaguiController','page'=> 'lists','peoples'=> null]);
+        }
     }
 }

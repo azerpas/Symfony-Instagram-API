@@ -87,6 +87,8 @@ class SearchByPseudoCommand extends ContainerAwareCommand
             $count = 1;
             $valid = 0;
             $maxId = null;
+            // TODO Pre-given maxid
+            // Last one for this given user
             do{
                 $followersList = $ig->people->getFollowers($userId, \InstagramAPI\Signatures::generateUUID(),null,$maxId);
                 foreach ($followersList->getUsers() as $follower) {
@@ -113,11 +115,21 @@ class SearchByPseudoCommand extends ContainerAwareCommand
                     if ($this->UserMatch($settings, $userInfo,$output)){
                         $output->writeln("Pushing...");
                         $valid++;
-                        array_push($peoples,array("id"=>$follower->getPk(),"username"=> $follower->getUsername()));
+                        $infos = new \stdClass();
+                        $infos->ratio = $userInfo->getUser()->getFollowerCount() / $userInfo->getUser()->getFollowingCount();
+                        $infos->origin = $user;
+                        $infos->profilePic = $userInfo->getUser()->getProfilePicUrl();
+                        array_push($peoples,
+                            array(
+                                "id"=>$follower->getPk(),
+                                "username"=> $follower->getUsername(),
+                                "infos"=>$infos
+                            )
+                        );
                     }
                     $output->writeln("");
                     $count++;
-                    if($valid >= 400){
+                    if($valid >= 50){
                         $output->writeln("Enough users found");
                         $this->end($peoples,$account);
                         break;
@@ -134,7 +146,7 @@ class SearchByPseudoCommand extends ContainerAwareCommand
         foreach ($peoples as $user) {
             $exist=$this->entityManager->getRepository('App\Entity\People')->findOneByInstaId($user["id"],$account->getId());
             if($exist==null) {
-                $person=new People($user["username"],$user["id"],$account);
+                $person=new People($user["username"],$user["id"],$account,$user["infos"]);
                 echo json_encode($person);
                 $this->entityManager->persist($person);
                 $account->addPerson($person);
