@@ -38,7 +38,12 @@
                                     <i class="fas fa-stream"></i> Blacklist
                                 {% endif %}
                             </th>
-                            <td>{{ i.message }}</td>
+                            <td>
+                                {{ i.message }}
+                                {% if i.link %}
+                                    <a class="rounded float-right" href="{{ i.link }}" target="_blank" ><img width="50" height="50" src="{{ i.link }}" class="rounded float-right" alt="link"></a>
+                                {% endif %}
+                            </td>
                             <td>
                                 {% if i.date %}
                                     {{ i.date|date('H:i:s d-m-Y') }} UTC

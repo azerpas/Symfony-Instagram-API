@@ -14,6 +14,9 @@
     "corneltek/getoptionkit": {
         "version": "2.6.0"
     },
+    "curl/curl": {
+        "version": "2.2.0"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -125,6 +128,15 @@
     "guzzlehttp/psr7": {
         "version": "1.4.2"
     },
+    "illuminate/contracts": {
+        "version": "v5.8.18"
+    },
+    "illuminate/support": {
+        "version": "v5.8.18"
+    },
+    "intervention/image": {
+        "version": "2.4.2"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -136,6 +148,9 @@
     },
     "monolog/monolog": {
         "version": "1.24.0"
+    },
+    "nesbot/carbon": {
+        "version": "2.18.0"
     },
     "nikic/php-parser": {
         "version": "v4.2.1"
@@ -478,6 +493,9 @@
     },
     "twig/twig": {
         "version": "v2.5.0"
+    },
+    "tzsk/collage": {
+        "version": "2.0.1"
     },
     "valga/fbns-react": {
         "version": "0.1.8"

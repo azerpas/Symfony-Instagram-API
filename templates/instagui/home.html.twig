@@ -29,6 +29,30 @@
                               </ul>
                         </div>
                   </div>
+                  <div class="card col-6">
+                        <div class="card-header">
+                              <h3>Bots status 🔋</h3>
+                        </div>
+                        <div class="card-body">
+                              <table class="table">
+                                    <thead>
+                                          <tr>
+                                                <th>Main command</th>
+                                                <th>Search</th>
+                                                <th>Liking</th>
+                                          </tr>
+                                    </thead>
+                                    <tbody>
+                                          <tr>
+                                                {#<td>{% if command.main %}✅{% else %}⛔️{% endif %}</td>
+                                                <td>{% if command.search %}✅{% else %}⛔️{% endif %}</td>
+                                                <td>{% if command.liking %}✅{% else %}⛔️{% endif %}</td>
+                                                #}
+                                          </tr>
+                                    </tbody>
+                              </table>
+                        </div>
+                  </div>
             </section>
             <!-- Counts Section -->
             <section class="dashboard-counts section-padding">

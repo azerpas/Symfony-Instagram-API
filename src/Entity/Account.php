@@ -78,6 +78,11 @@ class Account
      */
     private $proxy;
 
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $turnedOn = [];
+
     public function __construct() {
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
         $this->people = new ArrayCollection();
@@ -275,6 +280,18 @@ class Account
     public function setProxy(?string $proxy)
     {
         $this->proxy = $proxy;
+
+        return $this;
+    }
+
+    public function getTurnedOn()
+    {
+        return $this->turnedOn;
+    }
+
+    public function setTurnedOn($turnedOn)
+    {
+        $this->turnedOn = $turnedOn;
 
         return $this;
     }

@@ -22,7 +22,7 @@ class History
     private $type;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=500, nullable=true)
      */
     private $message;
 
@@ -40,6 +40,11 @@ class History
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $date;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $Link;
 
     public function getId(): ?int
     {
@@ -102,6 +107,18 @@ class History
     public function setDate(?\DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getLink(): ?string
+    {
+        return $this->Link;
+    }
+
+    public function setLink(?string $Link): self
+    {
+        $this->Link = $Link;
 
         return $this;
     }

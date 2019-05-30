@@ -55,24 +55,27 @@ class LikeAndFollowUsersCommand extends Command
         $password = $input->getArgument('password');
         $ig = new \InstagramAPI\Instagram($debug, $truncatedDebug);
         try {
-            $ig->login($username, $password);
             $account = $this->em->getRepository('App\Entity\Account')->findOneByUsername($username);
             $peopleToInteract = $this->em->getRepository('App\Entity\People')->findPeopleToFollowTrueByAccount($account);
+            $nbOfFollows = json_decode($account->getSettings())->followPerHour;
+            intval($nbOfFollows) ? $output->writeln("Number of accounts to Interact with: ".intval($nbOfFollows))  : $output->writeln("You put 0 follow per hour\n");
             $likeCommand = $this->getApplication()->find('app:like');
-            $followCommand = $this->getApplication()->find('app:follow'); 
+            $followCommand = $this->getApplication()->find('app:follow');
+            $output->writeln('Login...');
+            $ig->login($username, $password);
             $counter = 0;
-            while ($counter<10 && $counter<sizeof($peopleToInteract)) {
+            while ($counter<20 && $counter<sizeof($peopleToInteract) || $counter>=$nbOfFollows) {
                 $person = $peopleToInteract[$counter];
                 $mediaIds = [];
                 $mediaUrls = [];
                 try{
+                    $output->writeln('Getting user feed...');
                     $feed = json_decode($ig->timeline->getUserFeed($person->getInstaId()));
                 }catch (\Exception $e){
                     $output->writeln($e->getMessage());
                     $historyError = new History();
                     $historyError->setType("error");
                     $historyError->setMessage('We got an error while trying to get infos from: '. $person->getUsername().'. <br/> Removing and getting to next user');
-                    $historyError->setInteractWith($person);
                     $historyError->setFromAccount($account);
                     $historyError->setDate(new \DateTime());
                     $this->em->persist($historyError);
@@ -81,6 +84,7 @@ class LikeAndFollowUsersCommand extends Command
                     $counter++;
                     continue;
                 }
+                $urls = [];
                 for($i=0;$i<sizeof($feed->items);$i++) {
                     $mediaId = $feed->items[$i]->id;
                     array_push($mediaIds,$mediaId);
@@ -102,6 +106,7 @@ class LikeAndFollowUsersCommand extends Command
                             array_push($mediaUrls,$mediaUrl);
                         }
                     }
+                    array_push($urls,"https://www.instagram.com/p/".$feed->items[$i]->code);
                 }
                 $randomNumbers = [];
                 for($i=0;$i<2;) {
@@ -112,6 +117,7 @@ class LikeAndFollowUsersCommand extends Command
                     }
                 }
                 $likesNumber = 0;
+                $output->writeln('Liking...');
                 while ($likesNumber<2 && $likesNumber<sizeof($mediaIds)) {
                     $likeCommandArguments = [
                         'command' => 'app:like',
@@ -119,51 +125,70 @@ class LikeAndFollowUsersCommand extends Command
                         'password' => $password,
                         'mediaId' => $mediaIds[$randomNumbers[$likesNumber]-1],    
                     ];
+                    $output->writeln($mediaUrls[$randomNumbers[$likesNumber]-1]);
                     $likeInput = new ArrayInput($likeCommandArguments);
                     $likeCommand->run($likeInput, $output);
                     $historyLike = new History();
                     $historyLike->setType("like");
                     $historyLike->setMessage('Liked a media (number '.($randomNumbers[$likesNumber]).') of @'. $person->getUsername());
                     $historyLike->setInteractWith($person);
+                    $historyLike->setLink($mediaUrls[$randomNumbers[$likesNumber]-1]);
                     $historyLike->setFromAccount($account);
                     $historyLike->setDate(new \DateTime());
                     $this->em->persist($historyLike);
                     sleep(5);
                     $likesNumber++;
                 }
+                if (intval($nbOfFollows)){
+                    $output->writeln('following...');
+                    $followCommandArguments = [
+                        'command' => 'app:follow',
+                        'username' => $username,
+                        'password' => $password,
+                        'userId' => $person->getInstaID(),
+                    ];
+                    $followInput = new ArrayInput($followCommandArguments);
+                    sleep(rand(3,6));
+                    $followCommand->run($followInput, $output);
 
-                $followCommandArguments = [
-                    'command' => 'app:follow',
-                    'username' => $username,
-                    'password' => $password,
-                    'userId' => $person->getInstaID(),    
-                ];
-                $followInput = new ArrayInput($followCommandArguments);
-                sleep(rand(3,6));
-                $followCommand->run($followInput, $output);
-                
-                // TODO : need to add CATCH
-                $historyFollow = new History();
-                $historyFollow->setType("follow");
-                $historyFollow->setMessage("Followed @". $person->getUsername());
-                $historyFollow->setInteractWith($person);
-                $historyFollow->setFromAccount($account);
-                $historyFollow->setDate(new \DateTime());
-                $this->em->persist($historyFollow);
+                    // TODO : need to add CATCH
+                    $historyFollow = new History();
+                    $historyFollow->setType("follow");
+                    $historyFollow->setMessage("Followed @". $person->getUsername());
+                    $historyFollow->setInteractWith($person);
+                    $historyFollow->setFromAccount($account);
+                    $historyFollow->setDate(new \DateTime());
+                    $this->em->persist($historyFollow);
+                }
                 
                 $person->setToFollow(false);
                 $person->setUpdated(new \DateTime());
+                $mediasArray = [];
                 if ($likesNumber==2) {
-                    $mediasArray = array (($mediaIds[$randomNumbers[0]-1])=>($mediaUrls[$randomNumbers[0]-1]), ($mediaIds[$randomNumbers[1]-1])=>($mediaUrls[$randomNumbers[1]-1]));
+                    //$mediasArray = array (($mediaIds[$randomNumbers[0]-1])=>($mediaUrls[$randomNumbers[0]-1]), ($mediaIds[$randomNumbers[1]-1])=>($mediaUrls[$randomNumbers[1]-1]));
+                    // Sorry for awful code
+                    $obj = new \stdClass();
+                    $obj->ref = $mediaIds[$randomNumbers[0]-1];
+                    $obj->link = $mediaUrls[$randomNumbers[0]-1];
+                    $objj = new \stdClass();
+                    $objj->ref = $mediaIds[$randomNumbers[1]-1];
+                    $objj->link = $mediaUrls[$randomNumbers[1]-1];
+                    array_push($mediasArray,$obj);
+                    array_push($mediasArray,$objj);
                     $person->setLikedMedias(json_encode($mediasArray));
                 }
                 else if ($likesNumber==1) {
-                    $mediasArray = array (($mediaIds[$randomNumbers[0]-1])=>($mediaUrls[$randomNumbers[0]-1]));
+                    //$mediasArray = array (($mediaIds[$randomNumbers[0]-1])=>($mediaUrls[$randomNumbers[0]-1]));
+                    $obj = new \stdClass();
+                    $obj->ref = $mediaIds[$randomNumbers[0]-1];
+                    $obj->link = $mediaUrls[$randomNumbers[0]-1];
+                    array_push($mediasArray,$obj);
                     $person->setLikedMedias(json_encode($mediasArray));
                 }
                 $this->em->persist($person); 
-                $this->em->flush(); 
-                sleep(30);
+                $this->em->flush();
+                $output->writeln('sleeping...');
+                sleep(15);
                 $counter++;
             }
             $historyEnd = new History();

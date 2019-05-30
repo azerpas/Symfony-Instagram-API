@@ -105,7 +105,7 @@ class SearchByTagCommand extends ContainerAwareCommand
                     $instaId = $item->getUser()->getPk();
                     $username = $item->getUser()->getUsername();
 
-                    $output->writeln($count."/".$nbOfItems."| Adding @".$item->getUser()->getUsername(). ", sleeping first...");
+                    $output->writeln($count."/".$nbOfItems." | Adding @".$item->getUser()->getUsername(). ", sleeping first...");
 
                     $exist=$this->entityManager->getRepository('App\Entity\People')->findOneByUsername($username,$account);
                     if($exist!=null){
@@ -179,12 +179,17 @@ class SearchByTagCommand extends ContainerAwareCommand
      */
     private function UserMatch($settings, $userInfo, OutputInterface $output)
     {
+        if(json_decode($userInfo->getUser())->is_private){
+            $output->writeln("Private account");
+            return false;
+        }
         if(($userInfo->getUser()->getFollowerCount() > $settings->minfollow) && ($userInfo->getUser()->getFollowerCount() < $settings->maxfollow)){
             $output->writeln("Followers test passed");
             if (($userInfo->getUser()->getFollowingCount() > $settings->minfollowing) && ($userInfo->getUser()->getFollowingCount() < $settings->maxfollowing)){
                 $output->writeln("Following test passed");
                 if(($userInfo->getUser()->getMediaCount() > $settings->minpublication) && ($userInfo->getUser()->getMediaCount() < $settings->maxpublication)){
                     $output->writeln("Media test passed");
+                    $output->writeln("Every tests passed!");
                     return true;
                 }
                 return false;

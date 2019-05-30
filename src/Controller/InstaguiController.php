@@ -32,9 +32,14 @@ class InstaguiController extends AbstractController
      */
     public function homePage()
     {   $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $em = $this->getDoctrine()->getManager();
         $account = $this->getUser()->getActuelAccount() ? 1 : null;
+        $acc = $this->getUser()->getActuelAccount();
+        $acc->setTurnedOn("salut");
+        $em->persist($acc);
+        $em->flush();
         return $this->render('instagui/home.html.twig', [
-            'controller_name' => 'InstaguiController','page'=> 'home','account'=>$account
+            'controller_name' => 'InstaguiController','page'=> 'home','account'=>$account, 'command'=>null
         ]);
     }
 
@@ -301,5 +306,13 @@ class InstaguiController extends AbstractController
         $em->persist($user);
         $em->flush();
         return $this->redirectToRoute('inst_home');
+    }
+
+    /**
+     * @Route("/instagui/lists",name="inst_lists")
+     */
+    public function lists(LoggerInterface $log){
+
+        return new Response("test");
     }
 }

@@ -4,10 +4,13 @@
     "require": {
         "php": "^7.2.1",
         "ext-ctype": "*",
+        "ext-curl": "*",
         "ext-iconv": "*",
         "ext-json": "*",
+        "ext-gd": "*",
+        "curl/curl": "^2.2",
         "doctrine/doctrine-bundle": "^1.10",
-        "mgp25/instagram-php": "^5.0",
+        "mgp25/instagram-php": "^6.0.1",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/asset": "4.1.*",
         "symfony/console": "4.1.*",
@@ -26,7 +29,8 @@
         "symfony/twig-bundle": "4.1.*",
         "symfony/validator": "4.1.*",
         "symfony/web-link": "4.1.*",
-        "symfony/yaml": "4.1.*"
+        "symfony/yaml": "4.1.*",
+        "tzsk/collage": "^2.0"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.1",

@@ -19,6 +19,7 @@ class SearchByPseudoCommand extends ContainerAwareCommand
 {
     protected static $defaultName = 'search:pseudo';
 
+    protected $genderCheck = null;
     
     /**
      * @var EntityManagerInterface
@@ -85,49 +86,59 @@ class SearchByPseudoCommand extends ContainerAwareCommand
             $nbOfFollowers = sizeof($followersList->getUsers());
             $count = 1;
             $valid = 0;
-            foreach ($followersList->getUsers() as $follower) {
-                $output->writeln($count."/".$nbOfFollowers."| Adding @".$follower->getUsername(). ", sleeping first...");
+            $maxId = null;
+            do{
+                $followersList = $ig->people->getFollowers($userId, \InstagramAPI\Signatures::generateUUID(),null,$maxId);
+                foreach ($followersList->getUsers() as $follower) {
+                    $output->writeln($count."/".$nbOfFollowers." | Adding @".$follower->getUsername(). ", sleeping first...");
+                    $output->writeln('valid: '.$valid);
+                    // TODO check if already in DATABASE
+                    $exist=$this->entityManager->getRepository('App\Entity\People')->findOneByUsername($follower->getUsername(),$account);
+                    if($exist!=null){
+                        $output->writeln("Already in database");
+                        $count++;
+                        continue;
+                    }
 
-                // TODO check if already in DATABASE
-                $exist=$this->entityManager->getRepository('App\Entity\People')->findOneByUsername($follower->getUsername(),$account);
-                if($exist!=null){
-                    $output->writeln("Already in database");
-                    continue;
-                }
-
-                sleep(rand(2,5));
-                try{
-                    $userInfo = $ig->people->getInfoByName($follower->getUsername());
-                    $output->writeln("Checking before adding...");
-                }catch (\Exception $e){
-                    $output->writeln($e->getMessage());
-                    continue;
-                }
+                    sleep(rand(2,5));
+                    try{
+                        $userInfo = $ig->people->getInfoByName($follower->getUsername());
+                        $output->writeln("Checking before adding...");
+                    }catch (\Exception $e){
+                        $output->writeln($e->getMessage());
+                        continue;
+                    }
 
 
-                if ($this->UserMatch($settings, $userInfo,$output)){
-                    $output->writeln("Pushing...");
-                    $valid++;
-                    array_push($peoples,array("id"=>$follower->getPk(),"username"=> $follower->getUsername()));
+                    if ($this->UserMatch($settings, $userInfo,$output)){
+                        $output->writeln("Pushing...");
+                        $valid++;
+                        array_push($peoples,array("id"=>$follower->getPk(),"username"=> $follower->getUsername()));
+                    }
+                    $output->writeln("");
+                    $count++;
+                    if($valid >= 400){
+                        $output->writeln("Enough users found");
+                        $this->end($peoples,$account);
+                        break;
+                    }
                 }
-                $output->writeln("");
-                $count++;
-                if($valid >= 80){
-                    $output->writeln("Enough users found");
-                    break;
-                }
-            }
-             
+                $maxId = $followersList->getNextMaxId();
+            }while($maxId !== null);
+            $this->end($peoples,$account);
         }
-        
+    }
+
+    public function end($peoples,$account)
+    {
         foreach ($peoples as $user) {
             $exist=$this->entityManager->getRepository('App\Entity\People')->findOneByInstaId($user["id"],$account->getId());
             if($exist==null) {
                 $person=new People($user["username"],$user["id"],$account);
                 echo json_encode($person);
-                $this->entityManager->persist($person);  
-                $account->addPerson($person); 
-                $this->entityManager->persist($account);  
+                $this->entityManager->persist($person);
+                $account->addPerson($person);
+                $this->entityManager->persist($account);
                 $this->entityManager->flush();
             }
         }
@@ -138,9 +149,8 @@ class SearchByPseudoCommand extends ContainerAwareCommand
         $history->setDate(new \DateTime());
         $this->entityManager->persist($history);
         $this->entityManager->flush();
-         
+        exit();
     }
-
     /**
      * @method check if the user matches with the params
      * @param param account configuration
@@ -149,18 +159,25 @@ class SearchByPseudoCommand extends ContainerAwareCommand
      */
     private function UserMatch($settings, $userInfo, OutputInterface $output)
     {
-        if(($userInfo->getUser()->getFollowerCount() > $settings->minfollow) && ($userInfo->getUser()->getFollowerCount() < $settings->maxfollow)){
-            $output->writeln("Followers test passed");
-            if (($userInfo->getUser()->getFollowingCount() > $settings->minfollowing) && ($userInfo->getUser()->getFollowingCount() < $settings->maxfollowing)){
-                $output->writeln("Following test passed");
-                if(($userInfo->getUser()->getMediaCount() > $settings->minpublication) && ($userInfo->getUser()->getMediaCount() < $settings->maxpublication)){
-                    $output->writeln("Media test passed");
-                    return true;
-                }
-                return false;
-            }
+        if(json_decode($userInfo->getUser())->is_private){
+            $output->writeln("Private account");
             return false;
         }
+        if(($userInfo->getUser()->getFollowerCount() > $settings->minfollow) && ($userInfo->getUser()->getFollowerCount() < $settings->maxfollow)){
+            $output->writeln("Followers test passed\n");
+            if (($userInfo->getUser()->getFollowingCount() > $settings->minfollowing) && ($userInfo->getUser()->getFollowingCount() < $settings->maxfollowing)){
+                $output->writeln("Following test passed\n");
+                if(($userInfo->getUser()->getMediaCount() > $settings->minpublication) && ($userInfo->getUser()->getMediaCount() < $settings->maxpublication)){
+                    $output->writeln("Media test passed\n");
+                    $output->writeln("Every tests passed!");
+                    return true;
+                }
+            }
+            else{
+                $output->writeln($userInfo->getUser()->getFollowingCount() .'>'. $settings->minfollowing . ' -- ' . $userInfo->getUser()->getFollowingCount() .'<'. $settings->maxfollowing);
+            }
+        }
+        $output->writeln($userInfo->getUser()->getFollowerCount() .'>'. $settings->minfollowing . ' -- ' . $userInfo->getUser()->getFollowerCount() .'<'. $settings->maxfollowing);
         return false;
     }
 

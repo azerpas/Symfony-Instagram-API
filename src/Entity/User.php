@@ -182,7 +182,7 @@ class User implements UserInterface
         return $this->accounts->set($key,$acc);
     }
 
-    public function getActuelAccount(): ?account
+    public function getActuelAccount(): ?Account
     {
         return $this->actuelAccount;
     }
