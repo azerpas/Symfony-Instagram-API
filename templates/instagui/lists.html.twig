@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}INSTAGUI{% endblock %}
+
+{% block Navbar %}
+    {{parent()}}
+{% endblock %}
+{% block Section %}
+    <div class="container">
+        <section class="section-padding">
+            <div class="row">
+                {% if peoples %}
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">From</th>
+                            <th scope="col">Access</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for i in peoples|sort|reverse %}
+                            <tr>
+                                <td scope="row">
+                                    {{ i.username }}
+                                </td>
+                                <td>
+                                    {{ i.from }}
+                                </td>
+                                <td>
+                                    <a href="https://www.instagram.com/{{ i.username }}"><i class="fa-external-link-square"></i> </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="card">
+                        <div class="alert alert-danger" role="alert">
+                            No Instagram account found ! Please add one first by clicking below
+                        </div>
+                        <a href="profile"><button class="btn btn-success">Click here</button></a>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+{% endblock %}
+{% block Footer %}
+    {{parent()}}
+{% endblock %}
+

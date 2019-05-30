@@ -22,7 +22,7 @@ class History
     private $type;
 
     /**
-     * @ORM\Column(type="string", length=500, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $message;
 
@@ -42,7 +42,7 @@ class History
     private $date;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $Link;
 

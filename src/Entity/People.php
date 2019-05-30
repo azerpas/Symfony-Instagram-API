@@ -73,6 +73,11 @@ class People
      */
     private $likedMedias;
 
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $infos = [];
+
   
     
     public function __construct($username,$userId,$account)
@@ -240,6 +245,18 @@ class People
     public function setLikedMedias($likedMedias): self
     {
         $this->likedMedias = $likedMedias;
+
+        return $this;
+    }
+
+    public function getInfos(): ?array
+    {
+        return $this->infos;
+    }
+
+    public function setInfos(?array $infos): self
+    {
+        $this->infos = $infos;
 
         return $this;
     }
