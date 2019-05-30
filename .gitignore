@@ -1,6 +1,7 @@
 .env
-
+.env.local.php
 .idea
+.env.test
 last_followers
 ###> symfony/framework-bundle ###
 /.env.local
