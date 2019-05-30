@@ -15,7 +15,8 @@
                         <tr>
                             <th scope="col">Name</th>
                             <th scope="col">From</th>
-                            <th scope="col">Access</th>
+                            <th scope="col">Ratio</th>
+                            <th scope="col">Options</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -23,12 +24,27 @@
                             <tr>
                                 <td scope="row">
                                     {{ i.username }}
+                                    {% if i.profilePic %}
+                                        <a class="rounded float-right" href="{{ i.profilePic }}" target="_blank" ><img width="50" height="50" src="{{ i.profilePic }}" class="rounded float-right" alt="link"></a>
+                                    {% endif %}
                                 </td>
                                 <td>
-                                    {{ i.from }}
+                                    {% if i.origin %}
+                                        {{ i.origin }}
+                                    {% else %}
+                                        No origin
+                                    {% endif %}
                                 </td>
                                 <td>
-                                    <a href="https://www.instagram.com/{{ i.username }}"><i class="fa-external-link-square"></i> </a>
+                                    {% if i.ratio %}
+                                        {{ i.ratio }}
+                                    {% else %}
+                                        No ratio
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a target="_blank" href="https://www.instagram.com/{{ i.username }}"><i class="fa fa-external-link-square"></i> </a>
+                                    <a><i class="fas fa-minus-circle text-danger" style="margin-left: 5px" onclick="people(this)"></i></a>
                                 </td>
                             </tr>
                         {% endfor %}

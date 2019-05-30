@@ -74,13 +74,22 @@ class People
     private $likedMedias;
 
     /**
-     * @ORM\Column(type="json", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $infos = [];
+    private $origin;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $profilePic;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $ratio;
   
     
-    public function __construct($username,$userId,$account)
+    public function __construct($username,$userId,$account,$infos)
     {
         $this->histories = new ArrayCollection();
         $this->username=$username;
@@ -92,6 +101,9 @@ class People
         $this->account =$account;
         $this->contacted =false ;
         $this->updated =new \DateTime('@'.strtotime('now'));
+        $this->ratio = $infos->ratio;
+        $this->profilePic = $infos->profilePic;
+        $this->origin = $infos->origin;
     }
     public function getId(): ?int
     {
@@ -249,15 +261,40 @@ class People
         return $this;
     }
 
-    public function getInfos(): ?array
+    public function getOrigin(): ?string
     {
-        return $this->infos;
+        return $this->origin;
     }
 
-    public function setInfos(?array $infos): self
+    public function setOrigin(?string $origin): self
     {
-        $this->infos = $infos;
+        $this->origin = $origin;
 
         return $this;
     }
+
+    public function getProfilePic(): ?string
+    {
+        return $this->profilePic;
+    }
+
+    public function setProfilePic(?string $profilePic): self
+    {
+        $this->profilePic = $profilePic;
+
+        return $this;
+    }
+
+    public function getRatio(): ?float
+    {
+        return $this->ratio;
+    }
+
+    public function setRatio(?float $ratio): self
+    {
+        $this->ratio = $ratio;
+
+        return $this;
+    }
+
 }
